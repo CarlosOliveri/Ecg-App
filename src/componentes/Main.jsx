@@ -7,7 +7,9 @@ import User from './User'
 import Estadisticas from './Estadisticas'
 import Home from './Home'
 import BluetoothList from './BluetoothList';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Header } from '@react-navigation/stack';
+
 
 
 const homeName = 'HomeStack';
@@ -37,6 +39,7 @@ const Main = () => {
     };
 
     return (
+        //<GestureHandlerRootView >
         <NavigationContainer>
             <Tab.Navigator
                 initialRouteName = {homeName}
@@ -68,6 +71,7 @@ const Main = () => {
                 <Tab.Screen name = {user} component = {User}/>
             </Tab.Navigator>
         </NavigationContainer>
+        //</GestureHandlerRootView>
     )
 }
 

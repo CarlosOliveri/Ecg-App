@@ -4,7 +4,7 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {styles} from './styles/styles';
 
- const DeviceList = ({peripheral, connect, disconnect}) => {
+ const ExampleDevice = ({peripheral, connect, disconnect}) => {
   const {name, rssi, connected} = peripheral;
   return (
     <>
@@ -33,4 +33,4 @@ import {styles} from './styles/styles';
   );
 };
 
-export default DeviceList;
+export default ExampleDevice;
