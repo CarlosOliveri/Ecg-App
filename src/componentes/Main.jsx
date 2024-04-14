@@ -32,9 +32,13 @@ const MyStack = () =>{
                 headerShown: false,
             }}
         >
-            <HomeStackNavigator.Screen name = {Mediciones} component={Estadisticas} />
-            <HomeStackNavigator.Screen name = 'HomeScreen' component={Home} />
-            <HomeStackNavigator.Screen name = {user} component={User} />
+            
+            <HomeStackNavigator.Screen 
+                name = 'HomeScreen' 
+                component={Home} />
+            <HomeStackNavigator.Screen 
+                name = "Bluetooth" 
+                component={BluetoothList} />
         </HomeStackNavigator.Navigator>
     );
 }
@@ -47,16 +51,11 @@ const Main = () => {
                 screenOptions = {{
                     tabBarActiveTintColor : themeColor,
                     tabBarInactiveTintColor : 'grey',
-                    //tabBarActiveBackgroundColor : 'grey',
-                    //activeTintColor : 'tomato',
-                    //inactiveTintColor : 'grey',
-                    //labelStyle : {paddingBottom: 10, fontSize: 10},
-                    //style: {padding: 10, heigth: 70}
                 }}
             >
                 <Tab.Screen 
-                    name = {Mediciones}
-                    component={Estadisticas}
+                    name = {homeName}
+                    component={MyStack}
                     options={{
                         tabBarLabel : 'Medicion',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="heart-pulse" size={24} color={color} />),
@@ -70,8 +69,8 @@ const Main = () => {
                      
                 />
                 <Tab.Screen 
-                    name = {homeName} 
-                    component={MyStack}
+                    name = {Mediciones} 
+                    component={Estadisticas}
                     options={{
                         tabBarLabel : 'Historial',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="history" size={39} color={color} />),

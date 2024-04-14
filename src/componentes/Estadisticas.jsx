@@ -1,59 +1,65 @@
+import React from 'react';
+import { StyleSheet, Text, View, StatusBar, FlatList } from 'react-native';
+import Header from './Header';
+import HistoryCard from './HistoryCard';
 
-import React,{useState} from 'react'
-import {Text, View, TouchableNativeFeedback, TouchableOpacity} from 'react-native'
-import { useNavigation } from '@react-navigation/native';
-import { HomeStyles } from '../styles/HomeStyles';
-import Mediciones from './Mediciones';
+const datos = [
+    {
+        num: '1',
+        Fecha: '30/03/2024',
+        Hora: '6:00 am',
+        Actividad: 'Trote',
+        tiempo: '30 min',
+        id: 1,
+    },
+    {
+        num: '2',
+        Fecha: '30/03/2024',
+        Hora: '10:00 am',
+        Actividad: 'Reposo',
+        tiempo: '10 min',
+        id: 2,
+    },
+    {
+        num: '3',
+        Fecha: '30/03/2024',
+        Hora: '5:00 pm',
+        Actividad: 'Natacion',
+        tiempo: '20 min',
+        id: 3,
+    },
+    {
+        num: '4',
+        Fecha: '30/03/2024',
+        Hora: '20:00 pm',
+        Actividad: 'Gimnasio',
+        tiempo: '1 hora',
+        id: 4,
+    },
+  ];
 
-const Estadisticas = () => {
-        const navigation = useNavigation();
-       
-        const [isBleConnected,setIsBleConnected] = useState(false);
-
-        const handleBleConnect =()=>{
-        !isBleConnected ? setIsBleConnected(true) : setIsBleConnected(false);
-        }
-
+const Home = () => {
     return (
-        (!isBleConnected) ? (
-            <View>
-                    <Text
-                        style = {{
-                            fontSize: 17,
-                            marginHorizontal: 10,
-                            marginTop: '50%',
-                            paddingHorizontal:10,
-                            textAlign: 'center',
-                        }}
-                    >Para poder realizar la medicion debe estar conectado al dispositivo Elecctronico mediante Bluethooth  </Text>
-                <TouchableOpacity
-                        style = {{
-                            backgroundColor: 'red',
-                            padding : 10,
-                            marginTop : 20,
-                            width : '50%',
-                            alignSelf: 'center',
-                            borderRadius: 10,
-                        }}
-                        onPress={() => navigation.navigate('Bluetooth',{onBluetoothConnect:handleBleConnect})}   
-                >
-                    <Text
-                        style = {{
-                            fontSize: 16,
-                            textAlign: 'center',
-                            color: "white",
-
-                        }}
-                        >Conectar Dispositivo </Text>
-                </TouchableOpacity>
-                </View>
-         ):(
-            <Mediciones
-            onBluetoothDisconnect = {handleBleConnect}/>
-        )
- 
-    );
+        <View style={styles.container}>
+          <FlatList
+            data={datos}
+            renderItem={({ item }) => {
+              return <HistoryCard info={item} />;
+            }}
+            keyExtractor={(datos) => datos.id.toString()}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
+      );
 }
 
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      //backgroundColor: '#6c5ce7',
+      alignItems: 'center',
+      // justifyContent: 'center',
+    },
+  });
 
-export default Estadisticas
+export default Home
