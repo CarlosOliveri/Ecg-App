@@ -9,5 +9,5 @@ import Example from './src/Example.jsx';
 import Mediciones from './src/componentes/Mediciones.jsx';
 
 export default function App() {
-  return <Mediciones/>
+  return <Main/>
 }

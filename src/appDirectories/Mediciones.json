@@ -1,0 +1,74 @@
+{
+    "mediciones": [
+      {
+        "id": 1,
+        "fecha": "2024-04-15",
+        "hora": "09:30",
+        "actividad": "Correr",
+        "tiempo_actividad_minutos": 45,
+        "datos_medicion": [
+          { "time": "0:00", "value": 0 },
+          { "time": "0:15", "value": 130 },
+          { "time": "0:30", "value": 145 },
+          { "time": "0:45", "value": 155 }
+        ]
+      },
+      {
+        "id": 2,
+        "fecha": "2024-04-16",
+        "hora": "18:00",
+        "actividad": "Ciclismo",
+        "tiempo_actividad_minutos": 60,
+        "datos_medicion": [
+          { "time": "0:00", "value": 0 },
+          { "time": "0:15", "value": 120 },
+          { "time": "0:30", "value": 125 },
+          { "time": "0:45", "value": 130 },
+          { "time": "1:00", "value": 135 }
+        ]
+      },
+      {
+        "id": 3,
+        "fecha": "2024-04-17",
+        "hora": "08:45",
+        "actividad": "Natación",
+        "tiempo_actividad_minutos": 30,
+        "datos_medicion": [
+          { "time": "0:00", "value": 0 },
+          { "time": "0:10", "value": 50 },
+          { "time": "0:20", "value": 75 },
+          { "time": "0:30", "value": 100 }
+        ]
+      },
+      {
+        "id": 4,
+        "fecha": "2024-04-18",
+        "hora": "12:15",
+        "actividad": "Caminata",
+        "tiempo_actividad_minutos": 40,
+        "datos_medicion": [
+          { "time": "0:00", "value": 0 },
+          { "time": "0:10", "value": 70 },
+          { "time": "0:20", "value": 90 },
+          { "time": "0:30", "value": 110 },
+          { "time": "0:40", "value": 120 }
+        ]
+      },
+      {
+        "id": 5,
+        "fecha": "2024-04-19",
+        "hora": "14:30",
+        "actividad": "Entrenamiento",
+        "tiempo_actividad_minutos": 50,
+        "datos_medicion": [
+          { "time": "0:00", "value": 0 },
+          { "time": "0:10", "value": 60 },
+          { "time": "0:20", "value": 80 },
+          { "time": "0:30", "value": 100 },
+          { "time": "0:40", "value": 110 },
+          { "time": "0:50", "value": 120 }
+        ]
+      }
+    ]
+  }
+  

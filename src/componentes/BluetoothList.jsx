@@ -7,11 +7,14 @@ import BleManager from 'react-native-ble-manager';
 import Empty from './Empty';
 import Toggle from './Toggle';
 import Dispositivos from "./Dispositivos";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
-const BluetoothList = ({route}) => {
+const BluetoothList = (/*{route}*/) => {
+
+  const route = useRoute();
 
   const {onBluetoothConnect} = route.params;
   const [isScanning, setIsScanning] =useState(false);
