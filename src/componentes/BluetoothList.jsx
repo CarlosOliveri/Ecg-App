@@ -2,6 +2,7 @@ import React,{useState, useEffect} from "react";
 import { Platform, NativeModules,
      NativeEventEmitter, PermissionsAndroid, View,
       Text, FlatList, StyleSheet} from "react-native";
+import BluetoothListStyles from "../styles/BluetoothListStyles";
 import BleManager from 'react-native-ble-manager';
 import Empty from './Empty';
 import Toggle from './Toggle';
@@ -10,11 +11,16 @@ import Dispositivos from "./Dispositivos";
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
-const BluetoothList = () => {
+const BluetoothList = ({route}) => {
 
+  const {onBluetoothConnect} = route.params;
   const [isScanning, setIsScanning] =useState(false);
   const [bolEnable,setBolEnable] = useState(false); 
   const [discoveredDevices, setDisceveredDevices] = useState();
+
+  const handleBleConnect = () =>{
+    onBluetoothConnect();
+  }
 
   useEffect(() => {
     //Inicializamos los paquetes de BleManager
@@ -83,6 +89,7 @@ const BluetoothList = () => {
       setIsScanning(true);
       BleManager.scan([],5,true).then(() => {
         console.log('[startScan] scan promise returned Succsesfuly');
+        handleBleConnect();
       })/*.catch(error => {
         console.log('[startScan] scan returned an error',error);
       });*/
@@ -159,8 +166,8 @@ const BluetoothList = () => {
     }
 ////////////////////////LAYOUT//////////////////////////////////
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>
+        <View style={BluetoothListStyles.container}>
+            <Text style={BluetoothListStyles.title}>
                 Bluetooth
             </Text>
             <Toggle
@@ -168,11 +175,11 @@ const BluetoothList = () => {
                 value = {bolEnable}
             />
             
-            <View style = {styles.containerSubtitle}>
-            <Text style={styles.Subtitle}>
+            <View style = {BluetoothListStyles.containerSubtitle}>
+            <Text style={BluetoothListStyles.Subtitle}>
                 Lista de Dispositivos
             </Text>
-            <View style={styles.lineSubtitle}/>
+            <View style={BluetoothListStyles.lineSubtitle}/>
         </View>
             <FlatList
                 data ={discoveredDevices}
@@ -182,8 +189,10 @@ const BluetoothList = () => {
         </View>
     );
 }
+export default BluetoothList;
+
 //////////////////////////ESTILOS///////////////////////////////
-const styles = StyleSheet.create({
+/*const BluetoohLisgtStyles = StyleSheet.create({
     container:{
         paddingHorizontal: 20,
         paddingVertical: 25,
@@ -213,6 +222,4 @@ const styles = StyleSheet.create({
         marginTop:3,
         borderColor:'#eceff1'
     }
-})
-
-export default BluetoothList;
+})*/

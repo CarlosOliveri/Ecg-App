@@ -1,26 +1,28 @@
 import React from "react";
 import { View,Text,Image,StyleSheet,TouchableOpacity} from 'react-native';
+import DispositivosStyles from "../styles/DispositivosStyles";
 
 const Dispositivos =(props)=>{
     return (
         <>
-            <TouchableOpacity style={styles.wrapper} onPress = {props.onPress}>
-                <View style={styles.wrapperLeft}>
-                    <Image style={styles.iconLeft} source ={props.iconLeft}/>
+            <TouchableOpacity style={DispositivosStyles.wrapper} onPress = {props.onPress}>
+                <View style={DispositivosStyles.wrapperLeft}>
+                    <Image style={DispositivosStyles.iconLeft} source ={props.iconLeft}/>
                 </View>
-                <View style={styles.wrapperName}>
-                    <Text style={styles.name}>
+                <View style={DispositivosStyles.wrapperName}>
+                    <Text style={DispositivosStyles.name}>
                         {props.name}
                     </Text>
                 </View>
-                <Image style={styles.iconRight} source = {props.iconRight}/>
+                <Image style={DispositivosStyles.iconRight} source = {props.iconRight}/>
             </TouchableOpacity>
-            <View style = {styles.separador}/>
+            <View style = {DispositivosStyles.separador}/>
         </>
     );
 }
-
-const styles = StyleSheet.create({
+export default Dispositivos;
+/*
+const DispositivosStyles = StyleSheet.create({
     wrapper:{
         flexDirection: 'row',
         alignItems: 'centre',
@@ -63,5 +65,4 @@ const styles = StyleSheet.create({
         borderColor: '#eceff1',
     }
 })
-
-export default Dispositivos;
+*/

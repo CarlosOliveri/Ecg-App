@@ -1,48 +1,33 @@
 import React from "react";
 import { View, Text ,TextInput, Button, Alert} from "react-native";
+import LoginStyles from '../styles/LoginStyles';
 
-const Login = () => {
+const Login = ({onUserAuthenticated}) => {
+    
     function onPressButton(){
         Alert.alert('Login sucsesful');
+        handleUserAuthenticated();
+    }
+
+    const handleUserAuthenticated = () => {
+        onUserAuthenticated();
     }
 
     return(
         <View>
-            <Text style = {{
-                alignSelf:"center", 
-                marginTop: 100,
-                fontSize: 30}}>
+            <Text style = {LoginStyles.title}>
                     Sing in
             </Text>
             <TextInput
-                style ={{
-                    height:40,
-                    width: 200,
-                    borderColor: 'gray',
-                    borderWidth: 1,
-                    marginTop: 30,
-                    marginHorizontal: 100,
-                    padding: 10
-                }}
+                style ={LoginStyles.textInput}
                 placeholder="User"
             />
             <TextInput
-                style ={{
-                    height:40,
-                    width: 200,
-                    borderColor: 'gray',
-                    borderWidth: 1,
-                    marginTop: 10,
-                    marginHorizontal: 100,
-                    padding: 10
-                }}
+                style ={LoginStyles.textInput}
                 placeholder="Password"
                 secureTextEntry={true}
             />
-            <View style={{
-                width:100,
-                alignSelf:"center",
-                marginTop:10}}>
+            <View style={LoginStyles.Buttom}>
                 <Button
                     onPress = {onPressButton}
                     title = "Enter"

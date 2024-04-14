@@ -2,7 +2,7 @@
 
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {styles} from './styles/styles';
+import {styles} from './styles/ExampleStyles';
 
  const ExampleDevice = ({peripheral, connect, disconnect}) => {
   const {name, rssi, connected} = peripheral;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import {NavigationContainer} from '@react-navigation/native'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -7,12 +7,13 @@ import User from './User'
 import Estadisticas from './Estadisticas'
 import Home from './Home'
 import BluetoothList from './BluetoothList';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Header } from '@react-navigation/stack';
+import Login from './Login';
+//import { GestureHandlerRootView } from 'react-native-gesture-handler';
+//import { Header } from '@react-navigation/stack';
 
 
 
-const homeName = 'HomeStack';
+const homeName = 'Mediciones';
 const estadisticas = 'Estadisticas'
 const user = 'User'
 
@@ -21,10 +22,16 @@ const bleStack = createNativeStackNavigator();
 
 const Main = () => {
 
+    const [isUserAuthenticated,setIsUserAuthenticated] = useState(false);
+
+    const handleUserAuthenticated = () => {
+        !isUserAuthenticated ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
+    }
+
     const MyStack = () => {
         return(
             <bleStack.Navigator
-                initialRouteName='Home'
+                initialRouteName= 'Home'
             >
                 <bleStack.Screen 
                     name = 'Bluetooth'
@@ -33,7 +40,26 @@ const Main = () => {
                 <bleStack.Screen 
                     name = 'Home'
                     component = {Home}
+                    options={{
+                        headerShown:false,
+                    }}
                 />
+            </bleStack.Navigator>
+        );
+    };
+
+    const AuthStack = () => {
+        return(
+            <bleStack.Navigator
+                initialRouteName= 'Login'
+            >
+                <bleStack.Screen 
+                    name = 'Login'
+                    component = {Login}
+                    initialParams = {{onUserAuthenticated:handleUserAuthenticated}}
+                    options={{
+                        headerShown:false,
+                    }}/>
             </bleStack.Navigator>
         );
     };
@@ -57,18 +83,22 @@ const Main = () => {
                         }
                         return <MaterialIcons name={iconName}  size={size} color={color}/>
                     }   
-                })}
-                ScreenOptions = {{
-                    activeTintColor : 'tomato',
-                    inactiveTintColor : 'grey',
-                    labelStyle : {paddingBottom: 10, fontSize: 10},
-                    style: {padding: 10, heigth: 70}
-                }}
-            >
-
-                <Tab.Screen name = {homeName} component = {MyStack} options={{headerShown:false}}/>
-                <Tab.Screen name = {estadisticas} component = {Estadisticas}/>
-                <Tab.Screen name = {user} component = {User}/>
+                })}>
+                <Tab.Screen 
+                    name = {homeName} 
+                    component = {MyStack} 
+                    options={{
+                    headerTitleAlign: 'center'}}/>
+                <Tab.Screen 
+                    name = {estadisticas} 
+                    component = {Estadisticas} 
+                    options={{
+                        headerTitleAlign: 'center'}}/>
+                <Tab.Screen 
+                    name = {user} 
+                    component = {User}
+                    options={{
+                        headerTitleAlign: 'center'}}/>
             </Tab.Navigator>
         </NavigationContainer>
         //</GestureHandlerRootView>

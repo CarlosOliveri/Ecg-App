@@ -1,28 +1,36 @@
-import React from 'react'
-import {Text, View, TouchableNativeFeedback, Button} from 'react-native'
-import BluetoothList from './BluetoothList';
+import React,{useState} from 'react'
+import {Text, View, Button} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-
-
-
-
+import { HomeStyles } from '../styles/HomeStyles';
+import Mediciones from './Mediciones';
 
 const Home = () => {
     const navigation = useNavigation();
+
+    const [isBleConnected,setIsBleConnected] = useState(false);
+
+    const handleBleConnect =()=>{
+        !isBleConnected ? setIsBleConnected(true) : setIsBleConnected(false);
+    }
+
     return (
-        <>
-            <Text>Aqui se espera encontrar las lecturas en tiempo real recibidas y otra infirmacion</Text>
-            <View 
-                style={{ width: 200,
-                height: 50, 
-                justifyContent: 'center',
-                alignItems: 'center' }}
-            >
+        (!isBleConnected) ? ( 
+            <View style={HomeStyles.ButtonContainer}>
+                <Text
+                style = {HomeStyles.Text}>
+                    Para realizar mediciones debe 
+                    conectarse por Bluetooth al dispositivo ECG.
+                </Text>
                 <Button 
-                title="Bluetooth" 
-                onPress={() => navigation.navigate('Bluetooth')} />
+                title="Conectar Dispositivo" 
+                onPress={() => navigation.navigate('Bluetooth',{onBluetoothConnect:handleBleConnect})}
+                color = '#56C0FF' />
             </View>
-        </>
+        ):(
+            <Mediciones
+            onBluetoothDisconnect = {handleBleConnect}/>
+        )
+        
     );
 }
 

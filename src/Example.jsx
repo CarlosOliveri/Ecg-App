@@ -16,7 +16,7 @@ import {
 import BleManager from 'react-native-ble-manager';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import ExampleDevice from './ExampleDivice';
-import {styles} from './styles/styles';
+import {styles} from './styles/ExampleStyles';
 
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
