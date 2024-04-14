@@ -1,10 +1,65 @@
-import React from 'react'
-import {Text} from 'react-native'
+import React from 'react';
+import { StyleSheet, Text, View, StatusBar, FlatList } from 'react-native';
+import Header from './Header';
+import HistoryCard from './HistoryCard';
 
-const Estadisticas = () => {
+const datos = [
+    {
+        num: '1',
+        Fecha: '30/03/2024',
+        Hora: '6:00 am',
+        Actividad: 'Trote',
+        tiempo: '30 min',
+        id: 1,
+    },
+    {
+        num: '2',
+        Fecha: '30/03/2024',
+        Hora: '10:00 am',
+        Actividad: 'Reposo',
+        tiempo: '10 min',
+        id: 2,
+    },
+    {
+        num: '3',
+        Fecha: '30/03/2024',
+        Hora: '5:00 pm',
+        Actividad: 'Natacion',
+        tiempo: '20 min',
+        id: 3,
+    },
+    {
+        num: '4',
+        Fecha: '30/03/2024',
+        Hora: '20:00 pm',
+        Actividad: 'Gimnasio',
+        tiempo: '1 hora',
+        id: 4,
+    },
+  ];
+
+const Home = () => {
     return (
-        <Text>Estadisticas</Text>
-    );
+        <View style={styles.container}>
+          <FlatList
+            data={datos}
+            renderItem={({ item }) => {
+              return <HistoryCard info={item} />;
+            }}
+            keyExtractor={(datos) => datos.id.toString()}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
+      );
 }
 
-export default Estadisticas
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      //backgroundColor: '#6c5ce7',
+      alignItems: 'center',
+      // justifyContent: 'center',
+    },
+  });
+
+export default Home

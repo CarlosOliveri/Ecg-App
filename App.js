@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Main from './src/componentes/Main.jsx'
+
 // importaciones para pruebay debuging
 import Login from './src/componentes/Login.jsx';
 import BluetoothList from './src/componentes/BluetoothList.jsx'
