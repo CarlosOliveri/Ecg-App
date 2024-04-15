@@ -11,5 +11,5 @@ import Mediciones from './src/componentes/Mediciones.jsx';
 import RegistroShow from './src/componentes/RegistroShow.jsx';
 
 export default function App() {
-  return <Main/>
+  return <Login/>
 }

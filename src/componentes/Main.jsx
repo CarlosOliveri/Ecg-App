@@ -1,4 +1,4 @@
-import React from 'react'
+import React ,{useState }from 'react'
 import {NavigationContainer} from '@react-navigation/native'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -7,9 +7,9 @@ import User from './User'
 import Estadisticas from './Estadisticas'
 import Home from './Home'
 import BluetoothList from './BluetoothList';
-import { Header } from '@react-navigation/stack';
-import HistoryCard from './HistoryCard'
+import Login from './Login';
 import RegistroShow from './RegistroShow';
+import { Header } from '@react-navigation/stack';
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -26,46 +26,69 @@ const Tab = createBottomTabNavigator()
 const HomeStackNavigator = createNativeStackNavigator();
 const RegistroStackNavigator = createNativeStackNavigator();
 
-const MyStack1 = () =>{
-    return(
-        <HomeStackNavigator.Navigator
-            initialRouteName='HomeScreen'
-            screenOptions = {{
-                headerShown: false,
-            }}
-        >
-            <HomeStackNavigator.Screen 
-                name = 'HomeScreen' 
-                component={Home}/>
-            <HomeStackNavigator.Screen 
-                name = "Bluetooth" 
-                component={BluetoothList} />
-            {/*<HomeStackNavigator.Screen
-                name = "Registro"
-        component={RegistroShow}/>*/}
-        </HomeStackNavigator.Navigator>
-    );
-}
-
-const MyStack2 = ()=>{
-    return (
-        <RegistroStackNavigator.Navigator
-            initialRouteName = {estadisticas}
-            screenOptions = {{
-                headerShown: false,
-            }}>
-            <RegistroStackNavigator.Screen
-                name = 'Registro'
-                component={RegistroShow}
-                /*options={{headerShown : true}}*//>
-            <RegistroStackNavigator.Screen
-                name = {estadisticas}
-                component={Estadisticas}/>
-        </RegistroStackNavigator.Navigator>
-    );
-}
-
 const Main = () => {
+
+    const [isUserAuthenticated,setIsUserAuthenticated] = useState(false);
+
+    const handleUserAuthenticated = () => {
+        !isUserAuthenticated ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
+    }
+
+    const MyStack1 = () =>{
+        return(
+            <HomeStackNavigator.Navigator
+                initialRouteName='HomeScreen'
+                screenOptions = {{
+                    headerShown: false,
+                }}
+            >
+                <HomeStackNavigator.Screen 
+                    name = 'HomeScreen' 
+                    component={Home}/>
+                <HomeStackNavigator.Screen 
+                    name = "Bluetooth" 
+                    component={BluetoothList} />
+                <HomeStackNavigator.Screen
+                    name = "Login"
+            component={Login}/>
+            </HomeStackNavigator.Navigator>
+        );
+    }
+    
+    const MyStack2 = ()=>{
+        return (
+            <RegistroStackNavigator.Navigator
+                initialRouteName = {estadisticas}
+                screenOptions = {{
+                    headerShown: false,
+                }}>
+                <RegistroStackNavigator.Screen
+                    name = 'Registro'
+                    component={RegistroShow}
+                    /*options={{headerShown : true}}*//>
+                <RegistroStackNavigator.Screen
+                    name = {estadisticas}
+                    component={Estadisticas}/>
+            </RegistroStackNavigator.Navigator>
+        );
+    }
+    
+    const AuthStack = () => {
+        return(
+            <bleStack.Navigator
+                initialRouteName= 'Login'
+            >
+                <bleStack.Screen 
+                    name = 'Login'
+                    component = {Login}
+                    initialParams = {{onUserAuthenticated:handleUserAuthenticated}}
+                    options={{
+                        headerShown:false,
+                    }}/>
+            </bleStack.Navigator>
+        );
+    };
+
     return(
         <NavigationContainer>
             <Tab.Navigator

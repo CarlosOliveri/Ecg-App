@@ -7,7 +7,7 @@ const RegistroShow =({route})=>{
     const datos = route.params.datos
 
     useEffect(()=>{
-        console.log(datos);
+        //console.log(datos);
     })
 
     return(
