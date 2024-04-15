@@ -9,13 +9,14 @@ import Home from './Home'
 import BluetoothList from './BluetoothList';
 import { Header } from '@react-navigation/stack';
 import HistoryCard from './HistoryCard'
+import RegistroShow from './RegistroShow';
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 const homeName = 'Historial'
-const Mediciones = 'Mediciones'
+const estadisticas = 'Estadisticas'
 const user = 'Usuario'
 // Estetica
 const themeColor = 'red' //'#4EC8DB'
@@ -23,8 +24,9 @@ const titleSize = 20 //'#4EC8DB'
 
 const Tab = createBottomTabNavigator()
 const HomeStackNavigator = createNativeStackNavigator();
+const RegistroStackNavigator = createNativeStackNavigator();
 
-const MyStack = () =>{
+const MyStack1 = () =>{
     return(
         <HomeStackNavigator.Navigator
             initialRouteName='HomeScreen'
@@ -32,14 +34,34 @@ const MyStack = () =>{
                 headerShown: false,
             }}
         >
-            
             <HomeStackNavigator.Screen 
                 name = 'HomeScreen' 
-                component={Home} />
+                component={Home}/>
             <HomeStackNavigator.Screen 
                 name = "Bluetooth" 
                 component={BluetoothList} />
+            {/*<HomeStackNavigator.Screen
+                name = "Registro"
+        component={RegistroShow}/>*/}
         </HomeStackNavigator.Navigator>
+    );
+}
+
+const MyStack2 = ()=>{
+    return (
+        <RegistroStackNavigator.Navigator
+            initialRouteName = {estadisticas}
+            screenOptions = {{
+                headerShown: false,
+            }}>
+            <RegistroStackNavigator.Screen
+                name = 'Registro'
+                component={RegistroShow}
+                /*options={{headerShown : true}}*//>
+            <RegistroStackNavigator.Screen
+                name = {estadisticas}
+                component={Estadisticas}/>
+        </RegistroStackNavigator.Navigator>
     );
 }
 
@@ -55,7 +77,7 @@ const Main = () => {
             >
                 <Tab.Screen 
                     name = {homeName}
-                    component={MyStack}
+                    component={MyStack1}
                     options={{
                         tabBarLabel : 'Medicion',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="heart-pulse" size={24} color={color} />),
@@ -65,12 +87,13 @@ const Main = () => {
                         headerTitleStyle: { color: 'white', fontSize: titleSize, fontWeight : 'normal'},
                         headerStyle: { backgroundColor: themeColor},
                         headerTitleAlign : 'center',
+                        //headerShown: false
                     }}
                      
                 />
                 <Tab.Screen 
-                    name = {Mediciones} 
-                    component={Estadisticas}
+                    name = 'MyStack2' 
+                    component={MyStack2}
                     options={{
                         tabBarLabel : 'Historial',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="history" size={39} color={color} />),
@@ -94,8 +117,7 @@ const Main = () => {
                         headerTitleStyle: { color: 'white', fontSize: titleSize, fontWeight : 'normal'},
                         headerStyle: { backgroundColor: themeColor},
                         headerTitleAlign : 'center',
-                    }}
-                    />
+                    }}/>
             </Tab.Navigator>
         </NavigationContainer>
         
