@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 const LoginStyles = StyleSheet.create({
+    container:{
+        alignItems:'center'
+    },
     title:{
         alignSelf:"center", 
         marginTop: 100,
@@ -19,6 +22,19 @@ const LoginStyles = StyleSheet.create({
         width:100,
         alignSelf:"center",
         marginTop:10
+    },
+    registerContainer:{
+        marginTop: 20,
+        alignItems:'start',
+        width: 200,
+        flexDirection:'row',
+        justifyContent: 'space-between'
+    },
+    registerText:{
+        color:'#11ccff'
+    },
+    registerButton:{
+
     }
 })
 

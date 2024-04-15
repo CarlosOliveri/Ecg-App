@@ -1,20 +1,24 @@
 import React from "react";
-import { View, Text ,TextInput, Button, Alert} from "react-native";
+import { View, Text ,TextInput, Button, Alert, TouchableOpacity} from "react-native";
 import LoginStyles from '../styles/LoginStyles';
+import { useNavigation } from "@react-navigation/native";
+//import UserRegister from "./UserRegister";
 
-const Login = ({onUserAuthenticated}) => {
+const Login = () => {
     
+    const navigation = useNavigation();
+
     function onPressButton(){
+        //navigation.navigate('bleStackUser');
         Alert.alert('Login sucsesful');
-        handleUserAuthenticated();
     }
 
-    const handleUserAuthenticated = () => {
-        onUserAuthenticated();
+    function onPressRegisterButton(){
+        navigation.navigate('userRegister');
     }
 
     return(
-        <View>
+        <View style = {LoginStyles.container}>
             <Text style = {LoginStyles.title}>
                     Sing in
             </Text>
@@ -33,6 +37,22 @@ const Login = ({onUserAuthenticated}) => {
                     title = "Enter"
                     color= "#225599"
                 />
+            </View>
+            <View style = {LoginStyles.registerContainer}>
+                <TouchableOpacity 
+                    style = {LoginStyles.registerButton}
+                    onPress = {onPressRegisterButton}>
+                    <Text style = {LoginStyles.registerText}>
+                        Registrarse
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style = {LoginStyles.registerButton}
+                    onPress = {onPressRegisterButton}>
+                    <Text style = {LoginStyles.registerText}>
+                        Modo visitante
+                    </Text>
+                </TouchableOpacity>
             </View>
         </View>
     );

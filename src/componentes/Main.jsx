@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { MaterialIcons } from '@expo/vector-icons';
-import User from './User'
+import UserRegister from './UserRegister'
 import Estadisticas from './Estadisticas'
 import Home from './Home'
 import BluetoothList from './BluetoothList';
@@ -17,11 +17,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const homeName = 'Historial'
 const estadisticas = 'Estadisticas'
-const user = 'Usuario'
+const userRegister = 'UserRegister'
 // Estetica
 const themeColor = 'red' //'#4EC8DB'
 const titleSize = 20 //'#4EC8DB'
 
+const bleStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
 const HomeStackNavigator = createNativeStackNavigator();
 const RegistroStackNavigator = createNativeStackNavigator();
@@ -34,7 +35,7 @@ const Main = () => {
         !isUserAuthenticated ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
     }
 
-    const MyStack1 = () =>{
+    const MedicionesStack = () =>{
         return(
             <HomeStackNavigator.Navigator
                 initialRouteName='HomeScreen'
@@ -48,14 +49,11 @@ const Main = () => {
                 <HomeStackNavigator.Screen 
                     name = "Bluetooth" 
                     component={BluetoothList} />
-                <HomeStackNavigator.Screen
-                    name = "Login"
-            component={Login}/>
             </HomeStackNavigator.Navigator>
         );
     }
     
-    const MyStack2 = ()=>{
+    const RegistrosStack = ()=>{
         return (
             <RegistroStackNavigator.Navigator
                 initialRouteName = {estadisticas}
@@ -64,8 +62,7 @@ const Main = () => {
                 }}>
                 <RegistroStackNavigator.Screen
                     name = 'Registro'
-                    component={RegistroShow}
-                    /*options={{headerShown : true}}*//>
+                    component={RegistroShow}/>
                 <RegistroStackNavigator.Screen
                     name = {estadisticas}
                     component={Estadisticas}/>
@@ -73,15 +70,20 @@ const Main = () => {
         );
     }
     
-    const AuthStack = () => {
+    const AutenticacioStack = () => {
         return(
             <bleStack.Navigator
-                initialRouteName= 'Login'
+                initialRouteName= {isUserAuthenticated ? 'bleStackUser' : 'Login'}
             >
                 <bleStack.Screen 
                     name = 'Login'
                     component = {Login}
-                    initialParams = {{onUserAuthenticated:handleUserAuthenticated}}
+                    options={{
+                        headerShown:false,
+                    }}/>
+                <bleStack.Screen 
+                    name = 'userRegister'
+                    component = {UserRegister}
                     options={{
                         headerShown:false,
                     }}/>
@@ -100,7 +102,7 @@ const Main = () => {
             >
                 <Tab.Screen 
                     name = {homeName}
-                    component={MyStack1}
+                    component={MedicionesStack}
                     options={{
                         tabBarLabel : 'Medicion',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="heart-pulse" size={24} color={color} />),
@@ -115,8 +117,8 @@ const Main = () => {
                      
                 />
                 <Tab.Screen 
-                    name = 'MyStack2' 
-                    component={MyStack2}
+                    name = 'RegistrosStack' 
+                    component={RegistrosStack}
                     options={{
                         tabBarLabel : 'Historial',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="history" size={39} color={color} />),
@@ -129,13 +131,13 @@ const Main = () => {
                     }}
                     />
                 <Tab.Screen 
-                    name = {user} 
-                    component={User}
+                    name = 'AutenticacioStack'
+                    component={AutenticacioStack}
                     options={{
                         tabBarLabel : 'Usuario',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="account" size={24} color={color} />),
                         //tabBarBadge  es para notificcaciones
-                        headerTitle : 'Perfil del Usuario',
+                        headerTitle : 'Registro de Usuario',
                         //headerTintColor : 'white',
                         headerTitleStyle: { color: 'white', fontSize: titleSize, fontWeight : 'normal'},
                         headerStyle: { backgroundColor: themeColor},
