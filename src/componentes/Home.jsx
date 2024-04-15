@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { HomeStyles } from '../styles/HomeStyles';
 import Mediciones from './Mediciones';
 
-const Estadisticas = () => {
+const Home = () => {
         const navigation = useNavigation();
        
         const [isBleConnected,setIsBleConnected] = useState(false);
@@ -36,4 +36,4 @@ const Estadisticas = () => {
 }
 
 
-export default Estadisticas
+export default Home;

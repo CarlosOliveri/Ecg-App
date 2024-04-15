@@ -38,7 +38,7 @@ const datos = [
     },
   ];
 
-const Home = () => {
+const Estadisticas = () => {
     return (
         <View style={styles.container}>
           <FlatList
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default Home
+export default Estadisticas;
