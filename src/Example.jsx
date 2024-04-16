@@ -21,8 +21,6 @@ import {styles} from './styles/ExampleStyles';
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
-const serviceUUIDS = [];
-
 const Example = () => {
   const peripherals = new Map();
   const [isScanning, setIsScanning] = useState(false);
@@ -42,35 +40,32 @@ const Example = () => {
     }).catch((err) =>{
       console.log("[Bluetooth Enable] Debe encender su Bluetooth manualmente!",err)
     });
-    
-    //Escucha cuando se encuentre algun BLE Device y lo agrega a la lista peripherals y luego al estado discoveredDevice 
-    let stopDiscoverListener = BleManagerEmitter.addListener(
-      'BleManagerDiscoverPeripheral',//=>objeto que escucha el listener
-      (peripheral) => {//=>funcion anonima que recibe un objeto peripheral
-        peripherals.set(peripheral.id, peripheral); //=>Objeto map, actua como una lista, debe resetearse en cada nueva busqueda de dispositivos cercanos
-        setDiscoveredDevices(Array.from(peripherals.values())); //=>Se actualiza el estado de los dispositivos encontrados en cada scaneo 
-        console.log('BleManagerDiscoverPeripheral:', peripheral);
-      },
-    );
 
-    let stopConnectListener = BleManagerEmitter.addListener(
-      'BleManagerConnectPeripheral',
-      peripheral => {
-        console.log('BleManagerConnectPeripheral:', peripheral);
-      },
-    );
-    let stopScanListener = BleManagerEmitter.addListener(
-      'BleManagerStopScan',
-      () => {
-        setIsScanning(false);
-        console.log('[Event Listener]scan stopped');
-      },
-    );
+    const listeners = [
+      BleManagerEmitter.addListener(
+        'BleManagerDiscoverPeripheral',
+        handleDiscoverPeripheral,
+      ),
+      BleManagerEmitter.addListener(
+        'BleManagerConnectPeripheral',
+        peripheral => {
+          console.log('BleManagerConnectPeripheral:', peripheral);
+        },
+      ),
+      BleManagerEmitter.addListener(
+        'BleManagerStopScan',
+        () => {
+          setIsScanning(false);
+          console.log('[Event Listener]scan stopped');
+        },
+      ),
+    ];
 
     return () => {
-      stopDiscoverListener.remove();
-      stopConnectListener.remove();
-      stopScanListener.remove();
+      console.debug('[app] main component unmounting. Removing listeners...');
+      for (const listener of listeners) {
+        listener.remove();
+      }
     };
   }, []);
 
@@ -134,6 +129,33 @@ const Example = () => {
       });
   };
 
+  const handleDiscoverPeripheral = (peripheral) => {
+    console.debug('[handleDiscoverPeripheral] new BLE peripheral=', peripheral);
+    /*if (!peripheral.name) {
+      peripheral.name = 'NO NAME';
+    }*/
+    setDiscoveredDevices(map => {
+      peripherals.set(peripheral.id, peripheral); 
+      setDiscoveredDevices(Array.from(peripherals.values()));
+    });
+    console.log(discoveredDevices)
+  };
+
+  const handleGetConnected = () => {
+    BleManager.getBondedPeripherals([]).then(results => {
+      if (results.lenght == 0) {
+        console.log("No connected bluetooth devices")
+      }else{
+        for (let i = 0; i < results.length; i++) {
+          let peripheral = results[i];
+          peripheral.connected = true;
+          peripherals.set(peripheral.id, peripheral);
+          setConnectedDevices(Array.from(peripherals.values()));
+        }
+      }
+    });
+  }
+
   //Encuentra dispositivos conectados previamente
   const handleGetConnectedDevices = () => {
     PermissionsAndroid.check(
@@ -145,20 +167,14 @@ const Example = () => {
         ).then((result)=>{
           if(result==PermissionsAndroid.RESULTS.GRANTED){
             console.log("[Permission Connect Request] User accepted");
-            BleManager.getBondedPeripherals([]).then(results => {
-              for (let i = 0; i < results.length; i++) {
-                let peripheral = results[i];
-                peripheral.connected = true;
-                peripherals.set(peripheral.id, peripheral);
-                setConnectedDevices(Array.from(peripherals.values()));
-              }
-            });
+            handleGetConnected();
           }else{
             console.log("[Permission Connect Request] User refused")
           }
         })
       }else{
         console.log("[Permission Connect Check] Permission is OK");
+        handleGetConnected();
       }
     })
   };
@@ -212,6 +228,28 @@ const Example = () => {
           <Text style={styles.noDevicesText}>No Bluetooth devices found</Text>
         )}
       </View>
+      <Text
+          style={[
+            styles.subtitle,
+            {color: isDarkMode ? Colors.white : Colors.black},
+          ]}>
+          Connected Devices:
+        </Text>
+        {connectedDevices.length > 0 ? (
+          <FlatList
+            data={connectedDevices}
+            renderItem={({item}) => (
+              <ExampleDevice
+                peripheral={item}
+                connect={connectToPeripheral}
+                disconnect={()=>{}/*disconnectFromPeripheral*/}
+              />
+            )}
+            keyExtractor={item => item.id}
+          />
+        ) : (
+          <Text style={styles.noDevicesText}>No connected devices</Text>
+        )}
     </SafeAreaView>
   );
 };

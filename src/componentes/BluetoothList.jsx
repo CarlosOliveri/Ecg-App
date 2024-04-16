@@ -42,7 +42,12 @@ const BluetoothList = (/*{route}*/) => {
         ),
         BleManagerEmitter.addListener(
           'BleManagerStopScan', 
-          handleStopScan),
+          handleStopScan
+        ),
+        BleManagerEmitter.addListener(
+        'BleManagerDidUpdateValueForCharacteristic',
+        handleUpdateValueForCharacteristic,
+      ),
     ];
     return () => {
         console.debug('[app] main component unmounting. Removing listeners...');
@@ -52,6 +57,15 @@ const BluetoothList = (/*{route}*/) => {
     };
 
   }, [])
+
+  const handleUpdateValueForCharacteristic = (
+    data,
+  ) => {
+    /*console.debug(
+      `[handleUpdateValueForCharacteristic] received data from '${data.peripheral}' with characteristic='${data.characteristic}' and value='${data.value}'`,
+    );*/
+    console.log(data);
+  };
 
   //Maneja el permiso de Scan de dispositivos cercanos en tiempo de ejecucion
   const scanPermission = () =>{
@@ -193,36 +207,3 @@ const BluetoothList = (/*{route}*/) => {
     );
 }
 export default BluetoothList;
-
-//////////////////////////ESTILOS///////////////////////////////
-/*const BluetoohLisgtStyles = StyleSheet.create({
-    container:{
-        paddingHorizontal: 20,
-        paddingVertical: 25,
-        backgroundColor: '#f5fcff'
-    },
-    title:{
-        marginLeft:10,
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginTop: 20
-    },
-    containerSubtitle:{
-        flexDirection: 'row',
-        marginVertical:15,
-        alignItems:'center'
-    },
-    Subtitle:{
-        marginLeft: 10,
-        fontSize:18,
-        fontWeight:'bold',
-        color:'gray'
-    },
-    lineSubtitle:{
-        borderBottomWidth:1,
-        flex:1,
-        marginLeft:10,
-        marginTop:3,
-        borderColor:'#eceff1'
-    }
-})*/

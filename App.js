@@ -8,6 +8,7 @@ import BluetoothList from './src/componentes/BluetoothList.jsx'
 import * as React from 'react';
 import Example from './src/Example.jsx';
 import Mediciones from './src/componentes/Mediciones.jsx';
+import RegistroShow from './src/componentes/RegistroShow.jsx';
 
 export default function App() {
   return <Main/>

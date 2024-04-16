@@ -1,49 +1,96 @@
-import React from 'react'
+import React ,{useState }from 'react'
 import {NavigationContainer} from '@react-navigation/native'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { MaterialIcons } from '@expo/vector-icons';
-import User from './User'
+import UserRegister from './UserRegister'
 import Estadisticas from './Estadisticas'
 import Home from './Home'
 import BluetoothList from './BluetoothList';
+import Login from './Login';
+import RegistroShow from './RegistroShow';
 import { Header } from '@react-navigation/stack';
-import HistoryCard from './HistoryCard'
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 const homeName = 'Historial'
-const Mediciones = 'Mediciones'
-const user = 'Usuario'
+const estadisticas = 'Estadisticas'
+const userRegister = 'UserRegister'
 // Estetica
 const themeColor = 'red' //'#4EC8DB'
 const titleSize = 20 //'#4EC8DB'
 
+const bleStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
 const HomeStackNavigator = createNativeStackNavigator();
-
-const MyStack = () =>{
-    return(
-        <HomeStackNavigator.Navigator
-            initialRouteName='HomeScreen'
-            screenOptions = {{
-                headerShown: false,
-            }}
-        >
-            
-            <HomeStackNavigator.Screen 
-                name = 'HomeScreen' 
-                component={Home} />
-            <HomeStackNavigator.Screen 
-                name = "Bluetooth" 
-                component={BluetoothList} />
-        </HomeStackNavigator.Navigator>
-    );
-}
+const RegistroStackNavigator = createNativeStackNavigator();
 
 const Main = () => {
+
+    const [isUserAuthenticated,setIsUserAuthenticated] = useState(false);
+
+    const handleUserAuthenticated = () => {
+        !isUserAuthenticated ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
+    }
+
+    const MedicionesStack = () =>{
+        return(
+            <HomeStackNavigator.Navigator
+                initialRouteName='HomeScreen'
+                screenOptions = {{
+                    headerShown: false,
+                }}
+            >
+                <HomeStackNavigator.Screen 
+                    name = 'HomeScreen' 
+                    component={Home}/>
+                <HomeStackNavigator.Screen 
+                    name = "Bluetooth" 
+                    component={BluetoothList} />
+            </HomeStackNavigator.Navigator>
+        );
+    }
+    
+    const RegistrosStack = ()=>{
+        return (
+            <RegistroStackNavigator.Navigator
+                initialRouteName = {estadisticas}
+                screenOptions = {{
+                    headerShown: false,
+                }}>
+                <RegistroStackNavigator.Screen
+                    name = 'Registro'
+                    component={RegistroShow}/>
+                <RegistroStackNavigator.Screen
+                    name = {estadisticas}
+                    component={Estadisticas}/>
+            </RegistroStackNavigator.Navigator>
+        );
+    }
+    
+    const AutenticacioStack = () => {
+        return(
+            <bleStack.Navigator
+                initialRouteName= {isUserAuthenticated ? 'bleStackUser' : 'Login'}
+            >
+                <bleStack.Screen 
+                    name = 'Login'
+                    component = {Login}
+                    options={{
+                        headerShown:false,
+                    }}/>
+                <bleStack.Screen 
+                    name = 'userRegister'
+                    component = {UserRegister}
+                    options={{
+                        headerShown:false,
+                    }}/>
+            </bleStack.Navigator>
+        );
+    };
+
     return(
         <NavigationContainer>
             <Tab.Navigator
@@ -55,7 +102,7 @@ const Main = () => {
             >
                 <Tab.Screen 
                     name = {homeName}
-                    component={MyStack}
+                    component={MedicionesStack}
                     options={{
                         tabBarLabel : 'Medicion',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="heart-pulse" size={24} color={color} />),
@@ -65,12 +112,13 @@ const Main = () => {
                         headerTitleStyle: { color: 'white', fontSize: titleSize, fontWeight : 'normal'},
                         headerStyle: { backgroundColor: themeColor},
                         headerTitleAlign : 'center',
+                        //headerShown: false
                     }}
                      
                 />
                 <Tab.Screen 
-                    name = {Mediciones} 
-                    component={Estadisticas}
+                    name = 'RegistrosStack' 
+                    component={RegistrosStack}
                     options={{
                         tabBarLabel : 'Historial',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="history" size={39} color={color} />),
@@ -83,19 +131,18 @@ const Main = () => {
                     }}
                     />
                 <Tab.Screen 
-                    name = {user} 
-                    component={User}
+                    name = 'AutenticacioStack'
+                    component={AutenticacioStack}
                     options={{
                         tabBarLabel : 'Usuario',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="account" size={24} color={color} />),
                         //tabBarBadge  es para notificcaciones
-                        headerTitle : 'Perfil del Usuario',
+                        headerTitle : 'Registro de Usuario',
                         //headerTintColor : 'white',
                         headerTitleStyle: { color: 'white', fontSize: titleSize, fontWeight : 'normal'},
                         headerStyle: { backgroundColor: themeColor},
                         headerTitleAlign : 'center',
-                    }}
-                    />
+                    }}/>
             </Tab.Navigator>
         </NavigationContainer>
         
