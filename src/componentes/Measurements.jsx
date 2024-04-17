@@ -1,13 +1,13 @@
 import React,{useState,useEffect} from 'react';
 import { View,Text,DeviceEventEmitter, Button } from 'react-native';
-import { MedicionesStyles } from '../styles/MedicionesStyles';
+import {Measurementstyles} from '../styles/MeasurementStyles';
 import { ColorType, CrosshairMode, createChart } from 'lightweight-charts';
 import WebView from 'react-native-webview';
 //import useBLE from './useBLE';
 import {useBleContext} from './useBleContext';
 import { useBleConnectContext } from './useBleConnectContext';
 
-const Mediciones = () => {
+const Measurements = () => {
 
     const {isBleConnected,setIsBleConnected} = useBleConnectContext();
 
@@ -17,8 +17,8 @@ const Mediciones = () => {
     const [bpsValue,setBpsValue] = useState(0);
     //estado correspondiente al numero de maximos detectados
     const [numMaximos,setNumMaximos] = useState(0);
-    //estado correspondiente al array de mediciones que se va recibiendo
-    const [medicionesData,setMedicionesData] = useState([]);
+    //estado correspondiente al array de Measurements que se va recibiendo
+    const [MeasurementsData,setMeasurementsData] = useState([]);
 
     //Llamamos a esta funcion cada vez que llega una nueva medicion
     const handleBpsChange =() => {
@@ -56,7 +56,7 @@ const Mediciones = () => {
     
     //Datos que se muestran en el grafico 
     //este array debe actualizarse conforme llegan los datos
-    //=> Debe cambiarse por el estado "medicionesData"
+    //=> Debe cambiarse por el estado "MeasurementsData"
     const initialData =[
         { time: '2018-12-22', value: 32.51 },
         { time: '2018-12-23', value: 31.11 },
@@ -150,20 +150,20 @@ const Mediciones = () => {
     `;
 
     return(
-        <View style={MedicionesStyles.containerPrincipal}>
+        <View style={Measurementstyles.containerPrincipal}>
             <WebView //componente que renderiza hojas HTML
                 originWhitelist={['*']}
                 javaScriptEnabled={true}
                 source={{ html: chartHtml }}
-                style = {MedicionesStyles.webview}
+                style = {Measurementstyles.webview}
             />
         
-            <View style={MedicionesStyles.actionContainer}>
-                <View style={MedicionesStyles.bpmContainer}>
-                    <Text style={MedicionesStyles.bpmTitle}>BPM:</Text>
-                    <Text style={MedicionesStyles.bpmValue}>{bpsValue}</Text>
+            <View style={Measurementstyles.actionContainer}>
+                <View style={Measurementstyles.bpmContainer}>
+                    <Text style={Measurementstyles.bpmTitle}>BPM:</Text>
+                    <Text style={Measurementstyles.bpmValue}>{bpsValue}</Text>
                 </View>
-                <View style={MedicionesStyles.buttonContainer}>
+                <View style={Measurementstyles.buttonContainer}>
                     <Button
                     title='Iniciar Medicion'
                     onPress={()=>{}}/>
@@ -175,4 +175,4 @@ const Mediciones = () => {
         </View>
     );
 }
-export default Mediciones;
+export default Measurements;

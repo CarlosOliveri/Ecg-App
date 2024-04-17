@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const HomeStyles = StyleSheet.create({
+export const MeasurementsHomeStyles = StyleSheet.create({
     ButtonContainer:{
         //width: 200,
         //height: 50, 

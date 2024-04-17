@@ -10,7 +10,7 @@ import { StateProvider } from './useBleConnectContext';
 import BluetoothList from './BluetoothList';
 import Login from './Login';
 import HistoryShow from './HistoryShow';
-import Mediciones from './Mediciones';
+//import Measurements from './Measurements';
 import { Header } from '@react-navigation/stack';
 
 //Iconos
@@ -18,7 +18,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BleProvider } from './useBleContext';
 
 
-const measurements = 'MeasurementsScreen'
+const Measurements = 'Measurementscreen'
 const history = 'HistoryScreen'
 const userRegister = 'UserRegister'
 // Estetica
@@ -40,7 +40,7 @@ const Main = () => {
         !isUserAuthenticated ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
     }
 
-    const MeasurementStack = () =>{
+    const Measurementstack = () =>{
         return(
             <StateProvider>
                 <BleProvider>
@@ -110,8 +110,8 @@ const Main = () => {
                 }}
             >
                 <Tab.Screen 
-                    name = {measurements}
-                    component={MeasurementStack}
+                    name = {Measurements}
+                    component={Measurementstack}
                     options={{
                         tabBarLabel : 'Medicion',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="heart-pulse" size={24} color={color} />),
@@ -132,7 +132,7 @@ const Main = () => {
                         tabBarLabel : 'Historial',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="history" size={39} color={color} />),
                         //tabBarBadge  es para notificcaciones
-                        headerTitle : 'Historial de Mediciones',
+                        headerTitle : 'Historial de Measurements',
                         //headerTintColor : 'white',
                         headerTitleStyle: { color: 'white', fontSize: titleSize, fontWeight : 'normal'},
                         headerStyle: { backgroundColor: themeColor},

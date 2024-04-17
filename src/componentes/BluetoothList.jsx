@@ -22,10 +22,6 @@ const BluetoothList = () => {
   }
 
   const [toggleEnable,setToggleEnable] = useState(false); 
-  
-  const handleBleConnect = () =>{
-    onBluetoothConnect();
-  } 
 
     //Si no hay dispositivos encontrados
     const renderEmpty = () => <Empty text = 'No hay Dispositivos'/>

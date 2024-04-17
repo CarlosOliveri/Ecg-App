@@ -1,6 +1,6 @@
 import { StyleSheet,useWindowDimensions } from "react-native";
 
-export const MedicionesStyles = StyleSheet.create({
+export const Measurementstyles = StyleSheet.create({
     containerPrincipal:{
         flex: 1, 
         //alignItems:'center',

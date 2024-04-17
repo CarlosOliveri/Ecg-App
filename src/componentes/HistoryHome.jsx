@@ -7,12 +7,12 @@ import  AsyncStorage  from '@react-native-async-storage/async-storage';
 
 const HistoryHome = () => {
   
-  const mediciones = datosJson.mediciones;
-  const [datos, setDatos] = useState(mediciones);
+  const Measurements = datosJson.mediciones;
+  const [datos, setDatos] = useState(Measurements);
 
   useEffect(()=>{
     
-    AsyncStorage.setItem('mediciones', JSON.stringify(mediciones)).then(()=>{   //esto se debe cambiar mas adelante
+    AsyncStorage.setItem('Measurements', JSON.stringify(Measurements)).then(()=>{   //esto se debe cambiar mas adelante
       console.log("[Data UpLoad] Archivo Json Cargado con exito");
     })
   },[])
@@ -25,7 +25,7 @@ const HistoryHome = () => {
       datosActualizados[i].num = i+1;
     }
     setDatos(datosActualizados);
-    AsyncStorage.setItem('mediciones', JSON.stringify(datos)).then(()=>{
+    AsyncStorage.setItem('Measurements', JSON.stringify(datos)).then(()=>{
       console.log("[Data Storage] Datos Actualizados correctamente")
     })
   }
