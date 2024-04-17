@@ -3,8 +3,12 @@ import { View,Text,DeviceEventEmitter, Button } from 'react-native';
 import { MedicionesStyles } from '../styles/MedicionesStyles';
 import { ColorType, CrosshairMode, createChart } from 'lightweight-charts';
 import WebView from 'react-native-webview';
+import useBLE from './useBLE';
+import { useStateContext } from './StateContext';
 
-const Mediciones = ({onBluetoothDisconnect}) => {
+const Mediciones = () => {
+
+    const {isBleConnected,setIsBleConnected} = useStateContext();
 
     //estado correspondiene a los BPS
     const [bpsValue,setBpsValue] = useState(0);
@@ -12,7 +16,9 @@ const Mediciones = ({onBluetoothDisconnect}) => {
     const [numMaximos,setNumMaximos] = useState(0);
     //estado correspondiente al array de mediciones que se va recibiendo
     const [medicionesData,setMedicionesData] = useState([]);
-    
+    const [dataRecived] = useBLE();// CORREGIR  => este estado representa el mismo que la linea de arriba 
+
+
     //Llamamos a esta funcion cada vez que llega una nueva medicion
     const handleBpsChange =() => {
         //Calculo de los BPS
@@ -26,15 +32,8 @@ const Mediciones = ({onBluetoothDisconnect}) => {
         setNumMaximos(numMaximos + 1);
     }
 
-    //Manejamos la actualizacion del estado que contiene las mediciones
-    //data debe tener esta forma: { time: '2018-12-22', value: 32.51 }
-    const handleMedicionesArrive=(data)=>{
-        datos = [...medicionesData,data]
-        setMedicionesData(datos); 
-    }
-
     const handleBleDisconnect = () =>{
-        onBluetoothDisconnect();
+        setIsBleConnected(false);
     }
 
     useEffect(()=>{

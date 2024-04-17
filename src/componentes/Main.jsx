@@ -5,10 +5,12 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { MaterialIcons } from '@expo/vector-icons';
 import UserRegister from './UserRegister'
 import Estadisticas from './Estadisticas'
-import Home from './Home'
+import Home from './Home';
+import { StateProvider } from './StateContext';
 import BluetoothList from './BluetoothList';
 import Login from './Login';
 import RegistroShow from './RegistroShow';
+import Mediciones from './Mediciones';
 import { Header } from '@react-navigation/stack';
 
 //Iconos
@@ -37,19 +39,21 @@ const Main = () => {
 
     const MedicionesStack = () =>{
         return(
-            <HomeStackNavigator.Navigator
-                initialRouteName='HomeScreen'
-                screenOptions = {{
-                    headerShown: false,
-                }}
-            >
-                <HomeStackNavigator.Screen 
-                    name = 'HomeScreen' 
-                    component={Home}/>
-                <HomeStackNavigator.Screen 
-                    name = "Bluetooth" 
-                    component={BluetoothList} />
-            </HomeStackNavigator.Navigator>
+            <StateProvider>
+                <HomeStackNavigator.Navigator
+                    initialRouteName='HomeScreen'
+                    screenOptions = {{
+                        headerShown: false,
+                    }}
+                >
+                    <HomeStackNavigator.Screen 
+                        name = 'HomeScreen' 
+                        component={Home}/>
+                    <HomeStackNavigator.Screen 
+                        name = "Bluetooth" 
+                        component={BluetoothList} />
+                </HomeStackNavigator.Navigator>
+            </StateProvider>
         );
     }
     
@@ -66,6 +70,9 @@ const Main = () => {
                 <RegistroStackNavigator.Screen
                     name = {estadisticas}
                     component={Estadisticas}/>
+                <RegistroStackNavigator.Screen
+                    name = "Mediciones"
+                    component={Mediciones}/>
             </RegistroStackNavigator.Navigator>
         );
     }
