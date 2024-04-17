@@ -6,25 +6,22 @@ import BluetoothListStyles from "../styles/BluetoothListStyles";
 import Empty from './Empty';
 import Toggle from './Toggle';
 import Dispositivos from "./Dispositivos";
-import useBLE from "./useBLE";
-import {useStateContext} from "./StateContext";
+//import useBLE from "./useBLE";
+import {useBleConnectContext} from "./useBleConnectContext";
+import {useBleContext} from './useBleContext';
 import { useNavigation} from "@react-navigation/native";
 
 const BluetoothList = () => {
 
-  const {isBleConnected,setIsBleConnected} =useStateContext();
-  
+  const {discoveredDevices,startScan,startPermission} = useBleContext();
+
+  const {isBleConnected,setIsBleConnected} = useBleConnectContext();
+
   const updateState = () => {
     setIsBleConnected(true);
-    console.log(isBleConnected);
   }
 
-  const [
-    discoveredDevices,
-    startScan,
-    scanPermission] = useBLE();
-
-  const [bolEnable,setBolEnable] = useState(false); 
+  const [toggleEnable,setToggleEnable] = useState(false); 
   
   const handleBleConnect = () =>{
     onBluetoothConnect();
@@ -47,7 +44,7 @@ const BluetoothList = () => {
     }
     //inicia el scaneo de dispositivos cercanos
   const handleStartScan = () => {
-    scanPermission(
+    startPermission(
       () => {startScan();},
       () => {console.log("Permisos no consedidos");}
     );
@@ -55,13 +52,13 @@ const BluetoothList = () => {
 
     //Cambiamos el valor del toggle
     const toggleBluetooth = () => {
-        if (!bolEnable) {
-            setBolEnable(true); 
+        if (!toggleEnable) {
+            setToggleEnable(true); 
             handleStartScan();
             updateState();
             return
         }
-        setBolEnable(false);
+        setToggleEnable(false);
     }
 ////////////////////////LAYOUT//////////////////////////////////
     return (
@@ -71,7 +68,7 @@ const BluetoothList = () => {
             </Text>
             <Toggle
                 onChange = {toggleBluetooth}
-                value = {bolEnable}
+                value = {toggleEnable}
             />
             
             <View style = {BluetoothListStyles.containerSubtitle}>

@@ -123,10 +123,10 @@ const useBLE = () => {
     //Empezamos a Scanear los dispositivos cercanos
     const startScan = async () => {
         if (!isScanning) {
-            console.log('[startScan] Scanning...');
+            //console.log('[startScan] Scanning...');
             setIsScanning(true);
             BleManager.scan([],5,true).then(() => {
-                console.log('[startScan] scan promise returned Succsesfuly');
+              console.log('[startScan] Scanning...');
             });
         }
     };

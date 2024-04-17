@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import UserRegister from './UserRegister'
 import Estadisticas from './Estadisticas'
 import Home from './Home';
-import { StateProvider } from './StateContext';
+import { StateProvider } from './useBleConnectContext';
 import BluetoothList from './BluetoothList';
 import Login from './Login';
 import RegistroShow from './RegistroShow';
@@ -15,6 +15,7 @@ import { Header } from '@react-navigation/stack';
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { BleProvider } from './useBleContext';
 
 
 const homeName = 'Historial'
@@ -40,6 +41,7 @@ const Main = () => {
     const MedicionesStack = () =>{
         return(
             <StateProvider>
+                <BleProvider>
                 <HomeStackNavigator.Navigator
                     initialRouteName='HomeScreen'
                     screenOptions = {{
@@ -53,6 +55,7 @@ const Main = () => {
                         name = "Bluetooth" 
                         component={BluetoothList} />
                 </HomeStackNavigator.Navigator>
+                </BleProvider>
             </StateProvider>
         );
     }
@@ -70,9 +73,6 @@ const Main = () => {
                 <RegistroStackNavigator.Screen
                     name = {estadisticas}
                     component={Estadisticas}/>
-                <RegistroStackNavigator.Screen
-                    name = "Mediciones"
-                    component={Mediciones}/>
             </RegistroStackNavigator.Navigator>
         );
     }

@@ -3,13 +3,13 @@ import {Text, View, TouchableNativeFeedback, TouchableOpacity} from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 import { HomeStyles } from '../styles/HomeStyles';
 import Mediciones from './Mediciones';
-import { useStateContext } from './StateContext';
+import { useBleConnectContext } from './useBleConnectContext';
 
 const Home = () => {
 
     const navigation = useNavigation();
 
-    const {isBleConnected,setIsBleConnected} = useStateContext(false);
+    const {isBleConnected,setIsBleConnected} = useBleConnectContext(false);
 
     return (
         (!isBleConnected) ? (
@@ -26,8 +26,7 @@ const Home = () => {
                 </TouchableOpacity>
                 </View>
          ):(
-            <Mediciones
-            onBluetoothDisconnect/>
+            <Mediciones/>
         )
  
     );

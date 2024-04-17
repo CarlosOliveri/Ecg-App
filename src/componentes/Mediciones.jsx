@@ -3,12 +3,15 @@ import { View,Text,DeviceEventEmitter, Button } from 'react-native';
 import { MedicionesStyles } from '../styles/MedicionesStyles';
 import { ColorType, CrosshairMode, createChart } from 'lightweight-charts';
 import WebView from 'react-native-webview';
-import useBLE from './useBLE';
-import { useStateContext } from './StateContext';
+//import useBLE from './useBLE';
+import {useBleContext} from './useBleContext';
+import { useBleConnectContext } from './useBleConnectContext';
 
 const Mediciones = () => {
 
-    const {isBleConnected,setIsBleConnected} = useStateContext();
+    const {isBleConnected,setIsBleConnected} = useBleConnectContext();
+
+    const {discoveredDevices,startScan,startPermission} = useBleContext();
 
     //estado correspondiene a los BPS
     const [bpsValue,setBpsValue] = useState(0);
@@ -16,8 +19,6 @@ const Mediciones = () => {
     const [numMaximos,setNumMaximos] = useState(0);
     //estado correspondiente al array de mediciones que se va recibiendo
     const [medicionesData,setMedicionesData] = useState([]);
-    const [dataRecived] = useBLE();// CORREGIR  => este estado representa el mismo que la linea de arriba 
-
 
     //Llamamos a esta funcion cada vez que llega una nueva medicion
     const handleBpsChange =() => {
