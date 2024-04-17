@@ -2,7 +2,7 @@ import React ,{useEffect}from "react";
 import { View, Text } from 'react-native';
 import RegistroShowStyles from "../styles/RegistroShowStyles";
 
-const RegistroShow =({route})=>{
+const HistoryShow =({route})=>{
 
     const datos = route.params.datos
 
@@ -20,4 +20,4 @@ const RegistroShow =({route})=>{
         </>
     );
 }
-export default RegistroShow;
+export default HistoryShow;

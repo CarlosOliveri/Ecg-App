@@ -1,15 +1,17 @@
-import React,{useState, useContext, createContext} from 'react'
+import React,{useState} from 'react'
 import {Text, View, TouchableNativeFeedback, TouchableOpacity} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { HomeStyles } from '../styles/HomeStyles';
-import Mediciones from './Mediciones';
-import { useBleConnectContext } from './useBleConnectContext';
+import Mediciones from './Measurements';
 
-const Home = () => {
+const MeasurementsHome = () => {
+        const navigation = useNavigation();
+       
+        const [isBleConnected,setIsBleConnected] = useState(false);
 
-    const navigation = useNavigation();
-
-    const {isBleConnected,setIsBleConnected} = useBleConnectContext(false);
+        const handleBleConnect =()=>{
+        !isBleConnected ? setIsBleConnected(true) : setIsBleConnected(false);
+        }
 
     return (
         (!isBleConnected) ? (
@@ -18,7 +20,7 @@ const Home = () => {
               >Para poder realizar la medicion debe estar conectado al dispositivo Elecctronico mediante Bluethooth  </Text>
               <TouchableOpacity
                         style = {HomeStyles.touchable}
-                        onPress={() => navigation.navigate('Bluetooth')} 
+                        onPress={() => navigation.navigate('Bluetooth',{onBluetoothConnect:handleBleConnect})}   
               >
                     <Text
                         style = {HomeStyles.textButton}
@@ -26,10 +28,12 @@ const Home = () => {
                 </TouchableOpacity>
                 </View>
          ):(
-            <Mediciones/>
+            <Mediciones
+            onBluetoothDisconnect = {handleBleConnect}/>
         )
  
     );
 }
 
-export default Home;
+
+export default MeasurementsHome;

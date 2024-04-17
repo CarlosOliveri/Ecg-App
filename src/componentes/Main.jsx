@@ -4,12 +4,12 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { MaterialIcons } from '@expo/vector-icons';
 import UserRegister from './UserRegister'
-import Estadisticas from './Estadisticas'
-import Home from './Home';
+import HistoryHome from './HistoryHome'
+import MeasurementsHome from './MeasurementsHome';
 import { StateProvider } from './useBleConnectContext';
 import BluetoothList from './BluetoothList';
 import Login from './Login';
-import RegistroShow from './RegistroShow';
+import HistoryShow from './HistoryShow';
 import Mediciones from './Mediciones';
 import { Header } from '@react-navigation/stack';
 
@@ -18,17 +18,19 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BleProvider } from './useBleContext';
 
 
-const homeName = 'Historial'
-const estadisticas = 'Estadisticas'
+const measurements = 'MeasurementsScreen'
+const history = 'HistoryScreen'
 const userRegister = 'UserRegister'
 // Estetica
 const themeColor = 'red' //'#4EC8DB'
 const titleSize = 20 //'#4EC8DB'
 
-const bleStack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator()
-const HomeStackNavigator = createNativeStackNavigator();
-const RegistroStackNavigator = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+//Stacks
+const MeasuremetStackNavigator = createNativeStackNavigator();
+const HistoryStackNavigator = createNativeStackNavigator();
+const UserStack = createNativeStackNavigator();
 
 const Main = () => {
 
@@ -38,78 +40,78 @@ const Main = () => {
         !isUserAuthenticated ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
     }
 
-    const MedicionesStack = () =>{
+    const MeasurementStack = () =>{
         return(
             <StateProvider>
                 <BleProvider>
-                <HomeStackNavigator.Navigator
+                <MeasuremetStackNavigator.Navigator
                     initialRouteName='HomeScreen'
                     screenOptions = {{
                         headerShown: false,
                     }}
                 >
-                    <HomeStackNavigator.Screen 
+                    <MeasuremetStackNavigator.Screen 
                         name = 'HomeScreen' 
-                        component={Home}/>
-                    <HomeStackNavigator.Screen 
+                        component={MeasurementsHome}/>
+                    <MeasuremetStackNavigator.Screen 
                         name = "Bluetooth" 
                         component={BluetoothList} />
-                </HomeStackNavigator.Navigator>
+                </MeasuremetStackNavigator.Navigator>
                 </BleProvider>
             </StateProvider>
         );
     }
     
-    const RegistrosStack = ()=>{
+    const HistoryStack = ()=>{
         return (
-            <RegistroStackNavigator.Navigator
-                initialRouteName = {estadisticas}
+            <HistoryStackNavigator.Navigator
+                initialRouteName = {history}
                 screenOptions = {{
                     headerShown: false,
                 }}>
-                <RegistroStackNavigator.Screen
+                <HistoryStackNavigator.Screen
                     name = 'Registro'
-                    component={RegistroShow}/>
-                <RegistroStackNavigator.Screen
-                    name = {estadisticas}
-                    component={Estadisticas}/>
-            </RegistroStackNavigator.Navigator>
+                    component={HistoryShow}/>
+                <HistoryStackNavigator.Screen
+                    name = {history}
+                    component={HistoryHome}/>
+            </HistoryStackNavigator.Navigator>
         );
     }
     
     const AutenticacioStack = () => {
         return(
-            <bleStack.Navigator
+            <UserStack.Navigator
                 initialRouteName= {isUserAuthenticated ? 'bleStackUser' : 'Login'}
             >
-                <bleStack.Screen 
+                <UserStack.Screen 
                     name = 'Login'
                     component = {Login}
                     options={{
                         headerShown:false,
                     }}/>
-                <bleStack.Screen 
+                <UserStack.Screen 
                     name = 'userRegister'
                     component = {UserRegister}
                     options={{
                         headerShown:false,
                     }}/>
-            </bleStack.Navigator>
+            </UserStack.Navigator>
         );
     };
 
     return(
         <NavigationContainer>
             <Tab.Navigator
-                initialRouteName= {homeName}
+                initialRouteName= 'HistoryStack'
                 screenOptions = {{
                     tabBarActiveTintColor : themeColor,
                     tabBarInactiveTintColor : 'grey',
                 }}
             >
                 <Tab.Screen 
-                    name = {homeName}
-                    component={MedicionesStack}
+                    name = {measurements}
+                    component={MeasurementStack}
                     options={{
                         tabBarLabel : 'Medicion',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="heart-pulse" size={24} color={color} />),
@@ -124,8 +126,8 @@ const Main = () => {
                      
                 />
                 <Tab.Screen 
-                    name = 'RegistrosStack' 
-                    component={RegistrosStack}
+                    name = 'HistoryStack' 
+                    component={HistoryStack}
                     options={{
                         tabBarLabel : 'Historial',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="history" size={39} color={color} />),

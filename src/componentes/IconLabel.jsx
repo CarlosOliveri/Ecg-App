@@ -17,6 +17,8 @@ const  IconLabel = ({name,label,color,size})  => {
             <Text style={styles.labelStyle}>{label}</Text>
 
         </View>
+       
+
     );
 };
 

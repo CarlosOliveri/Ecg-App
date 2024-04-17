@@ -9,7 +9,7 @@ const RegistroShowStyles = StyleSheet.create({
     text:{
         fontSize: 50,
         fontWeight:'bold',
-        fontFamily: 'arial',
+       // fontFamily: 'arial',
         color: '#4567f7',
         textAlign:'center',
     }
