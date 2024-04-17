@@ -2,9 +2,9 @@ import React,{useState} from 'react'
 import {Text, View, TouchableNativeFeedback, TouchableOpacity} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { HomeStyles } from '../styles/HomeStyles';
-import Mediciones from './Mediciones';
+import Mediciones from './Measurements';
 
-const Home = () => {
+const MeasurementsHome = () => {
         const navigation = useNavigation();
        
         const [isBleConnected,setIsBleConnected] = useState(false);
@@ -36,4 +36,4 @@ const Home = () => {
 }
 
 
-export default Home;
+export default MeasurementsHome;

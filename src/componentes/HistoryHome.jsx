@@ -5,7 +5,7 @@ import HistoryCard from './HistoryCard';
 import datosJson from '../../assets/appDirectories/Mediciones.json';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 
-const Estadisticas = () => {
+const HistoryHome = () => {
   
   const mediciones = datosJson.mediciones;
   const [datos, setDatos] = useState(mediciones);
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default Estadisticas;
+export default HistoryHome;
