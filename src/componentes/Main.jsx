@@ -83,7 +83,8 @@ const Main = () => {
     const AutenticacioStack = () => {
         return(
             <UserStack.Navigator
-                initialRouteName= {isUserAuthenticated ? 'bleStackUser' : 'Login'}
+                //initialRouteName= {isUserAuthenticated ? 'bleStackUser' : 'Login'}
+                intialRouteName = 'userRegister'
             >
                 <UserStack.Screen 
                     name = 'Login'
@@ -142,7 +143,7 @@ const Main = () => {
                     />
                 <Tab.Screen 
                     name = 'AutenticacioStack'
-                    component={AutenticacioStack}
+                    component={UserRegister}
                     options={{
                         tabBarLabel : 'Usuario',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="account" size={24} color={color} />),
