@@ -1,6 +1,7 @@
 import { NativeEventEmitter, NativeModules, Platform, PermissionsAndroid,Alert } from 'react-native';
 import {useState, useEffect} from "react";
 import BleManager from 'react-native-ble-manager';
+import { PERMISSIONS } from 'react-native-permissions';
 
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -9,12 +10,13 @@ const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 const useBLE = () => {
     
     const [isScanning,setIsScanning] = useState(false);
-    const [discoveredDevices,setDisceveredDevices] = useState()
+    const [discoveredDevices,setDiscoveredDevices] = useState(new Map())
     const [dataRecived,setDataRecived] = useState([]);
     
     useEffect(()=>{
         BluetoothModuleStart();
         //EncenderBluetooth();
+        requestPermissions();
 
         /*BleManager.checkState().then(state => {
             if (state == 'off'){
@@ -67,12 +69,12 @@ const useBLE = () => {
 
     const handleUpdateValueForCharacteristic = (data) => {
         //LOS DATOS DEBEN SER PROCESADOS PRIMERAMENTE ANTES DE CONCATENARLOS AL ESTADO DE DATOS RECIBIDO ACTUAL
-        setDataRecived(data)
-        console.log(data);
+        //setDataRecived(data)
+        console.debug(data);
     };
     
     const BluetoothModuleStart = () => {
-        BleManager.start({showAlert: false}).then(() =>{ 
+        BleManager.start({showAlert: false, forceLegacy: true}).then(() =>{ 
             console.debug('[Ble Initialized] Initialized'); 
         })/*.catch((error) =>
           console.error('[Ble Initialized] No Initialized=>', error),
@@ -94,7 +96,7 @@ const useBLE = () => {
             PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
           ).then(res => {
             if (res) {
-                console.log('[Permission Scan Check] Permission is OK');
+                console.log('[Permission Scan Check] Permission is OK',res);
                 onPermissionGranted();
             } else {
               PermissionsAndroid.request(
@@ -120,13 +122,27 @@ const useBLE = () => {
         }
     };
 
+    const requestPermissions = () => {
+      if (Platform.OS == 'android'){
+        PermissionsAndroid.requestMultiple(
+          [PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION]
+        ).then((result) => {
+            console.debug("[Location Permissions] granted");
+        }).catch((err)=> {console.log("Error de permisos" ,err)})
+      }
+    }
+
     //Empezamos a Scanear los dispositivos cercanos
     const startScan = async () => {
         if (!isScanning) {
             //console.log('[startScan] Scanning...');
             setIsScanning(true);
-            BleManager.scan([],5,true).then(() => {
-              console.log('[startScan] Scanning...');
+            BleManager.scan([],1,true).then(() => {
+              console.debug('[startScan] Scanning...');
+            }).catch((err) => {
+              console.debug("[StartScan] Error al scanear")
             });
         }
     };
@@ -138,16 +154,28 @@ const useBLE = () => {
     };
 
     const handleDiscoverPeripheral = (peripheral) => {
-        console.debug('[handleDiscoverPeripheral] new BLE peripheral=', peripheral);
-        if (!peripheral.name) {
-          peripheral.name = 'NO NAME';
-        }
-        setDisceveredDevices(map => {
+        setDiscoveredDevices(map => {
           return new Map(map.set(peripheral.id, peripheral));
         });
+        //console.debug(discoveredDevices.get("D4:3D:51:50:3B:E9")); 
     };
 
-    const handleDisconnectedPeripheral = (BleDisconnectPeripheralEvent) => {
+    const handleConnectPeripheral = (peripheral) => {
+        try{
+           if(!peripheral){
+            console.debug("[Connection Peripheral] Periferico no valido");
+            return;
+           } 
+           BleManager.connect(peripheral.id).then(() =>{
+              console.debug("[Connection Peripheral] La conexion se ha realizado con exito");}
+
+           );
+        }catch(error){
+           console.debug("[Connection Peripheral] Error al intental conectarse a un dispositivo",peripheral)
+        }
+    }
+
+    /* const handleDisconnectedPeripheral = (BleDisconnectPeripheralEvent) => {
         console.debug(
           `[handleDisconnectedPeripheral][${BleDisconnectPeripheralEvent.peripheral}] disconnected.`,
         );
@@ -159,13 +187,14 @@ const useBLE = () => {
           }
           return map;
         });
-    };
+    }; */
 
     return ([
         discoveredDevices,
+        dataRecived,
         startScan,
         scanPermission,
-        dataRecived
+        handleConnectPeripheral,
     ]);
 }
 

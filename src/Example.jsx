@@ -71,7 +71,7 @@ const Example = () => {
 
   const startScan = () => { //funcion que maneja el inicio del scaneo de dispositivos cercanos
     if (!isScanning) {
-      BleManager.scan(serviceUUIDS, 5, true) // Inicia el escaneo de dispositivos cercanos
+      BleManager.scan([], 5, true) // Inicia el escaneo de dispositivos cercanos
         .then(() => {
           console.log('Scanning...');
           setIsScanning(true);

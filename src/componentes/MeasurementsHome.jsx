@@ -16,6 +16,7 @@ const MeasurementsHome = () => {
             <View>
               <Text style = {MeasurementsHomeStyles.Text}
               >Para poder realizar la medicion debe estar conectado al dispositivo Elecctronico mediante Bluethooth  </Text>
+              
               <TouchableOpacity
                         style = {MeasurementsHomeStyles.touchable}
                         onPress={() => navigation.navigate('Bluetooth')}   
