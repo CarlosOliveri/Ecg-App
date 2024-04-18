@@ -20,11 +20,15 @@ const DispositivosStyles = StyleSheet.create({
     wrapperName:{
         flex: 1,
         justifyContent: 'flex-start',
-        marginLeft: 15,
+        marginLeft: 30,
         marginTop: 10
     },
     name:{
-
+        fontSize: 20,
+    },
+    rssi:{
+        fontSize: 15,
+        color:'#999'
     },
     iconRight:{
         marginTop: 13,

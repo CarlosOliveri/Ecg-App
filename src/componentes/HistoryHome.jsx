@@ -12,7 +12,7 @@ const HistoryHome = () => {
 
   useEffect(()=>{
     
-    AsyncStorage.setItem('Measurements', JSON.stringify(Measurements)).then(()=>{   //esto se debe cambiar mas adelante
+    AsyncStorage.setItem('mediciones', JSON.stringify(Measurements)).then(()=>{   //esto se debe cambiar mas adelante
       console.log("[Data UpLoad] Archivo Json Cargado con exito");
     })
   },[])
@@ -25,7 +25,7 @@ const HistoryHome = () => {
       datosActualizados[i].num = i+1;
     }
     setDatos(datosActualizados);
-    AsyncStorage.setItem('Measurements', JSON.stringify(datos)).then(()=>{
+    AsyncStorage.setItem('mediciones', JSON.stringify(datos)).then(()=>{
       console.log("[Data Storage] Datos Actualizados correctamente")
     })
   }

@@ -4,9 +4,9 @@ import useBLE from "./useBLE";
 const BleContext = createContext();
 
 export const BleProvider = ({children}) => {
-    const [discoveredDevices,startScan,startPermission] = useBLE();
+    const [discoveredDevices,dataRecived,startScan,scanPermission,handleConnectPeripheral] = useBLE();
     return(
-        <BleContext.Provider value = {{discoveredDevices,startScan,startPermission}}>
+        <BleContext.Provider value = {{discoveredDevices,dataRecived,startScan,scanPermission,handleConnectPeripheral}}>
             {children}
         </BleContext.Provider>
     );

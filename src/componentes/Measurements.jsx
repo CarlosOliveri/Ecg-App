@@ -11,7 +11,6 @@ const Measurements = () => {
 
     const {isBleConnected,setIsBleConnected} = useBleConnectContext();
 
-    const {discoveredDevices,startScan,startPermission} = useBleContext();
 
     //estado correspondiene a los BPS
     const [bpsValue,setBpsValue] = useState(0);

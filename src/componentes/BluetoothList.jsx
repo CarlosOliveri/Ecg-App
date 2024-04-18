@@ -10,14 +10,16 @@ import Dispositivos from "./Dispositivos";
 import {useBleConnectContext} from "./useBleConnectContext";
 import {useBleContext} from './useBleContext';
 import { useNavigation} from "@react-navigation/native";
+import { Button } from "react-native-elements";
 
 const BluetoothList = () => {
 
-  const {discoveredDevices,startScan,startPermission} = useBleContext();
+  const {discoveredDevices,dataRecived,startScan,scanPermission,handleConnectPeripheral,} = useBleContext();
 
   const {isBleConnected,setIsBleConnected} = useBleConnectContext();
 
-  const updateState = () => {
+  const onConnectPeripheral = (device) => {
+    handleConnectPeripheral(device)
     setIsBleConnected(true);
   }
 
@@ -27,12 +29,12 @@ const BluetoothList = () => {
     const renderEmpty = () => <Empty text = 'No hay Dispositivos'/>
  
     //Enlistamos los dispositivos detectados
-    const renderItem = ({peripheral}) => {
-        const {name, rssi, connected} = peripheral;
+    const renderItem = (data) => {
+        //const {name, rssi, connected} = peripheral;
         return (
             <Dispositivos 
-                {...connectedDevices} 
-                onPress = {connectToPeripheral}
+                onConnectPeripheral = {onConnectPeripheral}
+                data = {data} 
                 iconLeft = {require('../../icons/ic_laptop.webp')} 
                 iconRight = {require('../../icons/ic_settings.png')}
             />
@@ -40,9 +42,9 @@ const BluetoothList = () => {
     }
     //inicia el scaneo de dispositivos cercanos
   const handleStartScan = () => {
-    startPermission(
+    scanPermission(
       () => {startScan();},
-      () => {console.log("Permisos no consedidos");}
+      () => {console.debug("Permisos no consedidos");}
     );
   }
 
@@ -51,7 +53,7 @@ const BluetoothList = () => {
         if (!toggleEnable) {
             setToggleEnable(true); 
             handleStartScan();
-            updateState();
+            //updateState();
             return
         }
         setToggleEnable(false);
@@ -74,7 +76,7 @@ const BluetoothList = () => {
             <View style={BluetoothListStyles.lineSubtitle}/>
         </View>
             <FlatList
-                data ={discoveredDevices}
+                data ={Array.from(discoveredDevices.values())}
                 ListEmptyComponent={renderEmpty}
                 renderItem={renderItem}
             />

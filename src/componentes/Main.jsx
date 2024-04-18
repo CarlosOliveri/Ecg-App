@@ -16,6 +16,7 @@ import { Header } from '@react-navigation/stack';
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BleProvider } from './useBleContext';
+import Dispositivos from './Dispositivos';
 
 
 const Measurements = 'Measurementscreen'
@@ -44,19 +45,19 @@ const Main = () => {
         return(
             <StateProvider>
                 <BleProvider>
-                <MeasuremetStackNavigator.Navigator
-                    initialRouteName='HomeScreen'
-                    screenOptions = {{
-                        headerShown: false,
-                    }}
-                >
-                    <MeasuremetStackNavigator.Screen 
-                        name = 'HomeScreen' 
-                        component={MeasurementsHome}/>
-                    <MeasuremetStackNavigator.Screen 
-                        name = "Bluetooth" 
-                        component={BluetoothList} />
-                </MeasuremetStackNavigator.Navigator>
+                    <MeasuremetStackNavigator.Navigator
+                        initialRouteName='HomeScreen'
+                        screenOptions = {{
+                            headerShown: false,
+                        }}
+                    >
+                        <MeasuremetStackNavigator.Screen 
+                            name = 'HomeScreen' 
+                            component={MeasurementsHome}/>
+                        <MeasuremetStackNavigator.Screen 
+                            name = "Bluetooth" 
+                            component={BluetoothList} />
+                    </MeasuremetStackNavigator.Navigator>
                 </BleProvider>
             </StateProvider>
         );
