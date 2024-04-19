@@ -4,15 +4,17 @@ import { useNavigation } from '@react-navigation/native';
 import { MeasurementsHomeStyles } from '../styles/MeasurementsHomeStyles';
 import Measurements from './Measurements';
 import { useBleConnectContext } from './useBleConnectContext';
+import { useBleContext } from './useBleContext';
 
 const MeasurementsHome = () => {
     
     const navigation = useNavigation();
        
     const {isBleConnected,setIsBleConnected} = useBleConnectContext(false);
+    const {discoveredDevices,dataReceived,isConnected,setIsConnected,startScan,scanPermission,handleConnectPeripheral,} = useBleContext();
 
     return (
-        (!isBleConnected) ? (
+        (!isConnected) ? (
             <View>
               <Text style = {MeasurementsHomeStyles.Text}
               >Para poder realizar la medicion debe estar conectado al dispositivo Elecctronico mediante Bluethooth  </Text>

@@ -10,6 +10,7 @@ import { useBleConnectContext } from './useBleConnectContext';
 const Measurements = () => {
 
     const {isBleConnected,setIsBleConnected} = useBleConnectContext();
+    const {discoveredDevices,dataReceived,isConnected,setIsConnected,startScan,scanPermission,handleConnectPeripheral} = useBleContext();
 
 
     //estado correspondiene a los BPS
@@ -33,7 +34,7 @@ const Measurements = () => {
     }
 
     const handleBleDisconnect = () =>{
-        setIsBleConnected(false);
+        setIsConnected(false);
     }
 
     useEffect(()=>{
@@ -147,7 +148,7 @@ const Measurements = () => {
         </body>
         </html>
     `;
-
+            console.log(dataReceived)
     return(
         <View style={Measurementstyles.containerPrincipal}>
             <WebView //componente que renderiza hojas HTML
@@ -171,6 +172,7 @@ const Measurements = () => {
                     onPress={()=>{}}/>
                 </View>
             </View>
+            <Text style = {{fontSize:20}}>{dataReceived}</Text>
         </View>
     );
 }
