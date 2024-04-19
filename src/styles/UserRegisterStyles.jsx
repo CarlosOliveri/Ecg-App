@@ -18,7 +18,7 @@ const UserRegisterStyles = StyleSheet.create({
     },
     labels:{
         alignSelf:'flex-start',
-        marginTop: 30,//80
+        marginTop: 15,//80
         marginHorizontal:20,
         fontSize: 20
     },
@@ -54,6 +54,13 @@ const UserRegisterStyles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         color: "white",
+    },
+    errores:{
+        alignSelf:'flex-start',
+        marginTop: 1,//80
+        marginHorizontal:120,
+        fontSize: 10,
+        color: 'red',
     }
 })
 export default UserRegisterStyles;

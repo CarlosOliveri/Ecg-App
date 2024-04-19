@@ -12,6 +12,7 @@ import Login from './Login';
 import HistoryShow from './HistoryShow';
 //import Measurements from './Measurements';
 import { Header } from '@react-navigation/stack';
+import UserShow from './UserShow';
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -31,7 +32,7 @@ const Tab = createBottomTabNavigator();
 //Stacks
 const MeasuremetStackNavigator = createNativeStackNavigator();
 const HistoryStackNavigator = createNativeStackNavigator();
-const UserStack = createNativeStackNavigator();
+const UserStackNavigator = createNativeStackNavigator();
 
 const Main = () => {
 
@@ -80,7 +81,7 @@ const Main = () => {
         );
     }
     
-    const AutenticacioStack = () => {
+    /*const AutenticacioStack = () => {
         return(
             <UserStack.Navigator
                 //initialRouteName= {isUserAuthenticated ? 'bleStackUser' : 'Login'}
@@ -100,7 +101,24 @@ const Main = () => {
                     }}/>
             </UserStack.Navigator>
         );
-    };
+    };*/
+
+    const UserStack = ()=>{
+        return (
+            <UserStackNavigator.Navigator
+                initialRouteName = {userRegister}
+                screenOptions = {{
+                    headerShown: false,
+                }}>
+                <HistoryStackNavigator.Screen
+                    name = 'UserShow'
+                    component={UserShow}/>
+                <HistoryStackNavigator.Screen
+                    name = {userRegister}
+                    component={UserRegister}/>
+            </UserStackNavigator.Navigator>
+        );
+    }
 
     return(
         <NavigationContainer>
@@ -143,7 +161,7 @@ const Main = () => {
                     />
                 <Tab.Screen 
                     name = 'AutenticacioStack'
-                    component={UserRegister}
+                    component={UserStack}
                     options={{
                         tabBarLabel : 'Usuario',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="account" size={24} color={color} />),
