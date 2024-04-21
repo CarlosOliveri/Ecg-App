@@ -9,6 +9,7 @@ import * as React from 'react';
 import Example from './src/Example.jsx';
 import Measurements from './src/componentes/Measurements.jsx';
 import RegistroShow from './src/componentes/HistoryShow.jsx';
+import ChartHeart from './src/componentes/ChartHeart.jsx';
 
 export default function App() {
   return <Main/>

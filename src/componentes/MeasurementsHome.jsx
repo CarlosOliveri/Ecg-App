@@ -11,7 +11,7 @@ const MeasurementsHome = () => {
     const navigation = useNavigation();
        
     const {isBleConnected,setIsBleConnected} = useBleConnectContext(false);
-    const {discoveredDevices,dataReceived,isConnected,setIsConnected,startScan,scanPermission,handleConnectPeripheral,} = useBleContext();
+    const {discoveredDevices,dataReceived,isConnected,objetGenerate,setIsConnected,startScan,scanPermission,handleConnectPeripheral,} = useBleContext();
 
     return (
         (!isConnected) ? (

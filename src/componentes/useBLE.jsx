@@ -18,6 +18,7 @@ const useBLE = () => {
     const [isScanning,setIsScanning] = useState(false);
     const [discoveredDevices,setDiscoveredDevices] = useState(new Map())
     const [dataReceived,setDataReceived] = useState([]);
+    const [objetGenerate,setObjetGenerate] = useState([]);
     const [isConnected,setIsConnected] = useState(false);
 
     useEffect(()=>{
@@ -79,10 +80,12 @@ const useBLE = () => {
     },[]);
 
     const handleUpdateValueForCharacteristic = (data) => {
-        //LOS DATOS DEBEN SER PROCESADOS PRIMERAMENTE ANTES DE CONCATENARLOS AL ESTADO DE DATOS RECIBIDO ACTUAL
-        let values = bytesToString(data.value);
-        //values = values.split("\n");
-        setDataReceived(dataReceived => dataReceived.concat(data.value))
+        const values = data.value;
+        setDataReceived(dataReceived => dataReceived.concat(values));
+        values.map((element) => {
+          setObjetGenerate(objetGenerate => [...objetGenerate,{x: objetGenerate.length,y: element}])
+        })
+        //setObjetGenerate(objetGenerate => objetGenerate.concat(objetArray));
     };
     
     const BluetoothModuleStart = () => {
@@ -261,6 +264,7 @@ const useBLE = () => {
         discoveredDevices,
         dataReceived,
         isConnected,
+        objetGenerate,
         setIsConnected,
         startScan,
         scanPermission,

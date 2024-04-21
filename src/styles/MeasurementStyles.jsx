@@ -1,14 +1,17 @@
 import { StyleSheet,useWindowDimensions } from "react-native";
+import ChartHeart from "../componentes/ChartHeart";
 
 export const Measurementstyles = StyleSheet.create({
     containerPrincipal:{
         flex: 1, 
+        backgroundColor: '#F5FCFF'
         //alignItems:'center',
         //justifyContent:'center',
         
     },
-    webview:{
-        
+    chartHeart:{
+        flex:1,
+        marginTop: 5,
     },
     actionContainer:{
         //alignItems:'center',
