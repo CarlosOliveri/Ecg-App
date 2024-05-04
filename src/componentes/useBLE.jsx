@@ -1,21 +1,29 @@
 import { NativeEventEmitter, NativeModules, Platform, PermissionsAndroid,Alert } from 'react-native';
 import {useState, useEffect} from "react";
 import BleManager from 'react-native-ble-manager';
+import { bytesToString } from "convert-string";
 import { PERMISSIONS } from 'react-native-permissions';
 
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
+const _UART_TX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+const _UART_RX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+const _UART_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+const _BATTERY_UUID = "180F";
+const _BATTERY_LEVEL = "2A19";
 
 const useBLE = () => {
     
     const [isScanning,setIsScanning] = useState(false);
     const [discoveredDevices,setDiscoveredDevices] = useState(new Map())
-    const [dataRecived,setDataRecived] = useState([]);
-    
+    const [dataReceived,setDataReceived] = useState([]);
+    const [objetGenerate,setObjetGenerate] = useState([]);
+    const [isConnected,setIsConnected] = useState(false);
+
     useEffect(()=>{
         BluetoothModuleStart();
-        //EncenderBluetooth();
+        EncenderBluetooth();
         requestPermissions();
 
         /*BleManager.checkState().then(state => {
@@ -53,9 +61,13 @@ const useBLE = () => {
               handleStopScan
             ),
             BleManagerEmitter.addListener(
-            'BleManagerDidUpdateValueForCharacteristic',
-            handleUpdateValueForCharacteristic,
-          ),
+              'BleManagerDidUpdateValueForCharacteristic',
+              handleUpdateValueForCharacteristic,
+            ),
+            BleManagerEmitter.addListener(
+              'BleManagerConnectPeripheral',
+              ()=>{setIsConnected(true);}
+            ),
         ];
 
         return () => {
@@ -68,9 +80,12 @@ const useBLE = () => {
     },[]);
 
     const handleUpdateValueForCharacteristic = (data) => {
-        //LOS DATOS DEBEN SER PROCESADOS PRIMERAMENTE ANTES DE CONCATENARLOS AL ESTADO DE DATOS RECIBIDO ACTUAL
-        //setDataRecived(data)
-        console.debug(data);
+        const values = data.value;
+        setDataReceived(dataReceived => dataReceived.concat(values));
+        values.map((element) => {
+          setObjetGenerate(objetGenerate => [...objetGenerate,{x: objetGenerate.length,y: element}])
+        })
+        //setObjetGenerate(objetGenerate => objetGenerate.concat(objetArray));
     };
     
     const BluetoothModuleStart = () => {
@@ -82,12 +97,13 @@ const useBLE = () => {
     }
 
     //Encendemos el Bluetooth si no lo esta
-    const EncenderBluetooth = () => {
-        BleManager.enableBluetooth().then(() =>{
-            console.log('Bluetooth se ha encendido');
-        }).catch((err)=>{
-            console.log('[EnableBluetoothError] ',err);
-        });
+    const EncenderBluetooth = async () => {
+        try{  
+          await BleManager.enableBluetooth();
+        }catch(err){
+            console.debug('[EnableBluetoothError] ',err);
+            Alert.alert("Necesita encender su Bluetooth manualmente")
+        };
     };
 
     const scanPermission = (onPermissionGranted, onPermissionDenied) =>{
@@ -160,19 +176,74 @@ const useBLE = () => {
         //console.debug(discoveredDevices.get("D4:3D:51:50:3B:E9")); 
     };
 
-    const handleConnectPeripheral = (peripheral) => {
+    const handleConnectPeripheral = async (peripheral) => {
         try{
-           if(!peripheral){
-            console.debug("[Connection Peripheral] Periferico no valido");
+            if(!peripheral){
+              console.debug("[Connection Peripheral] Periferico no valido");
             return;
-           } 
-           BleManager.connect(peripheral.id).then(() =>{
-              console.debug("[Connection Peripheral] La conexion se ha realizado con exito");}
+            } 
+            BleManager.connect(peripheral.id).then(() =>{
+              console.debug("[Connection Peripheral] La conexion se ha realizado con exito");
+              //console.log(peripheral)
+            });
 
-           );
+            // Antes de establece comunicacion es recomendable esperar un periodo a que la conexion se establezca corectamente
+            await sleep(900);
+          
+            //pripheralData recibira los diferentes servicios de los que dispone el dispositivo
+             const peripheralData = await BleManager.retrieveServices(peripheral.id);
+             console.debug("[Retrieve Sevice called] Retrieve Service Responded");
+
+             suscribeCharacteristicToReceive(peripheral);
+             //suscribeCharacteristicToSend();
+              /*console.debug(
+              `[connectPeripheral][${peripheral.id}] retrieved peripheral services`,
+              peripheralData,
+            );*/
+            
+            /*if (peripheralData.characteristics){
+              for (i = 0; i< peripheralData.characteristics.length; i++){
+                const characteristic = peripheralData.characteristics[i];
+                console.log(characteristic);
+                if (characteristic.descriptors) {
+                  for (k = 0; k< characteristic.descriptors.length; k++){
+                    const descriptor = characteristic.descriptors[k];
+                    console.log(descriptor)
+                     try {
+                        let data = await BleManager.readDescriptor(
+                        peripheral.id,
+                        characteristic.service,
+                        characteristic.characteristic,
+                        descriptor.uuid,
+                      );
+                      console.debug(
+                        `[connectPeripheral][${peripheral.id}] ${characteristic.service} ${characteristic.characteristic} ${descriptor.uuid} descriptor read as:`,
+                        data,
+                      );
+                    }catch(error){
+                      console.debug(
+                        `[connectPeripheral][${peripheral.id}] failed to retrieve descriptor ${descriptor} for characteristic ${characteristic}:`,
+                        error,
+                      );
+                    } 
+                  }
+                }
+              }
+            }else{
+              console.debug("no hubo respuesta")
+            }*/
         }catch(error){
-           console.debug("[Connection Peripheral] Error al intental conectarse a un dispositivo",peripheral)
+           console.debug("[Connection Peripheral] Error al intental conectarse a un dispositivo",error)
         }
+    }
+
+    function sleep(ms) {
+      return new Promise (resolve => setTimeout(resolve, ms));
+    }
+
+    const suscribeCharacteristicToReceive = async (peripheral) => {
+      await BleManager.startNotification(peripheral.id,_UART_UUID,_UART_RX);
+      console.debug("[Suscripcion Receive] Suscripcion a recibir datos realizada");
     }
 
     /* const handleDisconnectedPeripheral = (BleDisconnectPeripheralEvent) => {
@@ -191,7 +262,10 @@ const useBLE = () => {
 
     return ([
         discoveredDevices,
-        dataRecived,
+        dataReceived,
+        isConnected,
+        objetGenerate,
+        setIsConnected,
         startScan,
         scanPermission,
         handleConnectPeripheral,
