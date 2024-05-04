@@ -22,8 +22,8 @@ const HistoryCardStyles = StyleSheet.create({
       height: 5,
     },
     shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation:100,
+    shadowRadius: 15,
+    elevation:15,
     alignContent:'center'
   },
 
