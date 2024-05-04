@@ -19,7 +19,7 @@ export const MeasurementsHomeStyles = StyleSheet.create({
         textAlign: 'center',
     },
     touchable:{
-        backgroundColor: 'red',
+        backgroundColor: '#1F618D',
         padding : 10,
         marginTop : 20,
         width : '50%',

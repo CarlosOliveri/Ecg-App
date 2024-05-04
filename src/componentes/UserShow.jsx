@@ -1,6 +1,6 @@
 import React ,{useEffect} from "react";
 import { useState } from "react";
-import { View, Text, StyleSheet, Dimensions,Image } from 'react-native';
+import { View, Text, StyleSheet, Dimensions,Image,ImageBackground } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
@@ -17,6 +17,19 @@ const UserShow = () =>{
         try {
             // Obtener el valor almacenado en AsyncStorage
             const storedName = await AsyncStorage.getItem('Nombre');
+            setStoredName(storedName ? JSON.parse(storedName) : null);
+            const storedAge = await AsyncStorage.getItem('Edad');
+            setStoredAge(storedAge ? JSON.parse(storedAge) : null);
+            
+            const storedWeight = await AsyncStorage.getItem('Peso');
+            setStoredWeight(storedWeight ? JSON.parse(storedWeight) : null);
+            
+            const storedHeight = await AsyncStorage.getItem('Altura');
+            setStoredHeight(storedHeight ? JSON.parse(storedHeight) : null);
+            
+            const storedSex = await AsyncStorage.getItem('Sexo');
+            setStoredSex(storedSex ? JSON.parse(storedSex) : null);
+            /*const storedName = await AsyncStorage.getItem('Nombre');
             setStoredName(storedName);
             const storedAge = await AsyncStorage.getItem('Edad');
             setStoredAge(storedAge);
@@ -25,7 +38,7 @@ const UserShow = () =>{
             const storedHeight = await AsyncStorage.getItem('Altura');
             setStoredHeight(storedHeight);
             const storedSex = await AsyncStorage.getItem('Sexo');
-            setStoredSex(storedSex);
+            setStoredSex(storedSex);*/
         } catch (error) {
             console.error('Error al obtener el valor:', error);
         }
@@ -33,9 +46,39 @@ const UserShow = () =>{
 
         fetchData();
     }, []);
-
+    //require('../../assets/')
     return (
-        <View style ={styles.container} flexDirection = 'colum'>
+        <ImageBackground style ={styles.fondo} resizeMode="cover" source={require('../../assets/fondo.png')} >
+            <View style ={styles.container} flexDirection = 'colum'>
+            <View style ={styles.line} flexDirection='row'  paddingRight={50} alingIyems='stretch'>
+                <Image style ={styles.image} source={{uri:"https://media.gq.com.mx/photos/5f6ce732bc946e88f6c96320/16:9/w_2560%2Cc_limit/goky%2520ultra%2520instinto.jpg" }}/>
+                <Text numberOfLines={2} ellipsizeMode="tail" style={styles.nombre}>{storedName}</Text>
+            </View>
+            <View flexDirection='row'>
+                <Text style={styles.caractT}>Edad: </Text>
+                <Text style={styles.caractS}>{storedAge}</Text>
+                <Text style={styles.caractS}>años</Text>
+            </View>
+            <View flexDirection='row'>
+                <Text style={styles.caractT}>Peso: </Text>
+                <Text style={styles.caractS}>{storedWeight}</Text>
+                <Text style={styles.caractS}>kg</Text>
+            </View>
+            <View flexDirection='row'>
+                <Text style={styles.caractT}>Altura: </Text>
+                <Text style={styles.caractS}>{storedHeight}</Text>
+                <Text style={styles.caractS}>cm</Text>
+            </View>
+            <View flexDirection='row'>
+                <Text style={styles.caractT}>Sexo: </Text>
+                <Text style={styles.caractS}>{storedSex}</Text>
+            </View>
+            <View flexDirection='row'>
+            </View>
+        </View>
+        </ImageBackground>
+        /*<View style ={styles.container} flexDirection = 'colum'>
+            <ImageBackground style ={styles.fondo} resizeMode="cover" source={require('../../assets/USER.png')}/>
             <View flexDirection='row'>
                 <Image style ={styles.image} source={{uri:"https://media.gq.com.mx/photos/5f6ce732bc946e88f6c96320/16:9/w_2560%2Cc_limit/goky%2520ultra%2520instinto.jpg" }}/>
                 <Text style={styles.nombre}>{storedName}</Text>
@@ -58,10 +101,6 @@ const UserShow = () =>{
             </View>
             <View flexDirection='row'>
             </View>
-        </View>
-        /*<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Datos Guardados del Usuario:</Text>
-        <Text>{storedName} / {storedAge} / {storedWeight} / {storedHeight} / {storedSex}</Text>
         </View>*/
     );
 }
@@ -69,14 +108,28 @@ const styles = StyleSheet.create({
     container:{
         width: 300,
         height: 300,
-        marginTop:'40%',
-        marginLeft:25,
+       // marginTop:'40%',
+       // marginLeft:25,
        // borderWidth : 5,
        // borderColor : '#FF4646',
         borderRadius : 20,
-        backgroundColor : '#FF4646',
-        shadowColor:'black',
-        elevation:11,
+        backgroundColor : 'rgba(26, 82, 118,0.8)',
+       // shadowColor:'black',
+        elevation:0,
+    },
+    line:{
+        width: 300,
+    },
+    fondo:{
+        //flex:1,
+        resizeMode:'cover',
+        width: 300,
+        height: 300,
+        marginTop:'40%',
+        marginLeft:30,
+        borderRadius: 20, // Ajusta el radio de las esquinas
+        overflow: 'hidden',
+        elevation:10,
     },
     image:{
         width:70,
@@ -88,21 +141,28 @@ const styles = StyleSheet.create({
     },
     nombre:{
         fontSize: 30,
-        textAlign:'center',
-        marginTop:20,
+        marginTop:15,
         marginLeft:10,
+        paddingHorizontal:10,
+        paddingVertical:0,
+        fontWeight:'bold',
+        color:'white',
+        textAlign: 'left',
     },
     caractT:{
         fontSize: 20,
         textAlign:'center',
         marginTop:20,
         marginLeft:10,
-        fontWeight:'bold'
+        fontWeight:'bold',
+        color:'white'
     },
     caractS:{
         fontSize: 20,
         textAlign:'center',
         marginTop:20,
+        color:'white',
+        paddingLeft:5,
     },
 });
 export default UserShow;

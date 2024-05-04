@@ -17,7 +17,7 @@ const MeasurementsHome = () => {
         (!isConnected) ? (
             <View>
               <Text style = {MeasurementsHomeStyles.Text}
-              >Para poder realizar la medicion debe estar conectado al dispositivo Elecctronico mediante Bluethooth  </Text>
+              >Para poder realizar la medicion debe estar conectado al dispositivo Electronico mediante Bluethooth  </Text>
               
               <TouchableOpacity
                         style = {MeasurementsHomeStyles.touchable}

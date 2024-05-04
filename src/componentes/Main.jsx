@@ -24,7 +24,7 @@ const Measurements = 'Measurementscreen'
 const history = 'HistoryScreen'
 const userRegister = 'UserRegister'
 // Estetica
-const themeColor = 'red' //'#4EC8DB'
+const themeColor = '#154360' //'#4EC8DB'
 const titleSize = 20 //'#4EC8DB'
 
 const Tab = createBottomTabNavigator();
@@ -125,8 +125,8 @@ const Main = () => {
             <Tab.Navigator
                 initialRouteName= 'HistoryStack'
                 screenOptions = {{
-                    tabBarActiveTintColor : themeColor,
-                    tabBarInactiveTintColor : 'grey',
+                    tabBarActiveTintColor : '#2471A3',
+                    tabBarInactiveTintColor : '#AAB7B8',
                 }}
             >
                 <Tab.Screen 
@@ -152,7 +152,7 @@ const Main = () => {
                         tabBarLabel : 'Historial',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="history" size={39} color={color} />),
                         //tabBarBadge  es para notificcaciones
-                        headerTitle : 'Historial de Measurements',
+                        headerTitle : 'Historial de Mediciones',
                         //headerTintColor : 'white',
                         headerTitleStyle: { color: 'white', fontSize: titleSize, fontWeight : 'normal'},
                         headerStyle: { backgroundColor: themeColor},
