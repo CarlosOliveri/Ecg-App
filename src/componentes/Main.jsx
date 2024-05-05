@@ -124,10 +124,15 @@ const Main = () => {
         <NavigationContainer>
             <Tab.Navigator
                 initialRouteName= 'HistoryStack'
+                //keyboardHidesTabBar={true}
                 screenOptions = {{
+                    keyboardHidesTabBar: true,
                     tabBarActiveTintColor : '#2471A3',
                     tabBarInactiveTintColor : '#AAB7B8',
+                    tabBarHideOnKeyboard: true,
                 }}
+                //keyboardShouldPersistTaps="handled"
+                
             >
                 <Tab.Screen 
                     name = {Measurements}

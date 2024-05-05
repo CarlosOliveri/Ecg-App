@@ -3,6 +3,7 @@ import {Text,View,TextInput,TouchableOpacity} from 'react-native'
 import UserStyles from '../styles/UserRegisterStyles';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const UserRegister = () => {
 
@@ -23,7 +24,7 @@ const UserRegister = () => {
     })
 
     return (
-        <View>
+        <KeyboardAwareScrollView style={UserStyles.keyboard}>
             <Text
             style = {UserStyles.msgText}
             >Usted actualmete se encuentra en modo sin conexion, con lo cual 
@@ -136,7 +137,7 @@ const UserRegister = () => {
                 </Text>
             </TouchableOpacity>
         
-        </View>
+        </KeyboardAwareScrollView>
         
         
         
