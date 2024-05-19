@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 
+
 const UserRegisterStyles = StyleSheet.create({
     msgText:{
         fontSize: 16,
@@ -9,7 +10,7 @@ const UserRegisterStyles = StyleSheet.create({
         paddingVertical:10,
         marginTop: 10,
         textAlign: 'left',
-        backgroundColor:'#E05E5E',
+        backgroundColor:'#1F618D',
         //borderBlockColor: '#E72E2E',
         borderRadius: 10,
     },
@@ -18,14 +19,14 @@ const UserRegisterStyles = StyleSheet.create({
     },
     labels:{
         alignSelf:'flex-start',
-        marginTop: 30,//80
+        marginTop: 15,//80
         marginHorizontal:20,
         fontSize: 20
     },
     inputName:{
         height:40,
         width: 200,
-        borderColor: '#E05E5E',
+        borderColor: '#1A5276',
         borderRadius:5,
         borderWidth: 1,
         marginTop: -35,
@@ -34,8 +35,8 @@ const UserRegisterStyles = StyleSheet.create({
     },
     inputText:{
         height:40,
-        width: 95,
-        borderColor: '#E05E5E',
+        width: 106,
+        borderColor: '#1A5276',
         borderRadius:5,
         borderWidth: 1,
         marginTop: -35,
@@ -43,7 +44,7 @@ const UserRegisterStyles = StyleSheet.create({
         padding: 10
     },
     touchable:{
-        backgroundColor: 'red',
+        backgroundColor: '#1A5276',
         padding : 10,
         marginTop : 30,
         width : '50%',
@@ -54,6 +55,13 @@ const UserRegisterStyles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         color: "white",
+    },
+    errores:{
+        alignSelf:'flex-start',
+        marginTop: 1,//80
+        marginHorizontal:120,
+        fontSize: 10,
+        color: 'red',
     }
 })
 export default UserRegisterStyles;

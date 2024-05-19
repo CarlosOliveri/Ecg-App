@@ -13,7 +13,7 @@ const HistoryCardStyles = StyleSheet.create({
   },
   cardContainer: {
     width: deviceWidth - offset,
-    backgroundColor: '#E05E5E',
+    backgroundColor: 'rgba(31,97,141,0.8)',
     height: 150,
     borderRadius: radius,
     shadowColor: '#000',
@@ -22,9 +22,19 @@ const HistoryCardStyles = StyleSheet.create({
       height: 5,
     },
     shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation:100,
+    shadowRadius: 15,
+    elevation:15,
     alignContent:'center'
+  },
+  fondo:{
+    //flex:1,
+    resizeMode:'cover',
+    width: deviceWidth - offset,
+    height: 150,
+    height: 150,
+    borderRadius: radius,
+    overflow: 'hidden',
+    elevation:10,
   },
 
   titleStyle: {

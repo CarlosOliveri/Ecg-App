@@ -12,6 +12,7 @@ import Login from './Login';
 import HistoryShow from './HistoryShow';
 //import Measurements from './Measurements';
 import { Header } from '@react-navigation/stack';
+import UserShow from './UserShow';
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -23,7 +24,7 @@ const Measurements = 'Measurementscreen'
 const history = 'HistoryScreen'
 const userRegister = 'UserRegister'
 // Estetica
-const themeColor = 'red' //'#4EC8DB'
+const themeColor = '#154360' //'#4EC8DB'
 const titleSize = 20 //'#4EC8DB'
 
 const Tab = createBottomTabNavigator();
@@ -31,7 +32,7 @@ const Tab = createBottomTabNavigator();
 //Stacks
 const MeasuremetStackNavigator = createNativeStackNavigator();
 const HistoryStackNavigator = createNativeStackNavigator();
-const UserStack = createNativeStackNavigator();
+const UserStackNavigator = createNativeStackNavigator();
 
 const Main = () => {
 
@@ -80,10 +81,11 @@ const Main = () => {
         );
     }
     
-    const AutenticacioStack = () => {
+    /*const AutenticacioStack = () => {
         return(
             <UserStack.Navigator
-                initialRouteName= {isUserAuthenticated ? 'bleStackUser' : 'Login'}
+                //initialRouteName= {isUserAuthenticated ? 'bleStackUser' : 'Login'}
+                intialRouteName = 'userRegister'
             >
                 <UserStack.Screen 
                     name = 'Login'
@@ -99,15 +101,32 @@ const Main = () => {
                     }}/>
             </UserStack.Navigator>
         );
-    };
+    };*/
+
+    const UserStack = ()=>{
+        return (
+            <UserStackNavigator.Navigator
+                initialRouteName = {userRegister}
+                screenOptions = {{
+                    headerShown: false,
+                }}>
+                <HistoryStackNavigator.Screen
+                    name = 'UserShow'
+                    component={UserShow}/>
+                <HistoryStackNavigator.Screen
+                    name = {userRegister}
+                    component={UserRegister}/>
+            </UserStackNavigator.Navigator>
+        );
+    }
 
     return(
         <NavigationContainer>
             <Tab.Navigator
                 initialRouteName= 'HistoryStack'
                 screenOptions = {{
-                    tabBarActiveTintColor : themeColor,
-                    tabBarInactiveTintColor : 'grey',
+                    tabBarActiveTintColor : '#2471A3',
+                    tabBarInactiveTintColor : '#AAB7B8',
                 }}
             >
                 <Tab.Screen 
@@ -133,7 +152,7 @@ const Main = () => {
                         tabBarLabel : 'Historial',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="history" size={39} color={color} />),
                         //tabBarBadge  es para notificcaciones
-                        headerTitle : 'Historial de Measurements',
+                        headerTitle : 'Historial de Mediciones',
                         //headerTintColor : 'white',
                         headerTitleStyle: { color: 'white', fontSize: titleSize, fontWeight : 'normal'},
                         headerStyle: { backgroundColor: themeColor},
@@ -142,7 +161,7 @@ const Main = () => {
                     />
                 <Tab.Screen 
                     name = 'AutenticacioStack'
-                    component={AutenticacioStack}
+                    component={UserStack}
                     options={{
                         tabBarLabel : 'Usuario',
                         tabBarIcon: ({color,size}) => (<MaterialCommunityIcons name="account" size={24} color={color} />),

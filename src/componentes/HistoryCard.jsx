@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {View, Text, StyleSheet, Dimensions,TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Dimensions,TouchableOpacity,ImageBackground} from 'react-native';
 import IconLabel from "./IconLabel";
 import HistoryCardStyles from "../styles/HistoryCardStyles";
 import { useNavigation } from "@react-navigation/native";
@@ -13,7 +13,7 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
     return(
       //Contenedor de todas las cartas
         <View style = {HistoryCardStyles.container}>
-          
+          <ImageBackground style ={HistoryCardStyles.fondo} resizeMode="cover" source={require('../../assets/hearth.png')} >
           <View style = {HistoryCardStyles.cardContainer}>
              <View flexDirection='row'>
               <Text style={HistoryCardStyles.titleStyle} > Medicion numero </Text>
@@ -57,7 +57,9 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
                   <IconLabel name="arrow-forward-circle"  color='white' size={40}/></TouchableOpacity>
             </View>
             
+            
           </View>
+          </ImageBackground>
         </View>
     )
 }
