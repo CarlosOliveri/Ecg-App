@@ -14,13 +14,23 @@ export const Measurementstyles = StyleSheet.create({
         marginTop: 5,
     },
     actionContainer:{
-        //alignItems:'center',
+        flex:2,
         height: 500,
         backgroundColor:'rgb(255,255,255)'
     },
     buttonContainer:{
         flexDirection:'row',
         justifyContent:'space-around',
+        marginTop:100,
+    },
+    Button:{
+        backgroundColor: 'red',
+        borderRadius: 15,
+        padding: 10
+    },
+    buttonTitle:{
+        color: 'white',
+        fontSize: 13
     },
     bpmTitle:{
         textAlign:'center',
@@ -35,5 +45,6 @@ export const Measurementstyles = StyleSheet.create({
     bpmContainer:{
         flexDirection:'row',
         justifyContent:'center',
+        marginTop: 50,
     }
 });

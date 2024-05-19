@@ -19,7 +19,7 @@ const useBLE = () => {
     const [discoveredDevices,setDiscoveredDevices] = useState(new Map())
     const [dataReceived,setDataReceived] = useState([]);
     const [objetGenerate,setObjetGenerate] = useState([]);
-    const [isConnected,setIsConnected] = useState(false);
+    const [isConnected,setIsConnected] = useState(false); //Estado que nos permite switchear entre mediciones y conexion
 
     useEffect(()=>{
         BluetoothModuleStart();
@@ -68,6 +68,13 @@ const useBLE = () => {
               'BleManagerConnectPeripheral',
               ()=>{setIsConnected(true);}
             ),
+            BleManagerEmitter.addListener(
+              'BleManagerDidUpdateState',
+            ({ state }) => {
+                console.log('El bluetooth se a apagado =>estado: ', state);
+                // Aquí puedes actualizar el estado del Bluetooth en tu componente
+                handleBleDisconnect();}
+            ),
         ];
 
         return () => {
@@ -81,11 +88,12 @@ const useBLE = () => {
 
     const handleUpdateValueForCharacteristic = (data) => {
         const values = data.value;
-        setDataReceived(dataReceived => dataReceived.concat(values));
+        /* setDataReceived(dataReceived => dataReceived.concat(values));
         values.map((element) => {
           setObjetGenerate(objetGenerate => [...objetGenerate,{x: objetGenerate.length,y: element}])
-        })
-        //setObjetGenerate(objetGenerate => objetGenerate.concat(objetArray));
+        }) */
+        //setObjetGenerate(objetGenerate => objetGenerate.concat(objetArray)); //En desuso
+        console.log(values)
     };
     
     const BluetoothModuleStart = () => {
@@ -239,6 +247,10 @@ const useBLE = () => {
 
     function sleep(ms) {
       return new Promise (resolve => setTimeout(resolve, ms));
+    }
+
+    const handleBleDisconnect = () => {
+      setIsConnected(false);
     }
 
     const suscribeCharacteristicToReceive = async (peripheral) => {
