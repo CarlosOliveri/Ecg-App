@@ -10,7 +10,7 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 const Measurements = () => {
 
     const {isBleConnected,setIsBleConnected} = useBleConnectContext();
-    const {discoveredDevices,dataReceived,isConnected,objetGenerate,setIsConnected,startScan,scanPermission,handleConnectPeripheral} = useBleContext();
+    const {discoveredDevices,dataReceived,isConnected,objetGenerate,writeStartOrder,setIsConnected,startScan,scanPermission,handleConnectPeripheral} = useBleContext();
 
     const [fecha,setFecha] = useState();
     const [segundos,setSegundos] = useState(0);
@@ -19,26 +19,31 @@ const Measurements = () => {
 
     //estado correspondiene a los BPS
     const [bpsValue,setBpsValue] = useState(0);
-    //estado correspondiente al numero de maximos detectados
-    const [numMaximos,setNumMaximos] = useState(0);
-    //estado correspondiente al array de Measurements que se va recibiendo
-    const [MeasurementsData,setMeasurementsData] = useState([]);
 
-    //Llamamos a esta funcion cada vez que llega una nueva medicion
-    const handleBpsChange =() => {
+    const handleBpsCalculate = () => {
         //Calculo de los BPS
-        //El tiempoTranscurridoc corresponde al tiempo actual
-        setBpsValue(numMaximos/tiempoTranscurrido);
-    }
-
-    //Cuando se detecta un pico se llama a esta funcion
-    //y se incrementa el numero de maximos detectados 
-    const handleNumMaxChange =()=>{
-        setNumMaximos(numMaximos + 1);
+        const bps = (contarPicos()/segundos)*60;
+        setBpsValue(parseInt(bps,10));
+        //console.log(bps);
     }
 
     const handleBleDisconnect = () =>{
         setIsConnected(false);
+    }
+
+    const contarPicos = () => {
+        let cant = 0;
+        for(let i = 0; i < objetGenerate.length; i++){
+            try{
+                if (objetGenerate[i].y > 500 && objetGenerate[i - 1].y < 500){
+                    cant++;
+                }
+            }catch(err){
+                console.debug("no hacer nada");
+            }
+        }
+        //console.debug(objetGenerate.length);
+        return cant;
     }
 
     //detecta cambios en el estado del bluetooth
@@ -66,7 +71,7 @@ const Measurements = () => {
         hora = date.getHours();
         minuto = date.getMinutes();
         setFecha({'fecha':{'dia':dia,'mes':mes,'año':año,'hora':hora,'minuto':minuto}})
-        console.log(dia, mes, año, hora,minuto);
+        //console.log(dia, mes, año, hora,minuto);
     }
 
     //se encarga del inicio del timer
@@ -83,21 +88,30 @@ const Measurements = () => {
     },[isRunning])
     //Detecta cambios en el Timer para detenerlo
     useEffect(() =>{
-        if (segundos == 6){
+        if (segundos == 10){
             stopTimer();
             //console.log(segundos)
             handleStorage(); //Se genera el objeto fecha y Datos para guardar
             mostrarModal();//Temporalmente aca
         }
+        handleBpsCalculate();
     },[segundos])
     //inicia el timer
     const startTimer = () => {
         setIsRunning(true);
+        writeStartOrder(1);
     }
     //detiene el timer
     const stopTimer = () =>{
         setIsRunning(false);
-        setSegundos(0)
+        writeStartOrder(0);
+        setSegundos(0);
+    }
+    const resetTimer = () => {
+        setIsRunning(false);
+        setSegundos(0);
+        writeStartOrder(0);
+        setBpsValue(0);
     }
 
     const mostrarModal = () => {
@@ -109,7 +123,7 @@ const Measurements = () => {
 
     
     //Datos que se muestran en el grafico 
-    const initialData =[
+    /* const initialData =[
         {x:0, y: 32.51 },
         {x:1, y: 31.11 },
         {x:2, y: 27.02 },
@@ -120,7 +134,7 @@ const Measurements = () => {
         {x:7, y: 23.92 },
         {x:8, y: 22.68 },
         {x:9, y: 22.67 },
-    ];
+    ]; */
 
     /* const data = [{x:0,y: 1}, {x:1,y: 2}, {x:2,y: 1}];*/
     //console.log(objetGenerate); 
@@ -140,18 +154,18 @@ const Measurements = () => {
                 <Text style={Measurementstyles.bpmValue}>{segundos}</Text>
                 <View style={Measurementstyles.buttonContainer}>
                     <TouchableOpacity
-                    style = {Measurementstyles.Button}
-                    onPress={() => {
+                        style = {Measurementstyles.Button}
+                        onPress={() => {
                         //aca se debe manejar el inicio de las mediciones
                         startTimer();//temporalmente aca
-                    }}>
+                        }}>
                         <Text style={Measurementstyles.buttonTitle}>
                             INICIAR MEDICIONES
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                     style = {Measurementstyles.Button}
-                    onPress={() => {stopTimer();}}>
+                    onPress={() => {resetTimer();}}>
                         <Text style={Measurementstyles.buttonTitle}>
                             DETENER MEDICIONES
                         </Text>

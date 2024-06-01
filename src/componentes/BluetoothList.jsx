@@ -14,7 +14,7 @@ import { Button } from "react-native-elements";
 
 const BluetoothList = () => {
 
-  const {discoveredDevices,dataReceived,isConnected,objetGenerate,setIsConnected,startScan,scanPermission,handleConnectPeripheral} = useBleContext();
+  const {discoveredDevices,dataReceived,isConnected,objetGenerate,writeStartOrder,setIsConnected,startScan,scanPermission,handleConnectPeripheral} = useBleContext();
 
   const {isBleConnected,setIsBleConnected} = useBleConnectContext();
 
