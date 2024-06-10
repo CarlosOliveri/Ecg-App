@@ -70,6 +70,7 @@ const HistoryCardStyles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 0,
     marginHorizontal:15,
+    color:'white'
   },
   iconArrowtyle:{
     marginTop:-45,

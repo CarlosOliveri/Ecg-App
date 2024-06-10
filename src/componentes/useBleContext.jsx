@@ -5,10 +5,10 @@ const BleContext = createContext();
 
 export const BleProvider = ({children}) => {
     const [discoveredDevices,dataReceived,isConnected,objetGenerate,
-        writeStartOrder,setIsConnected,startScan,scanPermission,handleConnectPeripheral] = useBLE();
+        setObjetGenerate,writeStartOrder,setIsConnected,startScan,scanPermission,handleConnectPeripheral] = useBLE();
     return(
         <BleContext.Provider value = {{discoveredDevices,dataReceived,isConnected,objetGenerate,
-            writeStartOrder,setIsConnected,startScan,scanPermission,handleConnectPeripheral}}>
+            setObjetGenerate,writeStartOrder,setIsConnected,startScan,scanPermission,handleConnectPeripheral}}>
             {children}
         </BleContext.Provider>
     );

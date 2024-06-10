@@ -1,22 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, StatusBar, FlatList } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, FlatList,Button } from 'react-native';
 import Header from './Header';
 import HistoryCard from './HistoryCard';
-import datosJson from '../../assets/appDirectories/Mediciones.json';
+//import datosJson from '../../assets/appDirectories/Mediciones.json';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
+import { useDatosContext } from './useDatosContext';
 
 const HistoryHome = () => {
   
-  const Measurements = datosJson.mediciones;
-  const [datos, setDatos] = useState(Measurements);
+  /* const Measurements = datosJson.mediciones;
+  const [datos, setDatos] = useState(Measurements); */
+  const {datos,setDatos} = useDatosContext();
 
   useEffect(()=>{
-    
-    AsyncStorage.setItem('mediciones', JSON.stringify(Measurements)).then(()=>{   //esto se debe cambiar mas adelante
-      console.log("[Data UpLoad] Archivo Json Cargado con exito");
-    })
+    //console.debug(datos);
   },[])
-
 
   const handleDeleteRegister = (id) =>{
     //Manejar eliminacion de registros
@@ -41,9 +39,12 @@ const HistoryHome = () => {
                   handleDeleteRegister = {handleDeleteRegister}/>
             );}}
             keyExtractor={(datos) => datos.id.toString()}
-            showsVerticalScrollIndicator={false}
-          />
+            showsVerticalScrollIndicator={false}/>
+          {/* <Button
+          title='actualizar'
+          onPress={()=>{console.debug(datos)}}/> */}
         </View>
+
       );
 }
 

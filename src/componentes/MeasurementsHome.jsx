@@ -10,7 +10,7 @@ const MeasurementsHome = () => {
     
     const navigation = useNavigation();
        
-    const {isBleConnected,setIsBleConnected} = useBleConnectContext(false);
+    //const {isBleConnected,setIsBleConnected} = useBleConnectContext(false);
     const {discoveredDevices,dataReceived,isConnected,objetGenerate,setIsConnected,startScan,scanPermission,handleConnectPeripheral,} = useBleContext();
 
     return (
@@ -20,12 +20,12 @@ const MeasurementsHome = () => {
               >Para poder realizar la medicion debe estar conectado al dispositivo Electronico mediante Bluethooth  </Text>
               
               <TouchableOpacity
-                        style = {MeasurementsHomeStyles.touchable}
-                        onPress={() => navigation.navigate('Bluetooth')}   
+                style = {MeasurementsHomeStyles.touchable}
+                onPress={() => navigation.navigate('Bluetooth')}   
               >
                     <Text
-                        style = {MeasurementsHomeStyles.textButton}
-                        >Conectar Dispositivo </Text>
+                    style = {MeasurementsHomeStyles.textButton}
+                    >Conectar Dispositivo </Text>
                 </TouchableOpacity>
             </View>
          ):(

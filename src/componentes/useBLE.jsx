@@ -297,6 +297,7 @@ const useBLE = () => {
         dataReceived,
         isConnected,
         objetGenerate,
+        setObjetGenerate,
         writeStartOrder,
         setIsConnected,
         startScan,

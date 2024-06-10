@@ -6,21 +6,22 @@ import { MaterialIcons } from '@expo/vector-icons';
 import UserRegister from './UserRegister'
 import HistoryHome from './HistoryHome'
 import MeasurementsHome from './MeasurementsHome';
+import Measurements from './Measurements';
 import { StateProvider } from './useBleConnectContext';
 import BluetoothList from './BluetoothList';
 import Login from './Login';
 import HistoryShow from './HistoryShow';
-//import Measurements from './Measurements';
 import { Header } from '@react-navigation/stack';
 import UserShow from './UserShow';
+import { BleProvider } from './useBleContext';
+import { DatosProvider } from './useDatosContext';
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { BleProvider } from './useBleContext';
 import Dispositivos from './Dispositivos';
 
 
-const Measurements = 'Measurementscreen'
+const measurements = 'Measurementscreen'
 const history = 'HistoryScreen'
 const userRegister = 'UserRegister'
 // Estetica
@@ -63,6 +64,7 @@ const Main = () => {
             </StateProvider>
         );
     }
+
     
     const HistoryStack = ()=>{
         return (
@@ -121,6 +123,7 @@ const Main = () => {
     }
 
     return(
+        <DatosProvider>
         <NavigationContainer>
             <Tab.Navigator
                 initialRouteName= 'HistoryStack'
@@ -130,7 +133,7 @@ const Main = () => {
                 }}
             >
                 <Tab.Screen 
-                    name = {Measurements}
+                    name = {measurements}
                     component={Measurementstack}
                     options={{
                         tabBarLabel : 'Medicion',
@@ -160,7 +163,7 @@ const Main = () => {
                     }}
                     />
                 <Tab.Screen 
-                    name = 'AutenticacioStack'
+                    name = 'userStack'
                     component={UserStack}
                     options={{
                         tabBarLabel : 'Usuario',
@@ -174,7 +177,7 @@ const Main = () => {
                     }}/>
             </Tab.Navigator>
         </NavigationContainer>
-        
+        </DatosProvider>
     );
 
 }
