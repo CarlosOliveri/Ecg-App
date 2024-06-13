@@ -4,7 +4,7 @@ import  AsyncStorage  from '@react-native-async-storage/async-storage';
 
 const useDatosMedidos = () => {
 
-    const Measurements = datosJson.mediciones;
+    const Measurements = datosJson.mediciones;// Esto debe ser una consult al backend
     const [datos, setDatos] = useState(Measurements);
     useEffect(()=>{
         //console.debug(Measurements);

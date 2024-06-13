@@ -12,10 +12,6 @@ const HistoryHome = () => {
   const [datos, setDatos] = useState(Measurements); */
   const {datos,setDatos} = useDatosContext();
 
-  useEffect(()=>{
-    //console.debug(datos);
-  },[])
-
   const handleDeleteRegister = (id) =>{
     //Manejar eliminacion de registros
     const datosActualizados = datos.filter(dato => dato.id !== id);

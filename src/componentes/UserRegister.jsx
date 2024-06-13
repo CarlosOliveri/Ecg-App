@@ -22,6 +22,25 @@ const UserRegister = () => {
         Se:'',
     })
 
+    const handleGuardarRegistro = async () => {
+        //Generacion de objeto JS
+        const newRegistro = {
+            "nombre": Name,
+            "edad": Age,
+            "peso": Weight,
+            "altura": Height,
+            "sexo": Sex,
+        }
+
+        //Guardamos los datos 
+        await AsyncStorage.setItem('User', JSON.stringify(newRegistro));
+
+        await AsyncStorage.setItem('Nombre', JSON.stringify(Name));
+
+        //Cambiamos de Pantalla
+        navigation.navigate('UserShow');
+    }
+
     return (
         <View>
             <Text
@@ -118,17 +137,8 @@ const UserRegister = () => {
                         He:'',
                         Se:'',
                     });
-                    //Guardamos los datos 
-                    AsyncStorage.setItem('Nombre', JSON.stringify(Name));
-                    AsyncStorage.setItem('Edad', JSON.stringify(Age));
-                    AsyncStorage.setItem('Peso', JSON.stringify(Weight));
-                    AsyncStorage.setItem('Altura', JSON.stringify(Height));
-                    AsyncStorage.setItem('Sexo', JSON.stringify(Sex));
-
-                    //Cambiamos de Pantalla
-                    navigation.navigate('UserShow');
+                    handleGuardarRegistro();
                 }
-                
             }}
             >
                 <Text style = {UserStyles.textButton}>

@@ -20,7 +20,7 @@ const useBLE = () => {
     const [discoveredDevices,setDiscoveredDevices] = useState(new Map())
     const [dataReceived,setDataReceived] = useState([]);
     const [objetGenerate,setObjetGenerate] = useState([]);
-    const [isConnected,setIsConnected] = useState(false); //Estado que nos permite switchear entre mediciones y conexion
+    const [isConnected,setIsConnected] = useState(true); //Estado que nos permite switchear entre mediciones y conexion
     const [peripheralId,setPeripheralId] = useState();
 
     useEffect(()=>{

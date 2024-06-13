@@ -16,22 +16,20 @@ const MeasurementsHome = () => {
     return (
         (!isConnected) ? (
             <View>
-              <Text style = {MeasurementsHomeStyles.Text}
-              >Para poder realizar la medicion debe estar conectado al dispositivo Electronico mediante Bluethooth  </Text>
+                <Text style = {MeasurementsHomeStyles.Text}
+                    >Para poder realizar la medicion debe estar conectado al dispositivo Electronico mediante Bluethooth  </Text>
               
-              <TouchableOpacity
-                style = {MeasurementsHomeStyles.touchable}
-                onPress={() => navigation.navigate('Bluetooth')}   
-              >
+                <TouchableOpacity
+                    style = {MeasurementsHomeStyles.touchable}
+                    onPress={() => navigation.navigate('Bluetooth')}>
                     <Text
-                    style = {MeasurementsHomeStyles.textButton}
-                    >Conectar Dispositivo </Text>
+                        style = {MeasurementsHomeStyles.textButton}
+                            >Conectar Dispositivo </Text>
                 </TouchableOpacity>
             </View>
          ):(
             <Measurements/>
         )
- 
     );
 }
 
