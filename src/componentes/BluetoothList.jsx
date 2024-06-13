@@ -14,13 +14,14 @@ import { Button } from "react-native-elements";
 
 const BluetoothList = () => {
 
-  const {discoveredDevices,dataReceived,isConnected,objetGenerate,setObjetGenerate,writeStartOrder,setIsConnected,startScan,scanPermission,handleConnectPeripheral} = useBleContext();
+  const {discoveredDevices,dataReceived,isConnected,objetGenerate,setObjetGenerate,writeStartOrder,
+    setIsConnected,startScan,setDiscoveredDevices,scanPermission,handleConnectPeripheral} = useBleContext();
 
   const {isBleConnected,setIsBleConnected} = useBleConnectContext();
 
   const onConnectPeripheral = (device) => {
     handleConnectPeripheral(device)
-    setIsConnected(true);
+    //setIsConnected(true);
   }
 
   const [toggleEnable,setToggleEnable] = useState(false); 
@@ -57,6 +58,7 @@ const BluetoothList = () => {
             return
         }
         setToggleEnable(false);
+        setDiscoveredDevices(new Map());
     }
 ////////////////////////LAYOUT//////////////////////////////////
     return (

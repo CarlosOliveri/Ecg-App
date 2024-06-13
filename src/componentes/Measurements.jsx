@@ -13,7 +13,9 @@ const Measurements = () => {
 
     const {datos,setDatos} = useDatosContext();
     //const {isBleConnected,setIsBleConnected} = useBleConnectContext();
-    const {discoveredDevices,dataReceived,isConnected,objetGenerate,setObjetGenerate,writeStartOrder,setIsConnected,startScan,scanPermission,handleConnectPeripheral} = useBleContext();
+    const {discoveredDevices,dataReceived,isConnected,objetGenerate,
+        setObjetGenerate,writeStartOrder,setIsConnected,startScan,setDiscoveredDevices,scanPermission,
+        handleConnectPeripheral,handleBleDisconnectManual} = useBleContext();
 
     const [fecha,setFecha] = useState();
     const [segundos,setSegundos] = useState(0);
@@ -217,6 +219,13 @@ const Measurements = () => {
                         </Text>
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity
+                style={Measurementstyles.buttonDesconectar}
+                onPress={handleBleDisconnectManual}>
+                    <Text style={Measurementstyles.titleDesconectar}>
+                        DESCONECTAR
+                    </Text>
+                </TouchableOpacity>
             </View>
             {/* <Text style = {{fontSize:20}}>{dataReceived}</Text> */}
 

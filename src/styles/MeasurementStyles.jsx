@@ -15,13 +15,16 @@ export const Measurementstyles = StyleSheet.create({
     },
     actionContainer:{
         flex:2,
+        alignItems:'center',
+        //justifyContent:'center',
         height: 500,
         backgroundColor:'rgb(255,255,255)'
-    },
+    }, 
     buttonContainer:{
         flexDirection:'row',
         justifyContent:'space-around',
-        marginTop:100,
+        marginTop:50,
+        width:400,
     },
     Button:{
         backgroundColor: '#22aaee',
@@ -48,11 +51,10 @@ export const Measurementstyles = StyleSheet.create({
         marginTop: 50,
     },
     actividadContainer:{
-        alignItems:'center',
+        //alignItems:'center',
         flexDirection:'row',
         marginTop: 30,
         marginBottom: 2,
-
     },
     modalHead:{
         fontSize:35,
@@ -89,5 +91,17 @@ export const Measurementstyles = StyleSheet.create({
         borderRadius:10,
         padding:20,
         marginBottom:5,
+    },
+    buttonDesconectar:{
+        backgroundColor: '#22aaee',
+        borderRadius: 15,
+        padding: 10,
+        marginTop: 30,
+        width: 120,
+    },
+    titleDesconectar:{
+        color: 'white',
+        fontSize: 13,
+        textAlign:'center',
     }
 });

@@ -4,7 +4,7 @@ const RegistroShowStyles = StyleSheet.create({
     container:{
         flex:2,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
     },
     text:{
         fontSize: 50,

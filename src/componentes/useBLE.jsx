@@ -20,7 +20,7 @@ const useBLE = () => {
     const [discoveredDevices,setDiscoveredDevices] = useState(new Map())
     const [dataReceived,setDataReceived] = useState([]);
     const [objetGenerate,setObjetGenerate] = useState([]);
-    const [isConnected,setIsConnected] = useState(true); //Estado que nos permite switchear entre mediciones y conexion
+    const [isConnected,setIsConnected] = useState(false); //Estado que nos permite switchear entre mediciones y conexion
     const [peripheralId,setPeripheralId] = useState();
 
     useEffect(()=>{
@@ -69,6 +69,10 @@ const useBLE = () => {
             BleManagerEmitter.addListener(
               'BleManagerConnectPeripheral',
               ()=>{setIsConnected(true);}
+            ),
+            BleManagerEmitter.addListener(
+              'BleManagerDisconnectPeripheral',
+              handleDisconnectedPeripheral
             ),
             BleManagerEmitter.addListener(
               'BleManagerDidUpdateState',
@@ -272,17 +276,26 @@ const useBLE = () => {
     const handleBleDisconnect = () => {
       setIsConnected(false);
     }
+    const handleBleDisconnectManual = () => {
+      BleManager.disconnect(peripheralId).then(() => {
+        // Success code
+        console.debug("Disconnected");
+      }).catch((error) => {
+        // Failure code
+        console.log(error);
+      });
+    }
 
     const suscribeCharacteristicToReceive = async (peripheral) => {
       await BleManager.startNotification(peripheral.id,_UART_UUID,_UART_RX);
       console.debug("[Suscripcion Receive] Suscripcion a recibir datos realizada");
     }
 
-    /* const handleDisconnectedPeripheral = (BleDisconnectPeripheralEvent) => {
+    const handleDisconnectedPeripheral = (BleDisconnectPeripheralEvent) => {
         console.debug(
           `[handleDisconnectedPeripheral][${BleDisconnectPeripheralEvent.peripheral}] disconnected.`,
         );
-        setPeripherals(map => {
+        setDiscoveredDevices(map => {
           let p = map.get(BleDisconnectPeripheralEvent.peripheral);
           if (p) {
             p.connected = false;
@@ -290,7 +303,8 @@ const useBLE = () => {
           }
           return map;
         });
-    }; */
+        setIsConnected(false);
+    };
 
     return ([
         discoveredDevices,
@@ -301,8 +315,10 @@ const useBLE = () => {
         writeStartOrder,
         setIsConnected,
         startScan,
+        setDiscoveredDevices,
         scanPermission,
         handleConnectPeripheral,
+        handleBleDisconnectManual,
     ]);
 }
 

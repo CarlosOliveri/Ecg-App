@@ -1,11 +1,14 @@
 import React ,{useEffect, useReducer} from "react";
 import { useState } from "react";
-import { View, Text, StyleSheet, Dimensions,Image,ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, Dimensions,Image,ImageBackground ,TouchableOpacity} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from '@react-navigation/native';
 
 
 
-const UserShow = () =>{
+const UserShow = ({handleSetUserLog}) =>{
+
+    const navigation = useNavigation();
     const [storedName, setStoredName] = useState(null);
     const [storedAge, setStoredAge] = useState(null);
     const [storedWeight, setStoredWeight] = useState(null);
@@ -38,37 +41,42 @@ const UserShow = () =>{
 
     //require('../../assets/')
     return (
-        <>
+        <View style={styles.pincipalContainer}>
         <ImageBackground style ={styles.fondo} resizeMode="cover" source={require('../../assets/fondo.png')} >
             <View style ={styles.container} flexDirection = 'colum'>
-            <View style ={styles.line} flexDirection='row'  paddingRight={50} alingIyems='stretch'>
-                <Image style ={styles.image} source={{uri:"https://media.gq.com.mx/photos/5f6ce732bc946e88f6c96320/16:9/w_2560%2Cc_limit/goky%2520ultra%2520instinto.jpg" }}/>
-                <Text numberOfLines={2} ellipsizeMode="tail" style={styles.nombre}>{user.nombre}</Text>
+                <View style ={styles.line} flexDirection='row'  paddingRight={50} alingIyems='stretch'>
+                    <Image style ={styles.image} source={{uri:"https://media.gq.com.mx/photos/5f6ce732bc946e88f6c96320/16:9/w_2560%2Cc_limit/goky%2520ultra%2520instinto.jpg" }}/>
+                    <Text numberOfLines={2} ellipsizeMode="tail" style={styles.nombre}>{user.nombre}</Text>
+                </View>
+                <View flexDirection='row'>
+                    <Text style={styles.caractT}>Edad: </Text>
+                    <Text style={styles.caractS}>{user.edad}</Text>
+                    <Text style={styles.caractS}>años</Text>
+                </View>
+                <View flexDirection='row'>
+                    <Text style={styles.caractT}>Peso: </Text>
+                    <Text style={styles.caractS}>{user.peso}</Text>
+                    <Text style={styles.caractS}>kg</Text>
+                </View>
+                <View flexDirection='row'>
+                    <Text style={styles.caractT}>Altura: </Text>
+                    <Text style={styles.caractS}>{user.altura}</Text>
+                    <Text style={styles.caractS}>cm</Text>
+                </View>
+                <View flexDirection='row'>
+                    <Text style={styles.caractT}>Sexo: </Text>
+                    <Text style={styles.caractS}>{user.sexo}</Text>
+                </View>
+                <View flexDirection='row'>
+                </View>
             </View>
-            <View flexDirection='row'>
-                <Text style={styles.caractT}>Edad: </Text>
-                <Text style={styles.caractS}>{user.edad}</Text>
-                <Text style={styles.caractS}>años</Text>
-            </View>
-            <View flexDirection='row'>
-                <Text style={styles.caractT}>Peso: </Text>
-                <Text style={styles.caractS}>{user.peso}</Text>
-                <Text style={styles.caractS}>kg</Text>
-            </View>
-            <View flexDirection='row'>
-                <Text style={styles.caractT}>Altura: </Text>
-                <Text style={styles.caractS}>{user.altura}</Text>
-                <Text style={styles.caractS}>cm</Text>
-            </View>
-            <View flexDirection='row'>
-                <Text style={styles.caractT}>Sexo: </Text>
-                <Text style={styles.caractS}>{user.sexo}</Text>
-            </View>
-            <View flexDirection='row'>
-            </View>
-        </View>
         </ImageBackground>
-        </>
+        <TouchableOpacity
+            style={styles.touchable}
+            onPress={()=>{handleSetUserLog()}}>
+            <Text style={styles.textButton}>Cambiar Usuario</Text>
+        </TouchableOpacity>
+        </View>
         /*<View style ={styles.container} flexDirection = 'colum'>
             <ImageBackground style ={styles.fondo} resizeMode="cover" source={require('../../assets/USER.png')}/>
             <View flexDirection='row'>
@@ -97,6 +105,11 @@ const UserShow = () =>{
     );
 }
 const styles = StyleSheet.create({
+    pincipalContainer:{
+        //backgroundColor:'red',
+        //width:400,
+        alignItems: 'center',
+    },
     container:{
         width: 300,
         height: 300,
@@ -118,7 +131,7 @@ const styles = StyleSheet.create({
         width: 300,
         height: 300,
         marginTop:'40%',
-        marginLeft:30,
+        //marginLeft:45,
         borderRadius: 20, // Ajusta el radio de las esquinas
         overflow: 'hidden',
         elevation:10,
@@ -155,6 +168,19 @@ const styles = StyleSheet.create({
         marginTop:20,
         color:'white',
         paddingLeft:5,
+    },
+    touchable:{
+        backgroundColor: '#1A5276',
+        padding : 10,
+        marginTop : 30,
+        width : '50%',
+        alignSelf: 'center',
+        borderRadius: 10,
+    },
+    textButton:{
+        fontSize: 16,
+        textAlign: 'center',
+        color: "white",
     },
 });
 export default UserShow;
