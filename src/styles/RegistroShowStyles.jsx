@@ -2,9 +2,9 @@ import { StyleSheet } from "react-native";
 
 const RegistroShowStyles = StyleSheet.create({
     container:{
-        flex:1,
+        flex:2,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
     },
     text:{
         fontSize: 50,
@@ -12,7 +12,11 @@ const RegistroShowStyles = StyleSheet.create({
        // fontFamily: 'arial',
         color: '#4567f7',
         textAlign:'center',
-    }
+    },
+    chartHeart:{
+        flex:1,
+        marginTop: 5,
+    },
 })
 
 export default RegistroShowStyles;

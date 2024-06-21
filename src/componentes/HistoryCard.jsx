@@ -3,8 +3,9 @@ import {View, Text, StyleSheet, Dimensions,TouchableOpacity,ImageBackground} fro
 import IconLabel from "./IconLabel";
 import HistoryCardStyles from "../styles/HistoryCardStyles";
 import { useNavigation } from "@react-navigation/native";
+import { color } from "react-native-elements/dist/helpers";
 
-const iconColor = 'black';
+const iconColor = 'white';
 
 const HistoryCard = ({ info, handleDeleteRegister }) => {
 
@@ -31,22 +32,22 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
             <View style = {HistoryCardStyles.infoStyle}>
               
               <Text style={HistoryCardStyles.subtitleStyle}> Fecha: </Text>
-              <Text marginLeft={-2}> {info.fecha} </Text>
+              <Text marginLeft={-2} style={{color:'white'}}> {info.fecha} </Text>
               
               <Text style={HistoryCardStyles.subtitleStyle} marginLeft={20}> Hora: </Text>
-              <Text marginLeft={-2}> {info.hora} </Text>
+              <Text marginLeft={-2} style={{color:'white'}}> {info.hora} </Text>
             
             </View>
             
             <View style = {HistoryCardStyles.infoStyle}>
             
               <Text style={HistoryCardStyles.subtitleStyle}> Actividad Realizada: </Text>
-              <Text marginLeft={-2}> {info.actividad} </Text>
+              <Text marginLeft={-2} style={{color:'white'}}> {info.actividad} </Text>
             
             </View>
             
             <View style={HistoryCardStyles.iconTimerStyle}>
-              <IconLabel name="timer" label= {info.tiempo_actividad_minutos}  color={iconColor} />
+              <IconLabel name="timer" label = {info.tiempo_actividad_minutos} color={iconColor}/>
             </View>
             
             <View style={HistoryCardStyles. iconArrowtyle}>

@@ -65,6 +65,9 @@ const UserRegisterStyles = StyleSheet.create({
         marginHorizontal:120,
         fontSize: 10,
         color: 'red',
+    },
+    userShow:{
+
     }
 })
 export default UserRegisterStyles;

@@ -1,6 +1,7 @@
 import { NativeEventEmitter, NativeModules, Platform, PermissionsAndroid,Alert } from 'react-native';
 import {useState, useEffect} from "react";
 import BleManager from 'react-native-ble-manager';
+import {Buffer} from 'buffer'; 
 import { bytesToString } from "convert-string";
 import { PERMISSIONS } from 'react-native-permissions';
 
@@ -19,7 +20,8 @@ const useBLE = () => {
     const [discoveredDevices,setDiscoveredDevices] = useState(new Map())
     const [dataReceived,setDataReceived] = useState([]);
     const [objetGenerate,setObjetGenerate] = useState([]);
-    const [isConnected,setIsConnected] = useState(false);
+    const [isConnected,setIsConnected] = useState(true); //Estado que nos permite switchear entre mediciones y conexion
+    const [peripheralId,setPeripheralId] = useState();
 
     useEffect(()=>{
         BluetoothModuleStart();
@@ -68,6 +70,17 @@ const useBLE = () => {
               'BleManagerConnectPeripheral',
               ()=>{setIsConnected(true);}
             ),
+            BleManagerEmitter.addListener(
+              'BleManagerDisconnectPeripheral',
+              handleDisconnectedPeripheral
+            ),
+            BleManagerEmitter.addListener(
+              'BleManagerDidUpdateState',
+            ({ state }) => {
+                console.log('El bluetooth se a apagado =>estado: ', state);
+                // Aquí puedes actualizar el estado del Bluetooth en tu componente
+                handleBleDisconnect();}
+            ),
         ];
 
         return () => {
@@ -79,14 +92,32 @@ const useBLE = () => {
 
     },[]);
 
+
     const handleUpdateValueForCharacteristic = (data) => {
-        const values = data.value;
-        setDataReceived(dataReceived => dataReceived.concat(values));
-        values.map((element) => {
-          setObjetGenerate(objetGenerate => [...objetGenerate,{x: objetGenerate.length,y: element}])
-        })
-        //setObjetGenerate(objetGenerate => objetGenerate.concat(objetArray));
+        const valuesAcsii = data.value;//recibe el dato en formato ascii
+        const valuesString = String.fromCharCode.apply(null, valuesAcsii); //devuelve el valor entero real pero como un string
+        const valuesInt = parseInt(valuesString,10);
+        //setDataReceived(dataReceived => [...dataReceived,parseInt(valuesInt,10)]); //posiblemente no se use este estado
+        //Concatenamos el dato recibido en formato de objeto de JS casteando a un entero y guardando tambien el indice
+        setObjetGenerate(objetGenerate => [...objetGenerate,{x: objetGenerate.length,y: valuesInt}]);
+        //console.log(valuesString);
+
     };
+
+    //const buffer = Buffer.from([1]);
+    const writeStartOrder = (order) => {
+      const buffer = Buffer.from([order]);
+      BleManager.write(peripheralId,_UART_UUID,_UART_TX,
+        buffer.toJSON().data
+      ).then(() => {
+        if (order == 1){
+          console.debug("empezar medicion");  
+        }else{
+          //setObjetGenerate([]);
+          console.debug("terminar medicion");
+        }
+      })
+    }
     
     const BluetoothModuleStart = () => {
         BleManager.start({showAlert: false, forceLegacy: true}).then(() =>{ 
@@ -184,6 +215,7 @@ const useBLE = () => {
             } 
             BleManager.connect(peripheral.id).then(() =>{
               console.debug("[Connection Peripheral] La conexion se ha realizado con exito");
+              setPeripheralId(peripheral.id);
               //console.log(peripheral)
             });
 
@@ -241,16 +273,29 @@ const useBLE = () => {
       return new Promise (resolve => setTimeout(resolve, ms));
     }
 
+    const handleBleDisconnect = () => {
+      setIsConnected(false);
+    }
+    const handleBleDisconnectManual = () => {
+      BleManager.disconnect(peripheralId).then(() => {
+        // Success code
+        console.debug("Disconnected");
+      }).catch((error) => {
+        // Failure code
+        console.log(error);
+      });
+    }
+
     const suscribeCharacteristicToReceive = async (peripheral) => {
       await BleManager.startNotification(peripheral.id,_UART_UUID,_UART_RX);
       console.debug("[Suscripcion Receive] Suscripcion a recibir datos realizada");
     }
 
-    /* const handleDisconnectedPeripheral = (BleDisconnectPeripheralEvent) => {
+    const handleDisconnectedPeripheral = (BleDisconnectPeripheralEvent) => {
         console.debug(
           `[handleDisconnectedPeripheral][${BleDisconnectPeripheralEvent.peripheral}] disconnected.`,
         );
-        setPeripherals(map => {
+        setDiscoveredDevices(map => {
           let p = map.get(BleDisconnectPeripheralEvent.peripheral);
           if (p) {
             p.connected = false;
@@ -258,17 +303,22 @@ const useBLE = () => {
           }
           return map;
         });
-    }; */
+        setIsConnected(false);
+    };
 
     return ([
         discoveredDevices,
         dataReceived,
         isConnected,
         objetGenerate,
+        setObjetGenerate,
+        writeStartOrder,
         setIsConnected,
         startScan,
+        setDiscoveredDevices,
         scanPermission,
         handleConnectPeripheral,
+        handleBleDisconnectManual,
     ]);
 }
 
