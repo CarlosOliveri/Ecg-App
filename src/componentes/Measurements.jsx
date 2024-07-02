@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { View,Text,TextInput,DeviceEventEmitter, Button, TouchableOpacity, Modal, Touchable} from 'react-native';
+import { View,Text,TextInput,DeviceEventEmitter, Button, TouchableOpacity, Modal,ImageBackground, Touchable} from 'react-native';
 import {Measurementstyles} from '../styles/MeasurementStyles';
 import { useDatosContext } from './useDatosContext';
 import {useBleContext} from './useBleContext';
@@ -8,6 +8,9 @@ import ChartHeart from './ChartHeart';
 import IconLabel from "./IconLabel";
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+
 
 const Measurements = () => {
 
@@ -189,17 +192,22 @@ const Measurements = () => {
     
     return(
         <View style={Measurementstyles.containerPrincipal}>
-            <View style = {Measurementstyles.chartHeart}>
-                <ChartHeart
-                data = {objetGenerate}/>
-            </View>
-        
-            <View style={Measurementstyles.actionContainer}>
+                
+                <View style={Measurementstyles.actionContainer}>
                 <View style={Measurementstyles.bpmContainer}>
-                    <Text style={Measurementstyles.bpmTitle}>BPM:</Text>
+                    <FontAwesome5 name="heartbeat" size={30} style={Measurementstyles.Icon}/>
                     <Text style={Measurementstyles.bpmValue}>{bpmValue}</Text>
+                    <Text style={Measurementstyles.bpmTitle}>BPM</Text>
+                    <MaterialIcons name="timer" size={24} color={'#1A5276'} marginTop={20} marginLeft={90} />
+                    <Text style={[Measurementstyles.bpmValue, {marginLeft: 10}]}>{segundos}s</Text>
                 </View>
-                <Text style={Measurementstyles.bpmValue}>{segundos}</Text>
+                <View style = {Measurementstyles.chartHeart}>
+                    <ChartHeart
+                    data = {objetGenerate}/>
+                </View>
+
+                
+            
                 <View style={Measurementstyles.buttonContainer}>
                     <TouchableOpacity
                         style = {Measurementstyles.Button}
@@ -219,13 +227,16 @@ const Measurements = () => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                style={Measurementstyles.buttonDesconectar}
-                onPress={handleBleDisconnectManual}>
-                    <Text style={Measurementstyles.titleDesconectar}>
-                        DESCONECTAR
-                    </Text>
-                </TouchableOpacity>
+                <View marginVertical={50}>
+                    <TouchableOpacity
+                    style={Measurementstyles.buttonDesconectar}
+                    onPress={handleBleDisconnectManual}>
+                        <Text style={Measurementstyles.titleDesconectar}>
+                            DESCONECTAR
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+               
             </View>
             {/* <Text style = {{fontSize:20}}>{dataReceived}</Text> */}
 
@@ -235,67 +246,70 @@ const Measurements = () => {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={ocultarModal}>
-                <View style={{alignItems:'center',justifyContent:'center'}}>
-                    <View style={{alignItems:'center',justifyContent:'center',backgroundColor: '#22aaee',width:350,height:500,marginTop:200}}>
-                        <Text style={Measurementstyles.modalHead}>
-                            Actividad
-                        </Text>
-                        <View style={Measurementstyles.actividadContainer}>
-                            <TouchableOpacity
-                            style={Measurementstyles.touchActividad}
-                            onPress={()=>{setIntensityAct('Alta');}}>
-                                <Text style={Measurementstyles.actividad}>
-                                    Alta intensidad
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                            onPress={()=>{setIntensityAct('Media')}}
-                            style={Measurementstyles.touchActividad}>
-                                <Text style={Measurementstyles.actividad}>
-                                    Media intensidad
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                            onPress={()=>{setIntensityAct('Baja')}}
-                            style={Measurementstyles.touchActividad}>
-                                <Text style={Measurementstyles.actividad}>
-                                    Baja intensidad
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <TextInput
-                            style={Measurementstyles.duracionActividad}
-                            placeholder="actividad"
-                            placeholderTextColor={'#bbbbbb'}
-                            value= {Activity}
-                            onChangeText = {(val)=>{
-                                setActivity(val);
-                            }}/>
-                        <TextInput
-                            style={Measurementstyles.duracionActividad}
-                            placeholder="[minutos]"
-                            placeholderTextColor={'#bbbbbb'}
-                            value= {timeActivity}
-                            onChangeText = {(val)=>{
-                                setTimeActivity(parseInt(val,10));
-                            }}/>
-                        <View style={Measurementstyles.containerButtonActivity}>
-                            <TouchableOpacity
+                <View style={{alignItems:'center',justifyContent:'center',backgroundColor:'rgba(0,0,0,0.2)',height:'100%'}}>
+                        <ImageBackground style ={Measurementstyles.fondo} source={require('../../assets/Actividad.jpg')} >
+                        <View style={Measurementstyles.caja}>
+                            <Text style={Measurementstyles.modalHead}>
+                                Actividad
+                            </Text>
+                            <View style={Measurementstyles.actividadContainer}>
+                                <TouchableOpacity
                                 style={Measurementstyles.touchActividad}
-                                onPress={guardarNewRegistro}>
-                                    <Text
-                                        style={Measurementstyles.actividad}    
-                                            >Guardar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={Measurementstyles.touchActividad}
-                                onPress={ocultarModal}>
-                                    <Text
-                                        style={Measurementstyles.actividad}
-                                            >Descartar</Text>
-                            </TouchableOpacity>
+                                onPress={()=>{setIntensityAct('Alta');}}>
+                                    <Text style={Measurementstyles.actividad}>
+                                        Alta intensidad
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                onPress={()=>{setIntensityAct('Media')}}
+                                style={Measurementstyles.touchActividad}>
+                                    <Text style={Measurementstyles.actividad}>
+                                        Media intensidad
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                onPress={()=>{setIntensityAct('Baja')}}
+                                style={Measurementstyles.touchActividad}>
+                                    <Text style={Measurementstyles.actividad}>
+                                        Baja intensidad
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <TextInput
+                                style={Measurementstyles.duracionActividad}
+                                placeholder="Actividad Realizada"
+                                placeholderTextColor={'#616A6B'}
+                                value= {Activity}
+                                onChangeText = {(val)=>{
+                                    setActivity(val);
+                                }}/>
+                            <TextInput
+                                style={Measurementstyles.duracionActividad}
+                                placeholder="Duracion [minutos]"
+                                placeholderTextColor={'#616A6B'}
+                                value= {timeActivity}
+                                onChangeText = {(val)=>{
+                                    setTimeActivity(parseInt(val,10));
+                                }}/>
+                            <View style={Measurementstyles.containerButtonActivity}>
+                                <TouchableOpacity
+                                    style={Measurementstyles.touchActividadButton}
+                                    onPress={guardarNewRegistro}>
+                                        <Text
+                                            style={Measurementstyles.actividadtxt}    
+                                                >Guardar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={Measurementstyles.touchActividadButton}
+                                    onPress={ocultarModal}>
+                                        <Text
+                                            style={Measurementstyles.actividadtxt}
+                                                >Descartar</Text>
+                                </TouchableOpacity>
+                            </View>
+                            
                         </View>
-                    </View>
+                        </ImageBackground>        
                 </View>
             </Modal>
         </View>

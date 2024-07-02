@@ -10,12 +10,14 @@ const UserShow = ({handleSetUserLog}) =>{
 
     const navigation = useNavigation();
     const [storedName, setStoredName] = useState(null);
+    const [storedCI, setStoredCI] = useState(null);
     const [storedAge, setStoredAge] = useState(null);
     const [storedWeight, setStoredWeight] = useState(null);
     const [storedHeight, setStoredHeight] = useState(null);
     const [storedSex, setStoredSex] = useState(null);
     const [user,setUser] = useState({
         "nombre": null,
+        "cedula":null,
         "edad": null,
         "peso": null,
         "altura": null,
@@ -49,6 +51,10 @@ const UserShow = ({handleSetUserLog}) =>{
                     <Text numberOfLines={2} ellipsizeMode="tail" style={styles.nombre}>{user.nombre}</Text>
                 </View>
                 <View flexDirection='row'>
+                    <Text style={styles.caractT}>C.I: </Text>
+                    <Text style={styles.caractS}>{user.cedula}</Text>
+                </View>
+                <View flexDirection='row'>
                     <Text style={styles.caractT}>Edad: </Text>
                     <Text style={styles.caractS}>{user.edad}</Text>
                     <Text style={styles.caractS}>años</Text>
@@ -67,8 +73,7 @@ const UserShow = ({handleSetUserLog}) =>{
                     <Text style={styles.caractT}>Sexo: </Text>
                     <Text style={styles.caractS}>{user.sexo}</Text>
                 </View>
-                <View flexDirection='row'>
-                </View>
+
             </View>
         </ImageBackground>
         <TouchableOpacity
@@ -108,11 +113,12 @@ const styles = StyleSheet.create({
     pincipalContainer:{
         //backgroundColor:'red',
         //width:400,
+        marginTop:-40,
         alignItems: 'center',
     },
     container:{
-        width: 300,
-        height: 300,
+        width: 340,
+        height: 350,
        // marginTop:'40%',
        // marginLeft:25,
        // borderWidth : 5,
@@ -123,13 +129,13 @@ const styles = StyleSheet.create({
         elevation:0,
     },
     line:{
-        width: 300,
+        width: 340,
     },
     fondo:{
         //flex:1,
         resizeMode:'cover',
-        width: 300,
-        height: 300,
+        width: 340,
+        height: 350,
         marginTop:'40%',
         //marginLeft:45,
         borderRadius: 20, // Ajusta el radio de las esquinas
@@ -139,7 +145,7 @@ const styles = StyleSheet.create({
     image:{
         width:70,
         height:70,
-        marginTop:5,
+        marginTop:17,
         marginLeft:5,
         resizeMode:'cover',
         borderRadius:35,
@@ -147,7 +153,7 @@ const styles = StyleSheet.create({
     nombre:{
         fontSize: 30,
         marginTop:15,
-        marginLeft:10,
+        marginLeft:0,
         paddingHorizontal:10,
         paddingVertical:0,
         fontWeight:'bold',
