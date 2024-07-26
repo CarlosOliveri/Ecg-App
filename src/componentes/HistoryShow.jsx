@@ -90,7 +90,7 @@ const HistoryShow =({route})=>{
                     </View>
                     <View flexDirection='row'>
                         <FontAwesome5 name="heartbeat" size={30} style={styles.Icon} />
-                        <Text style={[styles.BPM]}>{info.num} BPM</Text>
+                        <Text style={[styles.BPM]}>{info.BPM_calculado} BPM</Text>
                     </View>
     
     

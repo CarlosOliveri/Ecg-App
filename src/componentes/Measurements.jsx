@@ -103,11 +103,14 @@ const Measurements = () => {
     },[isRunning])
     //Detecta cambios en el Timer para detenerlo
     useEffect(() =>{
-        if (segundos > 9){
+        if (segundos > 10){
             stopTimer();
             //console.log(segundos)
             setearFecha(); //Se genera el objeto fecha y Datos para guardar
             mostrarModal();//Temporalmente aca
+            //Prueba para detener la medicion 
+            setIsRunning(false);
+            writeStartOrder(0);
         }
         if (segundos != 0){
             handleBpsCalculate();
@@ -165,6 +168,7 @@ const Measurements = () => {
             "hora": fecha.hora,
             "tiempo_actividad_minutos": timeActivity,
             "datos_medicion": objetGenerate,
+            "BPM_calculado": bpmValue,
         };
         setDatos(datos => [...datos,newRegistro])
         await AsyncStorage.setItem('mediciones',JSON.stringify(datos));
