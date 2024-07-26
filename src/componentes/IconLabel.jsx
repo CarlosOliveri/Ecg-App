@@ -1,7 +1,6 @@
 import React from "react";
 import { View,Text, StyleSheet } from "react-native";
 import { Icon } from 'react-native-elements';
-import { FontAwesome } from '@expo/vector-icons';
 
 //Funcion para Realizar Iconos
 const  IconLabel = ({name,label,color,size})  => {

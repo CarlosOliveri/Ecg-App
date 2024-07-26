@@ -1,19 +1,17 @@
 import React,{useState,useEffect} from 'react';
-import { View,Text,TextInput,DeviceEventEmitter, Button, TouchableOpacity, Modal, Touchable} from 'react-native';
+import { View,Text,TextInput,DeviceEventEmitter, TouchableOpacity, Modal} from 'react-native';
 import {Measurementstyles} from '../styles/MeasurementStyles';
 import { useDatosContext } from './useDatosContext';
 import {useBleContext} from './useBleContext';
-import { useBleConnectContext } from './useBleConnectContext';
+//import { useBleConnectContext } from './useBleConnectContext';
 import ChartHeart from './ChartHeart';
-import IconLabel from "./IconLabel";
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 
 const Measurements = () => {
 
     const {datos,setDatos} = useDatosContext();
     //const {isBleConnected,setIsBleConnected} = useBleConnectContext();
-    const {discoveredDevices,dataReceived,isConnected,objetGenerate,
+    const {discoveredDevices,dataReceived,isConnected,objetGenerate,peakCont,
         setObjetGenerate,writeStartOrder,setIsConnected,startScan,setDiscoveredDevices,scanPermission,
         handleConnectPeripheral,handleBleDisconnectManual} = useBleContext();
 
@@ -30,7 +28,7 @@ const Measurements = () => {
 
     const handleBpsCalculate = () => {
         //Calculo de los BPS
-        const bps = (contarPicos()/segundos)*60;
+        const bps = (contarPicos/segundos)*60;
         setBpmValue(parseInt(bps,10));
         //console.log(bps);
     }
@@ -98,16 +96,26 @@ const Measurements = () => {
             clearInterval(interval);
         };
     },[isRunning])
+
+    const printDatos = async () =>{
+        const valores = await AsyncStorage.getItem("lecturas");
+        print(valores);
+    }
     //Detecta cambios en el Timer para detenerlo
     useEffect(() =>{
-        if (segundos > 9){
-            stopTimer();
-            //console.log(segundos)
-            setearFecha(); //Se genera el objeto fecha y Datos para guardar
-            mostrarModal();//Temporalmente aca
-        }
-        if (segundos != 0){
-            handleBpsCalculate();
+        try{
+            if (segundos >= 100){
+                stopTimer();
+                //console.log(segundos)
+                setearFecha(); //Se genera el objeto fecha y Datos para guardar
+                mostrarModal();//Temporalmente aca
+                console.log(objetGenerate)
+            }
+            AsyncStorage.setItem("lecturas", JSON.stringify(objetGenerate)).then(
+                printDatos()
+            );
+        }catch(e){
+            console.debug("dejar pasar excepcion");
         }
     },[segundos])
     //inicia el timer
@@ -119,8 +127,8 @@ const Measurements = () => {
     }
     //detiene el timer
     const stopTimer = () =>{
-        setIsRunning(false);
         writeStartOrder(0);
+        setIsRunning(false);
         //setSegundos(0);
     }
     const resetTimer = () => {
@@ -161,6 +169,7 @@ const Measurements = () => {
             "fecha": fecha.fecha,
             "hora": fecha.hora,
             "tiempo_actividad_minutos": timeActivity,
+            "BPM": bpmValue,
             "datos_medicion": objetGenerate,
         };
         setDatos(datos => [...datos,newRegistro])
@@ -191,7 +200,7 @@ const Measurements = () => {
         <View style={Measurementstyles.containerPrincipal}>
             <View style = {Measurementstyles.chartHeart}>
                 <ChartHeart
-                data = {objetGenerate}/>
+                data = {[]/*objetGenerate*/}/>
             </View>
         
             <View style={Measurementstyles.actionContainer}>

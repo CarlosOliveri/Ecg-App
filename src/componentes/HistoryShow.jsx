@@ -1,7 +1,7 @@
 import React ,{useEffect, useState}from "react";
 import { View, Text } from 'react-native';
 import RegistroShowStyles from "../styles/RegistroShowStyles";
-import { useDatosContext } from "./useDatosContext";
+//import { useDatosContext } from "./useDatosContext";
 import ChartHeart from './ChartHeart';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -38,7 +38,7 @@ const HistoryShow =({route})=>{
                     {info.num}:{info.actividad}
                 </Text>
                 <Text style = {RegistroShowStyles.text}>
-                    intensidad:  {info.intensidad}
+                    intensidad:  {info.intensidad},{info.BPM}
                 </Text>
                 <Text style = {RegistroShowStyles.text}>
                     {info.fecha}/{info.hora}

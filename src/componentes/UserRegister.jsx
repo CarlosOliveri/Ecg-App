@@ -4,7 +4,6 @@ import UserStyles from '../styles/UserRegisterStyles';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserShow from './UserShow';
-import UserRegisterStyles from '../styles/UserRegisterStyles';
 
 const UserRegister = () => {
 

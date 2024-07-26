@@ -1,7 +1,5 @@
-import React,{useState, useEffect} from "react";
-import { Platform, NativeModules,
-     NativeEventEmitter, PermissionsAndroid, View,
-      Text, FlatList, StyleSheet} from "react-native";
+import React,{useState} from "react";
+import {  View,Text, FlatList} from "react-native";
 import BluetoothListStyles from "../styles/BluetoothListStyles";
 import Empty from './Empty';
 import Toggle from './Toggle';
@@ -9,15 +7,16 @@ import Dispositivos from "./Dispositivos";
 //import useBLE from "./useBLE";
 import {useBleConnectContext} from "./useBleConnectContext";
 import {useBleContext} from './useBleContext';
-import { useNavigation} from "@react-navigation/native";
-import { Button } from "react-native-elements";
+//import { useNavigation} from "@react-navigation/native";
 
 const BluetoothList = () => {
 
-  const {discoveredDevices,dataReceived,isConnected,objetGenerate,setObjetGenerate,writeStartOrder,
+  const {discoveredDevices,dataReceived,isConnected,objetGenerate,peakCont,setObjetGenerate,writeStartOrder,
     setIsConnected,startScan,setDiscoveredDevices,scanPermission,handleConnectPeripheral} = useBleContext();
 
   const {isBleConnected,setIsBleConnected} = useBleConnectContext();
+
+  //console.log(discoveredDevices);
 
   const onConnectPeripheral = (device) => {
     handleConnectPeripheral(device)

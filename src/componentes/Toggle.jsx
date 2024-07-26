@@ -1,5 +1,5 @@
 import React from "react";
-import { View,Text,StyleSheet,Switch,TouchableOpacity } from "react-native";
+import { View,Text,StyleSheet,Switch } from "react-native";
 
 const Toggle = (props) => {
     let tog = false;

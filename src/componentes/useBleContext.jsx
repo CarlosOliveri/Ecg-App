@@ -4,10 +4,10 @@ import useBLE from "./useBLE";
 const BleContext = createContext();
 
 export const BleProvider = ({children}) => {
-    const [discoveredDevices,dataReceived,isConnected,objetGenerate,
+    const [discoveredDevices,dataReceived,isConnected,objetGenerate,peakCont,
         setObjetGenerate,writeStartOrder,setIsConnected,startScan,setDiscoveredDevices,scanPermission,handleConnectPeripheral,handleBleDisconnectManual] = useBLE();
     return(
-        <BleContext.Provider value = {{discoveredDevices,dataReceived,isConnected,objetGenerate,
+        <BleContext.Provider value = {{discoveredDevices,dataReceived,isConnected,objetGenerate,peakCont,
             setObjetGenerate,writeStartOrder,setIsConnected,startScan,setDiscoveredDevices,scanPermission,handleConnectPeripheral,handleBleDisconnectManual}}>
             {children}
         </BleContext.Provider>

@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, StatusBar, FlatList,Button } from 'react-native';
-import Header from './Header';
+import React from 'react';
+import { StyleSheet, View, FlatList} from 'react-native';
 import HistoryCard from './HistoryCard';
 //import datosJson from '../../assets/appDirectories/Mediciones.json';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';

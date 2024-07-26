@@ -1,6 +1,6 @@
-import React ,{useEffect, useReducer} from "react";
+import React ,{useEffect} from "react";
 import { useState } from "react";
-import { View, Text, StyleSheet, Dimensions,Image,ImageBackground ,TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet,Image,ImageBackground ,TouchableOpacity} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native';
 

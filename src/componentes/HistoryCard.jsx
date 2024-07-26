@@ -1,9 +1,8 @@
-import React, {useEffect} from "react";
-import {View, Text, StyleSheet, Dimensions,TouchableOpacity,ImageBackground} from 'react-native';
+import React from "react";
+import {View, Text,TouchableOpacity,ImageBackground} from 'react-native';
 import IconLabel from "./IconLabel";
 import HistoryCardStyles from "../styles/HistoryCardStyles";
 import { useNavigation } from "@react-navigation/native";
-import { color } from "react-native-elements/dist/helpers";
 
 const iconColor = 'white';
 

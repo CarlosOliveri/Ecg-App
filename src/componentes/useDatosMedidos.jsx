@@ -1,6 +1,6 @@
 import {React,useState,useEffect} from "react";
 import datosJson from '../../assets/appDirectories/Mediciones.json';
-import  AsyncStorage  from '@react-native-async-storage/async-storage';
+//import  AsyncStorage  from '@react-native-async-storage/async-storage';
 
 const useDatosMedidos = () => {
 

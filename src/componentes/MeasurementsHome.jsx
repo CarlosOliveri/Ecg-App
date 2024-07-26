@@ -1,9 +1,9 @@
-import React,{useState} from 'react'
+import React from 'react'
 import {Text, View, TouchableNativeFeedback, TouchableOpacity} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { MeasurementsHomeStyles } from '../styles/MeasurementsHomeStyles';
 import Measurements from './Measurements';
-import { useBleConnectContext } from './useBleConnectContext';
+//import { useBleConnectContext } from './useBleConnectContext';
 import { useBleContext } from './useBleContext';
 
 const MeasurementsHome = () => {

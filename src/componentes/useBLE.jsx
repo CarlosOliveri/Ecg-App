@@ -2,8 +2,6 @@ import { NativeEventEmitter, NativeModules, Platform, PermissionsAndroid,Alert }
 import {useState, useEffect} from "react";
 import BleManager from 'react-native-ble-manager';
 import {Buffer} from 'buffer'; 
-import { bytesToString } from "convert-string";
-import { PERMISSIONS } from 'react-native-permissions';
 
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -20,6 +18,8 @@ const useBLE = () => {
     const [discoveredDevices,setDiscoveredDevices] = useState(new Map())
     const [dataReceived,setDataReceived] = useState([]);
     const [objetGenerate,setObjetGenerate] = useState([]);
+    const [peakCont,setPeakCont] = useState(0);
+    const [timeInit, setTimeInit] = useState();
     const [isConnected,setIsConnected] = useState(false); //Estado que nos permite switchear entre mediciones y conexion
     const [peripheralId,setPeripheralId] = useState();
 
@@ -96,12 +96,26 @@ const useBLE = () => {
     const handleUpdateValueForCharacteristic = (data) => {
         const valuesAcsii = data.value;//recibe el dato en formato ascii
         const valuesString = String.fromCharCode.apply(null, valuesAcsii); //devuelve el valor entero real pero como un string
-        const valuesInt = parseInt(valuesString,10);
-        //setDataReceived(dataReceived => [...dataReceived,parseInt(valuesInt,10)]); //posiblemente no se use este estado
-        //Concatenamos el dato recibido en formato de objeto de JS casteando a un entero y guardando tambien el indice
-        setObjetGenerate(objetGenerate => [...objetGenerate,{x: objetGenerate.length,y: valuesInt}]);
-        //console.log(valuesString);
-
+        if(0){// Este bloque recibe un solo valor de lectura y lo almacena en un estado 
+          const valuesInt = isNaN(parseInt(valuesString,10)) ? 0 : parseInt(valuesString,10);
+          //setDataReceived(dataReceived => [...dataReceived,parseInt(valuesInt,10)]); //posiblemente no se use este estado
+          //Concatenamos el dato recibido en formato de objeto de JS casteando a un entero y guardando tambien el indice
+          setObjetGenerate(objetGenerate => [...objetGenerate,{x: objetGenerate.length,y: valuesInt}]);
+        }
+        if(1){//Este bloque recibe la lectura, la lectura filtrada, y un indicador de pico encontrado
+          const arrayData = valuesString.split(",");
+          const measureInt = isNaN(parseInt(arrayData[0],10)) ? 0 : parseInt(arrayData[0],10);
+          const measureFilterNAN = parseFloat(arrayData[0],10);
+          const deriv = isNaN(parseInt(arrayData[2],10)) ? 0 : parseInt(arrayData[2],10);
+          const cuadrado = isNaN(parseInt(arrayData[3],10)) ? 0 : parseInt(arrayData[3],10);
+          /* const salida = isNaN(parseInt(arrayData[4],10)) ? 0 : parseInt(arrayData[4],10);
+          const timer = parseInt(arrayData[5],10); */
+          const measureFilter = isNaN(measureFilterNAN) ? 0 : measureFilterNAN;
+          
+          setObjetGenerate(objetGenerate => [...objetGenerate, measureFilter]);
+          
+        }
+        console.log(objetGenerate.length,valuesString);
     };
 
     //const buffer = Buffer.from([1]);
@@ -311,6 +325,7 @@ const useBLE = () => {
         dataReceived,
         isConnected,
         objetGenerate,
+        peakCont,
         setObjetGenerate,
         writeStartOrder,
         setIsConnected,
