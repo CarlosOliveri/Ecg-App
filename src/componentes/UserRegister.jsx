@@ -3,6 +3,7 @@ import {Text,View,TextInput,TouchableOpacity,Button} from 'react-native'
 import UserStyles from '../styles/UserRegisterStyles';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import UserShow from './UserShow';
 
 const UserRegister = () => {
@@ -14,12 +15,14 @@ const UserRegister = () => {
     const [userLog,setUserLog] = useState(false);
     const navigation = useNavigation();
     const [Name,setName] = useState();
+    const [CI,setCI] = useState();
     const [Age,setAge] = useState();
     const [Weight,setWeight] = useState();
     const [Height,setHeight] = useState();
     const [Sex,setSex] = useState();
     const [errors,setErrors] = useState({
         Nam:'',
+        Cd:'',
         Ag: '',
         We:'',
         He:'',
@@ -30,6 +33,7 @@ const UserRegister = () => {
         //Generacion de objeto JS
         const newRegistro = {
             "nombre": Name,
+            "cedula":CI,
             "edad": Age,
             "peso": Weight,
             "altura": Height,
@@ -50,13 +54,15 @@ const UserRegister = () => {
     }
 
     return (
-        (!userLog)?(
+    (!userLog)?(
+            
+        
+        <KeyboardAwareScrollView style={UserStyles.keyboard}>
+            <Text
+            style = {UserStyles.msgText}
+            >Usted actualmete se encuentra en modo sin conexion, con lo cual 
+            sus datos seran almacenados en la memoria de su dispositivo movil</Text>
             <View>
-                <Text
-                style = {UserStyles.msgText}
-                >Usted actualmete se encuentra en modo sin conexion, con lo cual 
-                sus datos seran almacenados en la memoria de su dispositivo movil</Text>
-
                 <View style = {UserStyles.formContainer}>
                     <Text style = {UserStyles.labels}>Nombre: </Text> 
                     
@@ -71,6 +77,20 @@ const UserRegister = () => {
                         }}
                         />
                     {errors.Nam ? <Text style = {UserStyles.errores}>{errors.Nam}</Text> : null}
+
+                    <Text style = {UserStyles.labels}>Cedula: </Text> 
+                    
+                    <TextInput
+                        style ={UserStyles.inputCI}
+                        placeholder="Ex: 5.555.555"
+                        placeholderTextColor={'gray'}
+                        value= {CI}
+                        onChangeText = {(val)=>{
+                            setCI(val);
+                            setErrors(_errors =>({..._errors,Cd:''}));
+                        }}
+                        />
+                    {errors.Cd ? <Text style = {UserStyles.errores}>{errors.Cd}</Text> : null}
 
                     <Text style = {UserStyles.labels}>Edad: </Text>
                     <TextInput
@@ -130,17 +150,19 @@ const UserRegister = () => {
                 onPress={()=> {
                     let err = {};
                     if(!Name) err = {...err, Nam :'Inserte el Nombre'}
+                    if(!CI) err = {...err, Cd :'Inserte el documento de identidad'}
                     if(!Age) err = {...err, Ag :'Inserte la Edad'}
                     if(!Weight) err = {...err, We :'Inserte el Peso'}
                     if(!Height) err = {...err, He :'Inserte la Altura'}
                     if(!Sex) err = {...err, Se :'Inserte el Sexo'}
                     //Condicional de validacion de datos 
-                    if(err.Nam || err.Ag || err.We || err.We || err.He || err.Se){
+                    if(err.Nam || err.Cd || err.Ag || err.We || err.We || err.He || err.Se){
                         setErrors(_errors =>({..._errors, ...err}));
                     }else{
                         //console.log({Name,Age,Weight,Height,Sex});
                         setErrors({
                             Nam:'',
+                            Cd:'',
                             Ag: '',
                             We:'',
                             He:'',
@@ -156,13 +178,20 @@ const UserRegister = () => {
                 </TouchableOpacity>
             
             </View>
-        ):(
-            <>
-                <UserShow
-                handleSetUserLog = {handleSetUserLog}/>
-            </> 
+
+        
+        </KeyboardAwareScrollView>
+        
+        
+        
+
+    ):(
+        <>
+            <UserShow
+            handleSetUserLog = {handleSetUserLog}/>
+        </> 
         //console.debug('nada')
-        )
+    )
     );
 }
 export default UserRegister;

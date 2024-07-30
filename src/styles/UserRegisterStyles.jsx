@@ -2,6 +2,9 @@ import { StyleSheet } from "react-native";
 
 
 const UserRegisterStyles = StyleSheet.create({
+    keyboard:{
+        flex:1,
+    },
     msgText:{
         fontSize: 16,
         marginHorizontal: 15,
@@ -33,9 +36,19 @@ const UserRegisterStyles = StyleSheet.create({
         marginHorizontal: 120,
         padding: 10
     },
+    inputCI:{
+        height:40,
+        width: 120,
+        borderColor: '#1A5276',
+        borderRadius:5,
+        borderWidth: 1,
+        marginTop: -35,
+        marginHorizontal: 120,
+        padding: 10
+    },
     inputText:{
         height:40,
-        width: 106,
+        width: 107,
         borderColor: '#1A5276',
         borderRadius:5,
         borderWidth: 1,

@@ -63,4 +63,8 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
         </View>
     )
 }
+
+
+
+
 export default HistoryCard;

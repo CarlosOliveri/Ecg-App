@@ -15,7 +15,9 @@ const RegistroShowStyles = StyleSheet.create({
     },
     chartHeart:{
         flex:1,
-        marginTop: 5,
+        height:200,
+        marginHorizontal:10,
+        marginVertical:30,
     },
 })
 
