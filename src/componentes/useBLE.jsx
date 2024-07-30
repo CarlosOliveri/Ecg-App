@@ -96,13 +96,13 @@ const useBLE = () => {
     const handleUpdateValueForCharacteristic = (data) => {
         const valuesAcsii = data.value;//recibe el dato en formato ascii
         const valuesString = String.fromCharCode.apply(null, valuesAcsii); //devuelve el valor entero real pero como un string
-        if(0){// Este bloque recibe un solo valor de lectura y lo almacena en un estado 
+        if(1){// Este bloque recibe un solo valor de lectura y lo almacena en un estado 
           const valuesInt = isNaN(parseInt(valuesString,10)) ? 0 : parseInt(valuesString,10);
           //setDataReceived(dataReceived => [...dataReceived,parseInt(valuesInt,10)]); //posiblemente no se use este estado
           //Concatenamos el dato recibido en formato de objeto de JS casteando a un entero y guardando tambien el indice
           setObjetGenerate(objetGenerate => [...objetGenerate,{x: objetGenerate.length,y: valuesInt}]);
         }
-        if(1){//Este bloque recibe la lectura, la lectura filtrada, y un indicador de pico encontrado
+        if(0){//Este bloque recibe la lectura, la lectura filtrada, y un indicador de pico encontrado
           const arrayData = valuesString.split(",");
           const measureInt = isNaN(parseInt(arrayData[0],10)) ? 0 : parseInt(arrayData[0],10);
           const measureFilterNAN = parseFloat(arrayData[0],10);
