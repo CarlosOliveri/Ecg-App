@@ -4,28 +4,28 @@ import RegistroShowStyles from "../styles/RegistroShowStyles";
 //import { useDatosContext } from "./useDatosContext";
 import ChartHeart from './ChartHeart';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5'; 
 
 const HistoryShow =({route})=>{
 
-    const [user,setUser] = useState({
+    /* const [user,setUser] = useState({
         "nombre": null,
         "cedula":null,
         "edad": null,
         "peso": null,
         "altura": null,
-        "sexo": null,});
+        "sexo": null,}); */
     //const {datos,setDatos} = useDatosContext();
     const info = route.params.datos
 
-    useEffect(()=>{
+    /* useEffect(()=>{
         //console.debug(info);
         const getUser = async () => {
             const userRegistered = await AsyncStorage.getItem('User');
             setUser(userRegistered ? JSON.parse(userRegistered) : null);
         }
         getUser();
-    },[])
+    },[]) */
 
     return(
         
@@ -45,11 +45,11 @@ const HistoryShow =({route})=>{
 
                     <View flexDirection='row' position='relative' >
                         <Text style={[styles.caractT ,  { left: 10 }]}>Paciente: </Text>
-                        <Text style={[styles.caractS ,  { left: 72 }]}>{user.nombre}</Text>
+                        <Text style={[styles.caractS ,  { left: 72 }]}>{info.nombre}</Text>
                     </View>
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT ,  { left: 10 }]}>C.I: </Text>
-                        <Text style={[styles.caractS ,  { left: 33 }]}>{user.cedula}</Text>
+                        <Text style={[styles.caractS ,  { left: 33 }]}>{info.cedula}</Text>
 
                         <Text style={[styles.caractTs ,  { left: 200 }]} >Fecha: </Text>
                         <Text style={[styles.caractS ,  { left: 245 }]}>{info.fecha}</Text>
@@ -57,20 +57,20 @@ const HistoryShow =({route})=>{
 
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT ,  { left: 10 }]} >Edad: </Text>
-                        <Text style={[styles.caractS ,  { left: 48 }]}>{user.edad}</Text>
+                        <Text style={[styles.caractS ,  { left: 48 }]}>{info.edad}</Text>
                         <Text style={[styles.caractS ,  { left: 75 }]}>años</Text>
 
                         <Text style={[styles.caractTs ,  { left: 200 }]} >Peso: </Text>
-                        <Text style={[styles.caractS ,  { left: 238 }]}>{user.peso}</Text>
+                        <Text style={[styles.caractS ,  { left: 238 }]}>{info.peso}</Text>
                         <Text style={[styles.caractS ,  { left: 265 }]}>kg</Text>
                     </View>
 
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT ,  { left: 10 }]}>Sexo: </Text>
-                        <Text style={[styles.caractS ,  { left: 48 }]}>{user.sexo}</Text>
+                        <Text style={[styles.caractS ,  { left: 48 }]}>{info.sexo}</Text>
 
                         <Text style={[styles.caractTs ,  { left: 200 }]} >Altura: </Text>
-                        <Text style={[styles.caractS ,  { left: 243 }]}>{user.altura}</Text>
+                        <Text style={[styles.caractS ,  { left: 243 }]}>{info.altura}</Text>
                         <Text style={[styles.caractS ,  { left: 268 }]}>cm</Text>
                     </View>
                     <View style={[styles.linea, {marginTop:10}]}></View>

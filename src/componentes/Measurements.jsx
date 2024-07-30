@@ -12,6 +12,28 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const Measurements = () => {
 
+    const [user,setUser] = useState({
+        "nombre": null,
+        "cedula":null,
+        "edad": null,
+        "peso": null,
+        "altura": null,
+        "sexo": null,});
+    
+    useEffect(()=>{
+        //console.debug(info);
+        /* const getUser = async () => {
+            const userRegistered = await AsyncStorage.getItem('User');
+            setUser(userRegistered ? JSON.parse(userRegistered) : null);
+        } */
+        getUser();
+    },[])
+
+    const getUser = async () => {
+        const userRegistered = await AsyncStorage.getItem('User');
+        setUser(userRegistered ? JSON.parse(userRegistered) : null);
+    }
+
     const {datos,setDatos} = useDatosContext();
     //const {isBleConnected,setIsBleConnected} = useBleConnectContext();
     const {discoveredDevices,dataReceived,isConnected,objetGenerate,peakCont,
@@ -31,7 +53,7 @@ const Measurements = () => {
 
     const handleBpsCalculate = () => {
         //Calculo de los BPS
-        const bps = (contarPicos/segundos)*60;
+        const bps = (contarPicos()/segundos)*60;
         setBpmValue(parseInt(bps,10));
         //console.log(bps);
     }
@@ -45,7 +67,7 @@ const Measurements = () => {
         let cant = 0;
         for(let i = 0; i < objetGenerate.length; i++){
             try{
-                if (objetGenerate[i].y > 500 && objetGenerate[i - 1].y < 480){
+                if (objetGenerate[i].y > 490 && objetGenerate[i - 1].y < 480){
                     cant++;
                 }
             }catch(err){
@@ -107,7 +129,7 @@ const Measurements = () => {
     //Detecta cambios en el Timer para detenerlo
     useEffect(() =>{
         try{
-            if (segundos >= 100){
+            if (segundos >= 5){
                 stopTimer();
                 //console.log(segundos)
                 setearFecha(); //Se genera el objeto fecha y Datos para guardar
@@ -117,6 +139,7 @@ const Measurements = () => {
             AsyncStorage.setItem("lecturas", JSON.stringify(objetGenerate)).then(
                 printDatos()
             );
+            handleBpsCalculate();
         }catch(e){
             console.debug("dejar pasar excepcion");
         }
@@ -145,6 +168,7 @@ const Measurements = () => {
 
     const mostrarModal = () => {
         setModalVisible(true);
+        getUser();
     }
     const ocultarModal = () => {
         setModalVisible(false);
@@ -167,6 +191,12 @@ const Measurements = () => {
         const newRegistro = {
             "id": obtenerId(),
             "num": obtenerId(),
+            "nombre": user.nombre,
+            "cedula":user.cedula,
+            "edad": user.edad,
+            "peso": user.peso,
+            "altura": user.altura,
+            "sexo": user.sexo,
             "actividad": Activity,
             "intensidad":intensityAct.toString(),
             "fecha": fecha.fecha,
