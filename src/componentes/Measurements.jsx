@@ -18,7 +18,7 @@ const Measurements = () => {
     //const {isBleConnected,setIsBleConnected} = useBleConnectContext();
     const {discoveredDevices,dataReceived,isConnected,objetGenerate,
         setObjetGenerate,writeStartOrder,setIsConnected,startScan,setDiscoveredDevices,scanPermission,
-        handleConnectPeripheral,handleBleDisconnectManual} = useBleContext();
+        handleConnectPeripheral,handleBleDisconnectManual,isMeasuring, startMeasurement, stopMeasurement} = useBleContext();
 
     const [fecha,setFecha] = useState();
     const [segundos,setSegundos] = useState(0);
@@ -47,7 +47,7 @@ const Measurements = () => {
         let cant = 0;
         for(let i = 0; i < objetGenerate.length; i++){
             try{
-                if (objetGenerate[i].y > 500 && objetGenerate[i - 1].y < 480){
+                if (objetGenerate[i].y > 230 && objetGenerate[i - 1].y < 230){
                     cant++;
                 }
             }catch(err){
@@ -103,14 +103,14 @@ const Measurements = () => {
     },[isRunning])
     //Detecta cambios en el Timer para detenerlo
     useEffect(() =>{
-        if (segundos > 10){
+        if (segundos >= 20){
             stopTimer();
             //console.log(segundos)
             setearFecha(); //Se genera el objeto fecha y Datos para guardar
             mostrarModal();//Temporalmente aca
             //Prueba para detener la medicion 
             setIsRunning(false);
-            writeStartOrder(0);
+            //writeStartOrder(0);
         }
         if (segundos != 0){
             handleBpsCalculate();
@@ -120,20 +120,27 @@ const Measurements = () => {
     const startTimer = () => {
         setObjetGenerate([]);
         setIsRunning(true);
-        writeStartOrder(1);
+        //setIsMeasuring(true); // Inicia la medición
+        startMeasurement();
+       // writeStartOrder(1);
         setSegundos(0);
     }
     //detiene el timer
     const stopTimer = () =>{
+        //setIsMeasuring(false); // Detiene la medición
+        //setObjetGenerate([]);
+        stopMeasurement();
         setIsRunning(false);
-        writeStartOrder(0);
+        setSegundos(0);
+        setBpmValue(0);
+        //writeStartOrder(0);
         //setSegundos(0);
     }
     const resetTimer = () => {
-        writeStartOrder(0);
+        //writeStartOrder(0);
         setIsRunning(false);
         setSegundos(0);
-        setObjetGenerate([]);
+        //setObjetGenerate([]);
         setBpmValue(0);
         //console.debug(bpmValue);
     }
@@ -207,7 +214,9 @@ const Measurements = () => {
                 </View>
                 <View style = {Measurementstyles.chartHeart}>
                     <ChartHeart
-                    data = {objetGenerate}/>
+                    data = {objetGenerate}
+                    //isMeasuring={isMeasuring}
+                    />
                 </View>
 
                 
@@ -225,7 +234,7 @@ const Measurements = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                     style = {Measurementstyles.Button}
-                    onPress={() => {resetTimer();}}>
+                    onPress={() => {stopTimer();}}>
                         <Text style={Measurementstyles.buttonTitle}>
                             DETENER MEDICIONES
                         </Text>
