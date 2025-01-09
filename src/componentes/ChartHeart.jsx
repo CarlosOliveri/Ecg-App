@@ -47,7 +47,7 @@ const ChartHeart = (props) => {
                     visibleRange={{ 
                       x: { min: 600, max: 600 },
                       y: { min: 160, max: 300 },
-                    }} // Mostrar solo 10 puntos a la vez
+                    }}
                 />
             </View>
         </View>

@@ -14,7 +14,7 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
     return(
       //Contenedor de todas las cartas
         <View style = {HistoryCardStyles.container}>
-          <ImageBackground style ={HistoryCardStyles.fondo} resizeMode="cover" source={require('../../assets/hearth.png')} >
+          <ImageBackground style ={HistoryCardStyles.fondo} resizeMode="cover" source={require('../../assets/hhearth.png')} >
           <View style = {HistoryCardStyles.cardContainer}>
              <View flexDirection='row'>
               <Text style={HistoryCardStyles.titleStyle} > Medicion numero </Text>

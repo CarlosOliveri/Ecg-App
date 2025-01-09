@@ -223,7 +223,7 @@ setInterval(() => {
             ...samplesToProcess.map((y, idx) => ({ x: prevObjGen.length + idx, y }))
         ]);
     }
-}, 20);  // Se actualiza cada 20ms
+}, 200);  // Se actualiza cada 20ms 
 
 
     

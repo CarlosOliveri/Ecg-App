@@ -34,7 +34,7 @@ const HistoryShow =({route})=>{
 
                 <View style ={styles.container} flexDirection = 'colum'>
                     <View style ={styles.line} flexDirection='row' alingIyems='stretch'>
-                        <Image style ={styles.image} source={require('../../assets/Fiuna.png')}/>
+                        <Image style ={styles.image} source={require('../../assets/ffiuna.png')}/>
                         <View flexDirection = 'colum'>
                             <Text numberOfLines={2} ellipsizeMode="tail" style={styles.titulo}>Facultad de Ingeniería</Text>
                             <Text style={[styles.subT]}>Laboratorio de Innovacion Tecnológica</Text>
@@ -193,8 +193,8 @@ const styles = StyleSheet.create({
         width: 300,
     },
     image:{
-        width:90,
-        height:90,
+        width:80,
+        height:80,
         resizeMode:'cover',
         borderRadius:45,
     },

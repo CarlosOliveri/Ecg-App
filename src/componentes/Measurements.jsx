@@ -260,7 +260,7 @@ const Measurements = () => {
                 visible={modalVisible}
                 onRequestClose={ocultarModal}>
                 <View style={{alignItems:'center',justifyContent:'center',backgroundColor:'rgba(0,0,0,0.2)',height:'100%'}}>
-                        <ImageBackground style ={Measurementstyles.fondo} source={require('../../assets/Actividad.jpg')} >
+                        <ImageBackground style ={Measurementstyles.fondo} source={require('../../assets/actividad.jpg')} >
                         <View style={Measurementstyles.caja}>
                             <Text style={Measurementstyles.modalHead}>
                                 Actividad

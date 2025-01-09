@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "ecg-app",
+    "name": "Cardio Monitor PRO",
     "slug": "ecg-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/cmp.png",
     "userInterfaceStyle": "light",
     "plugins": [
       [
