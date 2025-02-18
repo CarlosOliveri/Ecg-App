@@ -1,6 +1,7 @@
 {
     "cli":{
-        "version":">= 5.9.1"
+        "version":">= 5.9.1",
+        "requireCommit":true
     },
     "build": {
         "development:simulator":{
@@ -15,7 +16,13 @@
             "distribution": "internal"    
         },
         "preview":{
-            "distribution":"internal"
+            "distribution":"internal",
+            "ios":{
+                "simulator": true
+            },
+            "android":{
+                "buildType":"apk"
+            }
         },
         "production": {}
     },

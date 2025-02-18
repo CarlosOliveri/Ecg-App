@@ -1,10 +1,11 @@
 import React, {useEffect} from "react";
-import {View, Text, StyleSheet, Dimensions,TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Dimensions,TouchableOpacity,ImageBackground} from 'react-native';
 import IconLabel from "./IconLabel";
 import HistoryCardStyles from "../styles/HistoryCardStyles";
 import { useNavigation } from "@react-navigation/native";
+import { color } from "react-native-elements/dist/helpers";
 
-const iconColor = 'black';
+const iconColor = 'white';
 
 const HistoryCard = ({ info, handleDeleteRegister }) => {
 
@@ -13,7 +14,7 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
     return(
       //Contenedor de todas las cartas
         <View style = {HistoryCardStyles.container}>
-          
+          <ImageBackground style ={HistoryCardStyles.fondo} resizeMode="cover" source={require('../../assets/hhearth.png')} >
           <View style = {HistoryCardStyles.cardContainer}>
              <View flexDirection='row'>
               <Text style={HistoryCardStyles.titleStyle} > Medicion numero </Text>
@@ -31,22 +32,22 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
             <View style = {HistoryCardStyles.infoStyle}>
               
               <Text style={HistoryCardStyles.subtitleStyle}> Fecha: </Text>
-              <Text marginLeft={-2}> {info.fecha} </Text>
+              <Text marginLeft={-2} style={{color:'white'}}> {info.fecha} </Text>
               
               <Text style={HistoryCardStyles.subtitleStyle} marginLeft={20}> Hora: </Text>
-              <Text marginLeft={-2}> {info.hora} </Text>
+              <Text marginLeft={-2} style={{color:'white'}}> {info.hora} </Text>
             
             </View>
             
             <View style = {HistoryCardStyles.infoStyle}>
             
               <Text style={HistoryCardStyles.subtitleStyle}> Actividad Realizada: </Text>
-              <Text marginLeft={-2}> {info.actividad} </Text>
+              <Text marginLeft={-2} style={{color:'white'}}> {info.actividad} </Text>
             
             </View>
             
             <View style={HistoryCardStyles.iconTimerStyle}>
-              <IconLabel name="timer" label= {info.tiempo_actividad_minutos}  color={iconColor} />
+              <IconLabel name="timer" label = {info.tiempo_actividad_minutos} color={iconColor}/>
             </View>
             
             <View style={HistoryCardStyles. iconArrowtyle}>
@@ -57,8 +58,14 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
                   <IconLabel name="arrow-forward-circle"  color='white' size={40}/></TouchableOpacity>
             </View>
             
+            
           </View>
+          </ImageBackground>
         </View>
     )
 }
+
+
+
+
 export default HistoryCard;

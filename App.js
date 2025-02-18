@@ -10,6 +10,7 @@ import Example from './src/Example.jsx';
 import Measurements from './src/componentes/Measurements.jsx';
 import RegistroShow from './src/componentes/HistoryShow.jsx';
 import ChartHeart from './src/componentes/ChartHeart.jsx';
+import UserShow from './src/componentes/UserShow.jsx';
 
 export default function App() {
   return <Main/>

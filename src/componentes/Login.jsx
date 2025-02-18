@@ -1,20 +1,45 @@
-import React from "react";
+import {React, useState} from "react";
 import { View, Text ,TextInput, Button, Alert, TouchableOpacity} from "react-native";
 import LoginStyles from '../styles/LoginStyles';
 import { useNavigation } from "@react-navigation/native";
+import {Logging} from '../api/ecg.api';
 //import UserRegister from "./UserRegister";
 
 const Login = () => {
     
     const navigation = useNavigation();
 
-    function onPressButton(){
+    const [user,setUser] = useState();
+    const [password,setPassword] = useState();
+
+    function onChangeUser(value){
+        if (value !== ''){
+            setUser(value);
+        }
+    }
+
+    function onChangePass(value){
+        if (value !== ''){
+            setPassword(value);
+        }
+    }
+
+    const onPressButton = async () => {
+        try{
+            const response = await Logging(user, password);
+            if (response.status == 200){
+                const datos = response.data;
+                Alert.alert(datos["mensaje"]);
+                console.log(datos);
+            }
+        }catch(error){
+            Alert.alert(error.response.data["Error"]);
+        }
         //navigation.navigate('bleStackUser');
-        Alert.alert('Login sucsesful');
     }
 
     function onPressRegisterButton(){
-        navigation.navigate('userRegister');
+        navigation.navigate('UserRegister');
     }
 
     return(
@@ -25,11 +50,13 @@ const Login = () => {
             <TextInput
                 style ={LoginStyles.textInput}
                 placeholder="User"
+                onChangeText={onChangeUser}
             />
             <TextInput
                 style ={LoginStyles.textInput}
                 placeholder="Password"
                 secureTextEntry={true}
+                onChangeText={onChangePass}
             />
             <View style={LoginStyles.Buttom}>
                 <Button

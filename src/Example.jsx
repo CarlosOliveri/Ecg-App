@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import BleManager from 'react-native-ble-manager';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import ExampleDevice from './ExampleDivice';
+import ExampleDevice from './exampleDivice';
 import {styles} from './styles/ExampleStyles';
 
 const BleManagerModule = NativeModules.BleManager;

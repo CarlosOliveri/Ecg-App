@@ -1,15 +1,15 @@
 import { NativeEventEmitter, NativeModules, Platform, PermissionsAndroid,Alert } from 'react-native';
 import {useState, useEffect} from "react";
 import BleManager from 'react-native-ble-manager';
+import {Buffer} from 'buffer'; 
 import { bytesToString } from "convert-string";
 import { PERMISSIONS } from 'react-native-permissions';
 
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
-const _UART_TX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-const _UART_RX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
-const _UART_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+const _GATT_SERVICE_UUID = "180D"; // UUID del servicio GATT
+const _GATT_CHARACTERISTIC_UUID = "2A37"; // UUID de la característica GATT
 const _BATTERY_UUID = "180F";
 const _BATTERY_LEVEL = "2A19";
 
@@ -20,81 +20,242 @@ const useBLE = () => {
     const [dataReceived,setDataReceived] = useState([]);
     const [objetGenerate,setObjetGenerate] = useState([]);
     const [isConnected,setIsConnected] = useState(false); //Estado que nos permite switchear entre mediciones y conexion
+    const [peripheralId,setPeripheralId] = useState();
+    const [isMeasuring, setIsMeasuring] = useState(false); // Añadimos el estado isMeasuring
 
-    useEffect(()=>{
-        BluetoothModuleStart();
-        EncenderBluetooth();
-        requestPermissions();
+  useEffect(()=>{
+      BluetoothModuleStart();
+      EncenderBluetooth();
+      requestPermissions();
 
-        /*BleManager.checkState().then(state => {
-            if (state == 'off'){
-                console.log('Turnning ON de Bluetooth')
-                Alert.alert(
-                    'Bluetooth Disable',
-                    'Debe encender su Bluetooth.',
-                    [
-                      {
-                        text: 'Aceptar',
-                        onPress: () => {console.log('Botón Aceptar presionado');},
-                        style: 'default', // 'default', 'cancel', 'destructive'
-                      },
-                      {
-                        text: 'Cancelar',
-                        onPress: () => console.log('Botón Cancelar presionado'),
-                        style: 'cancel',
-                      },
-                    ],
-                    { cancelable: false } // No permite cerrar el alerta haciendo clic fuera de él
-                  );
-            }else{
-                console.log('Bluetooth already ON')
-            }
-        });*/
+      /*BleManager.checkState().then(state => {
+          if (state == 'off'){
+              console.log('Turnning ON de Bluetooth')
+              Alert.alert(
+                  'Bluetooth Disable',
+                  'Debe encender su Bluetooth.',
+                  [
+                    {
+                      text: 'Aceptar',
+                      onPress: () => {console.log('Botón Aceptar presionado');},
+                      style: 'default', // 'default', 'cancel', 'destructive'
+                    },
+                    {
+                      text: 'Cancelar',
+                      onPress: () => console.log('Botón Cancelar presionado'),
+                      style: 'cancel',
+                    },
+                  ],
+                  { cancelable: false } // No permite cerrar el alerta haciendo clic fuera de él
+                );
+          }else{
+              console.log('Bluetooth already ON')
+          }
+      });*/
+      const listeners = [
+          BleManagerEmitter.addListener(
+            'BleManagerDiscoverPeripheral',
+            handleDiscoverPeripheral,
+          ),
+          BleManagerEmitter.addListener(
+            'BleManagerStopScan', 
+            handleStopScan
+          ),
+          BleManagerEmitter.addListener(
+            'BleManagerDidUpdateValueForCharacteristic',
+            handleUpdateValueForCharacteristic,
+          ),
+          BleManagerEmitter.addListener(
+            'BleManagerConnectPeripheral',
+            ()=>{setIsConnected(true);}
+          ),
+          BleManagerEmitter.addListener(
+            'BleManagerDisconnectPeripheral',
+            handleDisconnectedPeripheral
+          ),
+          BleManagerEmitter.addListener(
+            'BleManagerDidUpdateState',
+          ({ state }) => {
+              console.log('El bluetooth se a apagado =>estado: ', state);
+              // Aquí puedes actualizar el estado del Bluetooth en tu componente
+              handleBleDisconnect();}
+          ),
+      ];
 
-        const listeners = [
-            BleManagerEmitter.addListener(
-              'BleManagerDiscoverPeripheral',
-              handleDiscoverPeripheral,
-            ),
-            BleManagerEmitter.addListener(
-              'BleManagerStopScan', 
-              handleStopScan
-            ),
-            BleManagerEmitter.addListener(
-              'BleManagerDidUpdateValueForCharacteristic',
-              handleUpdateValueForCharacteristic,
-            ),
-            BleManagerEmitter.addListener(
-              'BleManagerConnectPeripheral',
-              ()=>{setIsConnected(true);}
-            ),
-            BleManagerEmitter.addListener(
-              'BleManagerDidUpdateState',
-            ({ state }) => {
-                console.log('El bluetooth se a apagado =>estado: ', state);
-                // Aquí puedes actualizar el estado del Bluetooth en tu componente
-                handleBleDisconnect();}
-            ),
-        ];
+      return () => {
+          console.debug('[app] main component unmounting. Removing listeners...');
+          for (const listener of listeners) {
+            listener.remove();
+          }
+      };
 
-        return () => {
-            console.debug('[app] main component unmounting. Removing listeners...');
-            for (const listener of listeners) {
-              listener.remove();
-            }
-        };
+  },[]);
 
-    },[]);
+  const startMeasurement = () => {
+    setIsMeasuring(true);
+    //console.log("Starting measurement, isMeasuring set to:", isMeasuring);
+  };
 
-    const handleUpdateValueForCharacteristic = (data) => {
-        const values = data.value;
-        /* setDataReceived(dataReceived => dataReceived.concat(values));
-        values.map((element) => {
-          setObjetGenerate(objetGenerate => [...objetGenerate,{x: objetGenerate.length,y: element}])
-        }) */
-        //setObjetGenerate(objetGenerate => objetGenerate.concat(objetArray)); //En desuso
-        console.log(values)
-    };
+  const stopMeasurement = () => {
+    setIsMeasuring(false);
+    //console.log("Stopping measurement, isMeasuring set to:", isMeasuring);
+  };
+
+/*const bufferSize = 500; // Tamaño del buffer
+let bufferA = []; // Primer buffer
+let bufferB = []; // Segundo buffer
+let activeBuffer = bufferA; // Buffer activo para llenarse
+let processingBuffer = bufferB; // Buffer en procesamiento
+
+// Función para cambiar los buffers
+const swapBuffers = () => {
+    const temp = activeBuffer;
+    activeBuffer = processingBuffer;
+    processingBuffer = temp;
+};
+
+// Procesar los datos del buffer en procesamiento
+const processBuffer = (buffer) => {
+    setObjetGenerate(prevObjGen => [
+        ...prevObjGen,
+        ...buffer.map((y, idx) => ({ x: prevObjGen.length + idx, y }))
+    ]);
+};
+
+const handleUpdateValueForCharacteristic = (data) => {
+    setIsMeasuring(prevIsMeasuring => {
+        if (!prevIsMeasuring) {
+            return prevIsMeasuring;
+        }
+
+        const buffer = Buffer.from(data.value);
+        const samples = [];
+
+        for (let i = 0; i < buffer.length; i += 2) {
+            const sample = buffer.readInt16LE(i);
+            samples.push(sample);
+        }
+
+        // Agrega las muestras al buffer activo
+        activeBuffer.push(...samples);
+
+        // Si el buffer activo alcanza su límite, lo cambia y procesa el buffer en procesamiento
+        if (activeBuffer.length >= bufferSize) {
+            swapBuffers(); // Cambia los buffers
+            processBuffer(processingBuffer); // Procesa el buffer completo
+            processingBuffer.length = 0; // Limpia el buffer que se acaba de procesar
+        }
+
+        return prevIsMeasuring;
+    });
+};*/
+/*let buffer = [];
+
+const handleUpdateValueForCharacteristic = (data) => {
+    setIsMeasuring(prevIsMeasuring => {
+        if (!prevIsMeasuring) return prevIsMeasuring;
+
+        const newBuffer = Buffer.from(data.value);
+        const samples = [];
+
+        for (let i = 0; i < newBuffer.length; i += 2) {
+            const sample = newBuffer.readInt16LE(i);
+            samples.push(sample);
+        }
+
+        // Almacena las muestras en un buffer temporal
+        buffer = [...buffer, ...samples];
+
+        return prevIsMeasuring;
+    });
+};
+
+// Esta función se encargará de actualizar los gráficos cada 20ms
+setInterval(() => {
+    if (buffer.length > 0) {
+        // Copia el buffer actual y lo vacía
+        const samplesToProcess = buffer.slice();
+        buffer = [];
+
+        // Actualiza el objeto de generación solo cada 20ms
+        setObjetGenerate(prevObjGen => [
+            ...prevObjGen,
+            ...samplesToProcess.map((y, idx) => ({ x: prevObjGen.length + idx, y }))
+        ]);
+    }
+}, 50);  // Se actualiza cada 20ms*/
+let bufferA = [];
+let bufferB = [];
+let activeBuffer = bufferA;
+
+const handleUpdateValueForCharacteristic = (data) => {
+    setIsMeasuring(prevIsMeasuring => {
+        if (!prevIsMeasuring) return prevIsMeasuring;
+
+        const newBuffer = Buffer.from(data.value);
+        const samples = [];
+
+        for (let i = 0; i < newBuffer.length; i += 2) {
+            const sample = newBuffer.readInt16LE(i);
+            samples.push(sample);
+        }
+
+        // Agregar muestras al buffer activo
+        activeBuffer.push(...samples);
+
+        return prevIsMeasuring;
+    });
+};
+
+// Esta función se encargará de actualizar los gráficos cada 20ms
+setInterval(() => {
+    // Alterna el buffer activo para no perder muestras entrantes
+    const processingBuffer = activeBuffer === bufferA ? bufferA : bufferB;
+    activeBuffer = activeBuffer === bufferA ? bufferB : bufferA;
+
+    if (processingBuffer.length > 0) {
+        const samplesToProcess = processingBuffer.slice();
+        processingBuffer.length = 0;  // Vacía el buffer procesado
+
+        // Actualiza el objeto de generación solo cada 20ms
+        setObjetGenerate(prevObjGen => [
+            ...prevObjGen,
+            ...samplesToProcess.map((y, idx) => ({ x: prevObjGen.length + idx, y }))
+        ]);
+    }
+}, 200);  // Se actualiza cada 20ms 
+
+
+    
+
+    
+
+    //const buffer = Buffer.from([1]);
+    /*const writeStartOrder = (order) => {
+      const buffer = Buffer.from([order]);
+      BleManager.write(peripheralId, _GATT_SERVICE_UUID, _GATT_CHARACTERISTIC_UUID,
+        buffer.toJSON().data
+      ).then(() => {
+        if (order == 1){
+          console.debug("empezar medicion");  
+        }else{
+          //setObjetGenerate([]);
+          console.debug("terminar medicion");
+        }
+      })
+    }*/
+   //************************ UTILIZANDO GATT ******************************
+   
+   const writeStartOrder = (order) => {
+    const buffer = Buffer.from([0x01, 0x02]); // Enviar un valor conocido para verificar la recepción
+    BleManager.write(peripheralId, _GATT_SERVICE_UUID, _GATT_CHARACTERISTIC_UUID,
+      buffer.toJSON().data
+    ).then(() => {
+      console.debug("Data sent successfully");  
+    }).catch((error) => {
+      console.error("Error sending data: ", error);
+    });
+ };
     
     const BluetoothModuleStart = () => {
         BleManager.start({showAlert: false, forceLegacy: true}).then(() =>{ 
@@ -184,7 +345,7 @@ const useBLE = () => {
         //console.debug(discoveredDevices.get("D4:3D:51:50:3B:E9")); 
     };
 
-    const handleConnectPeripheral = async (peripheral) => {
+    /*const handleConnectPeripheral = async (peripheral) => {
         try{
             if(!peripheral){
               console.debug("[Connection Peripheral] Periferico no valido");
@@ -192,6 +353,7 @@ const useBLE = () => {
             } 
             BleManager.connect(peripheral.id).then(() =>{
               console.debug("[Connection Peripheral] La conexion se ha realizado con exito");
+              setPeripheralId(peripheral.id);
               //console.log(peripheral)
             });
 
@@ -239,11 +401,37 @@ const useBLE = () => {
               }
             }else{
               console.debug("no hubo respuesta")
-            }*/
+            }*//*
         }catch(error){
            console.debug("[Connection Peripheral] Error al intental conectarse a un dispositivo",error)
         }
-    }
+    }*/
+
+    const handleConnectPeripheral = async (peripheral) => {
+        try {
+            if (!peripheral) {
+                console.debug("[Connection Peripheral] Periferico no válido");
+                return;
+            }
+    
+            await BleManager.connect(peripheral.id);
+            console.debug("[Connection Peripheral] Conexión realizada con éxito");
+            setPeripheralId(peripheral.id);
+    
+            // Esperar un tiempo para asegurar que la conexión se ha establecido correctamente
+            await sleep(900);
+    
+            // Recuperar los servicios disponibles en el dispositivo
+            const peripheralData = await BleManager.retrieveServices(peripheral.id);
+            console.debug("[Retrieve Service] Servicios GATT recuperados:", peripheralData);
+    
+            // Suscribirse a la característica GATT para recibir notificaciones
+            await suscribeCharacteristicToReceive(peripheral);
+    
+        } catch (error) {
+            console.debug("[Connection Peripheral] Error al intentar conectarse al dispositivo:", error);
+        }
+    };
 
     function sleep(ms) {
       return new Promise (resolve => setTimeout(resolve, ms));
@@ -252,17 +440,26 @@ const useBLE = () => {
     const handleBleDisconnect = () => {
       setIsConnected(false);
     }
-
-    const suscribeCharacteristicToReceive = async (peripheral) => {
-      await BleManager.startNotification(peripheral.id,_UART_UUID,_UART_RX);
-      console.debug("[Suscripcion Receive] Suscripcion a recibir datos realizada");
+    const handleBleDisconnectManual = () => {
+      BleManager.disconnect(peripheralId).then(() => {
+        // Success code
+        console.debug("Disconnected");
+      }).catch((error) => {
+        // Failure code
+        console.log(error);
+      });
     }
+    
+    const suscribeCharacteristicToReceive = async (peripheral) => {
+      await BleManager.startNotification(peripheral.id, _GATT_SERVICE_UUID, _GATT_CHARACTERISTIC_UUID);
+      console.debug("Subscribed to GATT characteristic notifications");
+   };
 
-    /* const handleDisconnectedPeripheral = (BleDisconnectPeripheralEvent) => {
+    const handleDisconnectedPeripheral = (BleDisconnectPeripheralEvent) => {
         console.debug(
           `[handleDisconnectedPeripheral][${BleDisconnectPeripheralEvent.peripheral}] disconnected.`,
         );
-        setPeripherals(map => {
+        setDiscoveredDevices(map => {
           let p = map.get(BleDisconnectPeripheralEvent.peripheral);
           if (p) {
             p.connected = false;
@@ -270,17 +467,25 @@ const useBLE = () => {
           }
           return map;
         });
-    }; */
+        setIsConnected(false);
+    };
 
     return ([
         discoveredDevices,
         dataReceived,
         isConnected,
         objetGenerate,
+        setObjetGenerate,
+        writeStartOrder,
         setIsConnected,
         startScan,
+        setDiscoveredDevices,
         scanPermission,
         handleConnectPeripheral,
+        handleBleDisconnectManual,
+        isMeasuring,            // Exportamos isMeasuring
+        startMeasurement,       // Función para iniciar medición
+        stopMeasurement,        // Función para detener medición
     ]);
 }
 

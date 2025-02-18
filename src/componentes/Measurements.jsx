@@ -1,44 +1,61 @@
 import React,{useState,useEffect} from 'react';
-import { View,Text,DeviceEventEmitter, Button, TouchableOpacity, Modal} from 'react-native';
+import { View,Text,TextInput,DeviceEventEmitter, Button, TouchableOpacity, Modal,ImageBackground, Touchable} from 'react-native';
 import {Measurementstyles} from '../styles/MeasurementStyles';
-//import useBLE from './useBLE';
+import { useDatosContext } from './useDatosContext';
 import {useBleContext} from './useBleContext';
 import { useBleConnectContext } from './useBleConnectContext';
 import ChartHeart from './ChartHeart';
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+import IconLabel from "./IconLabel";
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import  AsyncStorage  from '@react-native-async-storage/async-storage';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+
 
 const Measurements = () => {
 
-    const {isBleConnected,setIsBleConnected} = useBleConnectContext();
-    const {discoveredDevices,dataReceived,isConnected,objetGenerate,setIsConnected,startScan,scanPermission,handleConnectPeripheral} = useBleContext();
+    const {datos,setDatos} = useDatosContext();
+    //const {isBleConnected,setIsBleConnected} = useBleConnectContext();
+    const {discoveredDevices,dataReceived,isConnected,objetGenerate,
+        setObjetGenerate,writeStartOrder,setIsConnected,startScan,setDiscoveredDevices,scanPermission,
+        handleConnectPeripheral,handleBleDisconnectManual,isMeasuring, startMeasurement, stopMeasurement} = useBleContext();
 
     const [fecha,setFecha] = useState();
     const [segundos,setSegundos] = useState(0);
     const [isRunning,setIsRunning] = useState(false);
     const [modalVisible,setModalVisible] = useState(false);
-
+    const [intensityAct,setIntensityAct] = useState('Baja');
+    const [timeActivity,setTimeActivity] = useState(0);
+    const [Activity,setActivity] = useState("");
+    //const [datosRegistro,setDatosRegistro] = useState([]);
     //estado correspondiene a los BPS
-    const [bpsValue,setBpsValue] = useState(0);
-    //estado correspondiente al numero de maximos detectados
-    const [numMaximos,setNumMaximos] = useState(0);
-    //estado correspondiente al array de Measurements que se va recibiendo
-    const [MeasurementsData,setMeasurementsData] = useState([]);
+    const [bpmValue,setBpmValue] = useState(0);
 
-    //Llamamos a esta funcion cada vez que llega una nueva medicion
-    const handleBpsChange =() => {
+    const handleBpsCalculate = () => {
         //Calculo de los BPS
-        //El tiempoTranscurridoc corresponde al tiempo actual
-        setBpsValue(numMaximos/tiempoTranscurrido);
-    }
-
-    //Cuando se detecta un pico se llama a esta funcion
-    //y se incrementa el numero de maximos detectados 
-    const handleNumMaxChange =()=>{
-        setNumMaximos(numMaximos + 1);
+        const bps = (contarPicos()/segundos)*60;
+        setBpmValue(parseInt(bps,10));
+        //console.log(bps);
     }
 
     const handleBleDisconnect = () =>{
         setIsConnected(false);
+        setObjetGenerate([]);
+    }
+
+    const contarPicos = () => {
+        let cant = 0;
+        for(let i = 0; i < objetGenerate.length; i++){
+            try{
+                if (objetGenerate[i].y > 230 && objetGenerate[i - 1].y < 230){
+                    cant++;
+                }
+            }catch(err){
+                console.debug("no hacer nada");
+            }
+        }
+        //console.debug(objetGenerate.length);
+        return cant;
     }
 
     //detecta cambios en el estado del bluetooth
@@ -58,15 +75,18 @@ const Measurements = () => {
         };
     },[]);
 
-    const handleStorage = () => {
+    const setearFecha = () => {
         date = new Date();
         dia = date.getDate();
         mes = date.getMonth()+1;
         año = date.getFullYear();
         hora = date.getHours();
         minuto = date.getMinutes();
-        setFecha({'fecha':{'dia':dia,'mes':mes,'año':año,'hora':hora,'minuto':minuto}})
-        console.log(dia, mes, año, hora,minuto);
+        const newDate = año.toString()+'-'+ mes.toString()+'-'+ dia.toString();
+        const newHora = hora.toString()+':'+minuto.toString();
+        //console.debug(newHora);
+        setFecha({'fecha':newDate,'hora': newHora});
+        //console.log(dia, mes, año, hora,minuto);
     }
 
     //se encarga del inicio del timer
@@ -83,21 +103,46 @@ const Measurements = () => {
     },[isRunning])
     //Detecta cambios en el Timer para detenerlo
     useEffect(() =>{
-        if (segundos == 6){
+        if (segundos >= 20){
             stopTimer();
             //console.log(segundos)
-            handleStorage(); //Se genera el objeto fecha y Datos para guardar
+            setearFecha(); //Se genera el objeto fecha y Datos para guardar
             mostrarModal();//Temporalmente aca
+            //Prueba para detener la medicion 
+            setIsRunning(false);
+            //writeStartOrder(0);
+        }
+        if (segundos != 0){
+            handleBpsCalculate();
         }
     },[segundos])
     //inicia el timer
     const startTimer = () => {
+        setObjetGenerate([]);
         setIsRunning(true);
+        //setIsMeasuring(true); // Inicia la medición
+        startMeasurement();
+       // writeStartOrder(1);
+        setSegundos(0);
     }
     //detiene el timer
     const stopTimer = () =>{
+        //setIsMeasuring(false); // Detiene la medición
+        //setObjetGenerate([]);
+        stopMeasurement();
         setIsRunning(false);
-        setSegundos(0)
+        setSegundos(0);
+        setBpmValue(0);
+        //writeStartOrder(0);
+        //setSegundos(0);
+    }
+    const resetTimer = () => {
+        //writeStartOrder(0);
+        setIsRunning(false);
+        setSegundos(0);
+        //setObjetGenerate([]);
+        setBpmValue(0);
+        //console.debug(bpmValue);
     }
 
     const mostrarModal = () => {
@@ -105,11 +150,42 @@ const Measurements = () => {
     }
     const ocultarModal = () => {
         setModalVisible(false);
+        setActivity("");
+        setTimeActivity(0);
+        setIntensityAct('Baja');
+        resetTimer();
+        //console.debug(datos[datos.length -1]);
+    }
+
+    const obtenerId =()=>{
+        if (datos.length == 0){
+            return 1;
+        }else{
+            return datos[datos.length-1]['id'] + 1;
+        }
+    }
+
+    const guardarNewRegistro = async () => {
+        const newRegistro = {
+            "id": obtenerId(),
+            "num": obtenerId(),
+            "actividad": Activity,
+            "intensidad":intensityAct.toString(),
+            "fecha": fecha.fecha,
+            "hora": fecha.hora,
+            "tiempo_actividad_minutos": timeActivity,
+            "datos_medicion": objetGenerate,
+            "BPM_calculado": bpmValue,
+        };
+        setDatos(datos => [...datos,newRegistro])
+        await AsyncStorage.setItem('mediciones',JSON.stringify(datos));
+        console.debug('guardado con exito');
+        ocultarModal();
     }
 
     
     //Datos que se muestran en el grafico 
-    const initialData =[
+    /* const initialData =[
         {x:0, y: 32.51 },
         {x:1, y: 31.11 },
         {x:2, y: 27.02 },
@@ -120,31 +196,38 @@ const Measurements = () => {
         {x:7, y: 23.92 },
         {x:8, y: 22.68 },
         {x:9, y: 22.67 },
-    ];
+    ]; */
 
     /* const data = [{x:0,y: 1}, {x:1,y: 2}, {x:2,y: 1}];*/
     //console.log(objetGenerate); 
     
     return(
         <View style={Measurementstyles.containerPrincipal}>
-            <View style = {Measurementstyles.chartHeart}>
-                <ChartHeart
-                data = {objetGenerate}/>
-            </View>
-        
-            <View style={Measurementstyles.actionContainer}>
+                
+                <View style={Measurementstyles.actionContainer}>
                 <View style={Measurementstyles.bpmContainer}>
-                    <Text style={Measurementstyles.bpmTitle}>BPM:</Text>
-                    <Text style={Measurementstyles.bpmValue}>{bpsValue}</Text>
+                    <FontAwesome5 name="heartbeat" size={30} style={Measurementstyles.Icon}/>
+                    <Text style={Measurementstyles.bpmValue}>{bpmValue}</Text>
+                    <Text style={Measurementstyles.bpmTitle}>BPM</Text>
+                    <MaterialIcons name="timer" size={24} color={'#1A5276'} marginTop={20} marginLeft={90} />
+                    <Text style={[Measurementstyles.bpmValue, {marginLeft: 10}]}>{segundos}s</Text>
                 </View>
-                <Text style={Measurementstyles.bpmValue}>{segundos}</Text>
+                <View style = {Measurementstyles.chartHeart}>
+                    <ChartHeart
+                    data = {objetGenerate}
+                    //isMeasuring={isMeasuring}
+                    />
+                </View>
+
+                
+            
                 <View style={Measurementstyles.buttonContainer}>
                     <TouchableOpacity
-                    style = {Measurementstyles.Button}
-                    onPress={() => {
+                        style = {Measurementstyles.Button}
+                        onPress={() => {
                         //aca se debe manejar el inicio de las mediciones
                         startTimer();//temporalmente aca
-                    }}>
+                        }}>
                         <Text style={Measurementstyles.buttonTitle}>
                             INICIAR MEDICIONES
                         </Text>
@@ -157,23 +240,89 @@ const Measurements = () => {
                         </Text>
                     </TouchableOpacity>
                 </View>
+                <View marginVertical={50}>
+                    <TouchableOpacity
+                    style={Measurementstyles.buttonDesconectar}
+                    onPress={handleBleDisconnectManual}>
+                        <Text style={Measurementstyles.titleDesconectar}>
+                            DESCONECTAR
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+               
             </View>
             {/* <Text style = {{fontSize:20}}>{dataReceived}</Text> */}
+
+            {/*Pantalla emergente tras concluir la medicion*/}
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={ocultarModal}>
-                <View style={{alignItems:'center',justifyContent:'center'}}>
-                    <View style={{backgroundColor: 'pink',width:300,height:500,marginTop:200}}>
-                        <Text>
-                            Hola Mundo
-                            <Button
-                                title='cerrar'
-                                onPress={ocultarModal}
-                            />
-                        </Text>
-                    </View>
+                <View style={{alignItems:'center',justifyContent:'center',backgroundColor:'rgba(0,0,0,0.2)',height:'100%'}}>
+                        <ImageBackground style ={Measurementstyles.fondo} source={require('../../assets/cmp.png')} >
+                        <View style={Measurementstyles.caja}>
+                            <Text style={Measurementstyles.modalHead}>
+                                Actividad
+                            </Text>
+                            <View style={Measurementstyles.actividadContainer}>
+                                <TouchableOpacity
+                                style={Measurementstyles.touchActividad}
+                                onPress={()=>{setIntensityAct('Alta');}}>
+                                    <Text style={Measurementstyles.actividad}>
+                                        Alta intensidad
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                onPress={()=>{setIntensityAct('Media')}}
+                                style={Measurementstyles.touchActividad}>
+                                    <Text style={Measurementstyles.actividad}>
+                                        Media intensidad
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                onPress={()=>{setIntensityAct('Baja')}}
+                                style={Measurementstyles.touchActividad}>
+                                    <Text style={Measurementstyles.actividad}>
+                                        Baja intensidad
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <TextInput
+                                style={Measurementstyles.duracionActividad}
+                                placeholder="Actividad Realizada"
+                                placeholderTextColor={'#616A6B'}
+                                value= {Activity}
+                                onChangeText = {(val)=>{
+                                    setActivity(val);
+                                }}/>
+                            <TextInput
+                                style={Measurementstyles.duracionActividad}
+                                placeholder="Duracion [minutos]"
+                                placeholderTextColor={'#616A6B'}
+                                value= {timeActivity}
+                                onChangeText = {(val)=>{
+                                    setTimeActivity(parseInt(val,10));
+                                }}/>
+                            <View style={Measurementstyles.containerButtonActivity}>
+                                <TouchableOpacity
+                                    style={Measurementstyles.touchActividadButton}
+                                    onPress={guardarNewRegistro}>
+                                        <Text
+                                            style={Measurementstyles.actividadtxt}    
+                                                >Guardar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={Measurementstyles.touchActividadButton}
+                                    onPress={ocultarModal}>
+                                        <Text
+                                            style={Measurementstyles.actividadtxt}
+                                                >Descartar</Text>
+                                </TouchableOpacity>
+                            </View>
+                            
+                        </View>
+                        </ImageBackground>        
                 </View>
             </Modal>
         </View>

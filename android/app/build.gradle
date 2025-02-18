@@ -84,6 +84,7 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace 'com.anonymous.ecgapp'
+    
     defaultConfig {
         applicationId 'com.anonymous.ecgapp'
         minSdkVersion rootProject.ext.minSdkVersion
