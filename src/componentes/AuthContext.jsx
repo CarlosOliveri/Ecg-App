@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import * as SecureStore from 'expo-secure-store';
+//import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import {getPacienteDatos,getUserDatos} from '../api/ecg.api';
 
@@ -16,12 +16,12 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const saveAsyncStorage = async (value) => {
-        await SecureStore.setItemAsync("tokens", value);
+        //await SecureStore.setItemAsync("tokens", value);
     }
 
     const checkLoginStatus = async () => {
         try {
-            const tokens = await SecureStore.getItemAsync("tokens");
+            //const tokens = await SecureStore.getItemAsync("tokens");
             const accessToken = tokens["accessToken"]
             if (accessToken) {
                 const { token } = JSON.parse(accessToken);
