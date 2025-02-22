@@ -5,9 +5,12 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import UserShow from './UserShow';
+import useAuth from '../api/ecg.api';
 import UserRegisterStyles from '../styles/UserRegisterStyles';
 
 const UserRegister = () => {
+
+    const {setUserDatos} =useAuth();
 
     useEffect(() =>{
         console.log(userLog);
@@ -15,36 +18,59 @@ const UserRegister = () => {
     
     const [userLog,setUserLog] = useState(false);
     const navigation = useNavigation();
-    const [Name,setName] = useState();
+    const [foto,setFoto] = useState();
+    const [name,setName] = useState();
+    const [apellido,setApellido] = useState();
     const [CI,setCI] = useState();
     const [Age,setAge] = useState();
+    const [Sex,setSex] = useState();
+    const [telefono,setTelefono] = useState();
+    const [tipo,setTipo] = useState();
     const [Weight,setWeight] = useState();
     const [Height,setHeight] = useState();
-    const [Sex,setSex] = useState();
+    const [imc,setIMC] = useState();
+    const [historialMedico,setHistorialedico] = useState();
     const [errors,setErrors] = useState({
+        Fot:'',
         Nam:'',
+        Ap:'',
         Cd:'',
         Ag: '',
+        Se:'',
+        tel:'',
+        tip:'',
         We:'',
         He:'',
-        Se:'',
+        imc:'',
+        HM:'',
     });
 
     const handleGuardarRegistro = async () => {
         //Generacion de objeto JS
         const newRegistro = {
-            "nombre": Name,
-            "cedula":CI,
-            "edad": Age,
-            "peso": Weight,
-            "altura": Height,
-            "sexo": Sex,
+            "user":{
+                "foto":foto,
+                "nombre": name,
+                "apellido":apellido,
+                "cedula":CI,
+                "edad": Age,
+                "sexo": Sex,
+                "telefono":telefono,
+                "tipo":tipo,
+            },
+            "paciente":{
+                "peso": Weight,
+                "altura": Height,
+                "IMC":imc,
+                "historial_medico":historialMedico,
+            },
         };
         setUserLog(true);
+        setUserDatos(newRegistro);
         //Guardamos los datos 
-        await AsyncStorage.setItem('User', JSON.stringify(newRegistro));
+        //await AsyncStorage.setItem('User', JSON.stringify(newRegistro));
 
-        await AsyncStorage.setItem('Nombre', JSON.stringify(Name));
+        //await AsyncStorage.setItem('Nombre', JSON.stringify(Name));
 
         //Cambiamos de Pantalla
         //navigation.navigate('UserShow');
@@ -56,8 +82,6 @@ const UserRegister = () => {
 
     return (
     (!userLog)?(
-            
-        
         <KeyboardAwareScrollView style={UserStyles.keyboard}>
             <Text
             style = {UserStyles.msgText}
@@ -71,7 +95,7 @@ const UserRegister = () => {
                         style ={UserStyles.inputName}
                         placeholder="Ex: Nombre Apellido"
                         placeholderTextColor={'gray'}
-                        value= {Name}
+                        value= {name}
                         onChangeText = {(val)=>{
                             setName(val);
                             setErrors(_errors =>({..._errors,Nam:''}));

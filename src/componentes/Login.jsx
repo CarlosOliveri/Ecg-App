@@ -2,11 +2,13 @@ import {React, useState} from "react";
 import { View, Text ,TextInput, Button, Alert, TouchableOpacity} from "react-native";
 import LoginStyles from '../styles/LoginStyles';
 import { useNavigation } from "@react-navigation/native";
-import {Logging} from '../api/ecg.api';
+import { useAuth } from './AuthContext';
 //import UserRegister from "./UserRegister";
+import { LoginRequest } from "../api/ecg.api";
 
 const Login = () => {
-    
+
+    const { setToken,setLoadigScreen } = useAuth();
     const navigation = useNavigation();
 
     const [user,setUser] = useState();
@@ -25,12 +27,15 @@ const Login = () => {
     }
 
     const onPressButton = async () => {
+
         try{
-            const response = await Logging(user, password);
+            const response = await LoginRequest(user, password);
             if (response.status == 200){
                 const datos = response.data;
+                setToken(datos["Tokens"]["accesToken"]);
                 Alert.alert(datos["mensaje"]);
                 console.log(datos);
+                setLoadigScreen(True);
             }
         }catch(error){
             Alert.alert(error.response.data["Error"]);

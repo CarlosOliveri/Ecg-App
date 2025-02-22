@@ -15,6 +15,8 @@ import { Header } from '@react-navigation/stack';
 import UserShow from './UserShow';
 import { BleProvider } from './useBleContext';
 import { DatosProvider } from './useDatosContext';
+import LoadingScreen from './LoadigScreen';
+import { useAuth } from './AuthContext';
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -38,6 +40,7 @@ const UserStackNavigator = createNativeStackNavigator();
 
 const Main = () => {
 
+    //const {token,loadingScreen} = useAuth();
     const [isUserAuthenticated,setIsUserAuthenticated] = useState(false);
 
     const handleUserAuthenticated = () => {
@@ -130,7 +133,7 @@ const Main = () => {
         <DatosProvider>
         <NavigationContainer>
             <Tab.Navigator
-                initialRouteName= 'HistoryStack'
+                initialRouteName= 'userStack'
                 //keyboardHidesTabBar={true}
                 screenOptions = {{
                     keyboardHidesTabBar: true,

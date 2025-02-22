@@ -1,6 +1,5 @@
 import {React,useState,useEffect} from "react";
 import datosJson from '../../assets/appDirectories/Mediciones.json';
-import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import {getAllMeasurements} from '../api/ecg.api';
 
 const useDatosMedidos = () => {
@@ -23,5 +22,4 @@ const useDatosMedidos = () => {
         setDatos
     ]);
 };
-
 export default useDatosMedidos;
