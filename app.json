@@ -17,7 +17,7 @@
             "kotlinVersion": "1.8.22"
           },
           "ios": {
-            "deploymentTarget": "15.1"
+            "deploymentTarget": "13.4"
           }
         }
       ]
