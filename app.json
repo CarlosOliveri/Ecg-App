@@ -17,7 +17,7 @@
             "kotlinVersion": "1.8.22"
           },
           "ios": {
-            "deploymentTarget": "15.1"
+            "deploymentTarget": "13.4"
           }
         }
       ]
@@ -31,8 +31,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "deploymentTarget": "15.1"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
