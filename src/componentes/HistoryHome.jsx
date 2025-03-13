@@ -12,6 +12,9 @@ const HistoryHome = () => {
   const [datos, setDatos] = useState(Measurements); */
   const {datos,setDatos} = useDatosContext();
   
+  useEffect(() => {
+    console.log("mostrar tarjetas");
+  },[]);
 
   const handleDeleteRegister = (id) =>{
     //Manejar eliminacion de registros

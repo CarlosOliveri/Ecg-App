@@ -1,24 +1,36 @@
-import {React, useState} from "react";
+import {React, useState,useEffect} from "react";
 import { View, Text ,TextInput, Button, Alert, TouchableOpacity} from "react-native";
 import LoginStyles from '../styles/LoginStyles';
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from './AuthContext';
 //import UserRegister from "./UserRegister";
-import { LoginRequest } from "../api/ecg.api";
+import { LoginRequest, getPacienteDatos, getUserDatos } from "../api/ecg.api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
 
-    const { setToken,setLoadigScreen } = useAuth();
+    const { token,setToken,setLoadingScreen,saveTokens,setUserDatos,userDatos } = useAuth({});
     const navigation = useNavigation();
 
     const [user,setUser] = useState();
     const [password,setPassword] = useState();
+    const [firstRender,setFirstRender] = useState(true);
 
     function onChangeUser(value){
         if (value !== ''){
             setUser(value);
         }
     }
+
+    useEffect(() => {
+        if (firstRender){
+            setFirstRender(false);
+            setUserDatos({});
+            return 
+        }
+        AsyncStorage.setItem("User", JSON.stringify(userDatos));
+        navigation.navigate('UserShow');
+    },[userDatos]);
 
     function onChangePass(value){
         if (value !== ''){
@@ -32,15 +44,25 @@ const Login = () => {
             const response = await LoginRequest(user, password);
             if (response.status == 200){
                 const datos = response.data;
-                setToken(datos["Tokens"]["accesToken"]);
+                setToken(datos["tokens"]["access"]);
+                setLoadingScreen(true);
+                
+                saveTokens(datos["tokens"]);
                 Alert.alert(datos["mensaje"]);
+                //const datos_paciente = await getPacienteDatos(token,1)
                 console.log(datos);
-                setLoadigScreen(True);
+                setUserDatos({
+                    "user": datos["user"],
+                    "datosUser": datos["datos_user"],
+                    "datosTipo": datos["datosTipo"],
+                })
+                
             }
         }catch(error){
-            Alert.alert(error.response.data["Error"]);
+            //Alert.alert(error.response.data["Error"]);
+            console.debug(error);
+
         }
-        //navigation.navigate('bleStackUser');
     }
 
     function onPressRegisterButton(){

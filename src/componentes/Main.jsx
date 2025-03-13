@@ -1,4 +1,4 @@
-import React ,{useState }from 'react'
+import React ,{useState,useEffect }from 'react'
 import {NavigationContainer} from '@react-navigation/native'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -10,6 +10,7 @@ import Measurements from './Measurements';
 import { StateProvider } from './useBleConnectContext';
 import BluetoothList from './BluetoothList';
 import Login from './Login';
+import UserEdit from './UserEditRegister'
 import HistoryShow from './HistoryShow';
 import { Header } from '@react-navigation/stack';
 import UserShow from './UserShow';
@@ -17,6 +18,7 @@ import { BleProvider } from './useBleContext';
 import { DatosProvider } from './useDatosContext';
 import LoadingScreen from './LoadigScreen';
 import { useAuth } from './AuthContext';
+import { AuthProvider } from './AuthContext';
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -40,12 +42,16 @@ const UserStackNavigator = createNativeStackNavigator();
 
 const Main = () => {
 
-    //const {token,loadingScreen} = useAuth();
+    const {token,loadingScreen} = useAuth();
     const [isUserAuthenticated,setIsUserAuthenticated] = useState(false);
 
     const handleUserAuthenticated = () => {
         !isUserAuthenticated ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
     }
+
+    useEffect(() => {
+        //console.log("esto es del main " +token);
+     },[]);
 
     const Measurementstack = () =>{
         return(
@@ -112,7 +118,7 @@ const Main = () => {
     const UserStack = ()=>{
         return (
             <UserStackNavigator.Navigator
-                initialRouteName = {userLogin}
+                initialRouteName = {"UserShow"}
                 screenOptions = {{
                     headerShown: false,
                 }}>
@@ -123,14 +129,18 @@ const Main = () => {
                     name = {userRegister}
                     component={UserRegister}/>
                 <HistoryStackNavigator.Screen
-                    name = {userLogin}
+                    name = "userLogin"
                     component={Login}/>
+                <HistoryStackNavigator.Screen
+                    name = "userEdit"
+                    component={UserEdit}/>
             </UserStackNavigator.Navigator>
         );
     }
 
     return(
         <DatosProvider>
+        <AuthProvider>
         <NavigationContainer>
             <Tab.Navigator
                 initialRouteName= 'userStack'
@@ -189,6 +199,7 @@ const Main = () => {
                     }}/>
             </Tab.Navigator>
         </NavigationContainer>
+        </AuthProvider>
         </DatosProvider>
     );
 

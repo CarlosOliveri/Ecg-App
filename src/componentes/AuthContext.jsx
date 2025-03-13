@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import * as SecureStore from 'expo-secure-store';
-import axios from 'axios';
+//import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getPacienteDatos,getUserDatos} from '../api/ecg.api';
 
 const AuthContext = createContext();
@@ -8,29 +8,41 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [loadingScreen, setLoadingScreen] = useState(true);
-    const [userDatos, setUserDatos] = useState(null);
+    const [userDatos, setUserDatos] = useState({});
 
     useEffect(() => {
         // Verificar si hay sesión activa al abrir la app
-        checkLoginStatus();
+        checkLoginStatus(); //lo llevo a login 
     }, []);
-
-    const saveAsyncStorage = async (value) => {
-        await SecureStore.setItemAsync("tokens", value);
+ 
+    const saveTokens = async (value) => {
+        //console.log(value["access"]);
+        await AsyncStorage.setItem("tokens", JSON.stringify(value));
+        await AsyncStorage.setItem("accessToken", JSON.stringify(value["access"]));
+        await AsyncStorage.setItem("refreshToken", JSON.stringify(value["refresh"]));
     }
 
     const checkLoginStatus = async () => {
         try {
-            const tokens = await SecureStore.getItemAsync("tokens");
-            const accessToken = tokens["accessToken"]
-            if (accessToken) {
-                const { token } = JSON.parse(accessToken);
-                setToken({ token });
+            const token = await AsyncStorage.getItem("accessToken");
+            if (token) {
+                setToken(JSON.parse(token));
+                //console.debug(token);
             }
+            console.debug(token);
         } catch (error) {
-            console.error('Error verificando sesión:', error);
+            console.debug('Error verificando sesión:', error);
         }
         setLoadingScreen(false);
+    };
+
+    const logout = async () => {
+        await AsyncStorage.removeItem("accessToken");
+        setToken(null);
+        console.debug("log Out");
+
+        checkLoginStatus();
+
     };
 
     /* const login = async (username, password) => {
@@ -52,13 +64,8 @@ export const AuthProvider = ({ children }) => {
         }
     }; */
 
-    const logout = async () => {
-        await EncryptedStorage.removeItem('auth_tokens');
-        setToken(null);
-    };
-
     return (
-        <AuthContext.Provider value={{ setToken, token, logout, setLoadingScreen, loadingScreen, userDatos, setUserDatos, saveAsyncStorage }}>
+        <AuthContext.Provider value={{ setToken, token, logout, setLoadingScreen, loadingScreen, userDatos, setUserDatos, saveTokens }}>
             {children}
         </AuthContext.Provider>
     );

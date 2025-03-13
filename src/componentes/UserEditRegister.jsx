@@ -12,18 +12,17 @@ import UserRegisterStyles from '../styles/UserRegisterStyles';
 import Login from './Login';
 import Toggle from './Toggle';
 
-const UserRegister = () => {
+const UserEdit = () => {
 
     const {logout,setUserDatos,userDatos} =useAuth();
     const [firstRender,setFirstRender] = useState(true);
 
     useEffect(() =>{
-        /* if (firstRender){
+        if (firstRender){
             setFirstRender(false);
-            setUserDatos({});
             return 
         }
-        handleRegisterUp(userDatos); */
+        handleEdit(newRegistro);
     },[userDatos])
     
     const [userLog,setUserLog] = useState(true);
@@ -60,12 +59,12 @@ const UserRegister = () => {
         HM:'',
     });
 
-    const [esPaciente,setEsPaciente] = useState(false);
+    const [esPaciente,setEsPaciente] = useState(true);
     const [tipoUsuario,setTipoUsuario] = useState("Paciente");
 
     const handleGuardarRegistro = async () => {
         //Generacion de objeto JS
-        if (esPaciente){
+        if (tipoUsuario){
             setUserDatos({
                 "user":{
                     "username":username,
@@ -80,12 +79,11 @@ const UserRegister = () => {
                     "telefono":telefono,
                     "tipo":tipoUsuario,
                 },
-                "datosTipo":{
+                "paciente":{
                     "peso": Weight,
                     "altura": Height,
                     "IMC":imc,
                     "historial_medico":historialMedico,
-                    "doctor":null
                 },
             })
         }else{
@@ -103,24 +101,23 @@ const UserRegister = () => {
                     "telefono":telefono,
                     "tipo":tipoUsuario,
                 },
-                "datosTipo":{
+                "doctor":{
                     "especialidad": especialidad,
                     "matricula": matricula,
                 },
             })
         }
-        //console.log(userDatos);
         //setUserLog(true);
         //Guardamos los datos 
         //setUserDatos(newRegistro);
         //await AsyncStorage.setItem('User', JSON.stringify(newRegistro));
-        
+
         //Cambiamos de Pantalla
-        //navigation.navigate('UserShow');
+        navigation.navigate('UserShow');
     }
 
-    const handleRegisterUp = async(value) =>{
-        await RegisterRequest(value);
+    const handleEdit = async(value) =>{
+        //await RegisterRequest(value);
     }
 
     const handleSetUserLog = ()=>{
@@ -138,7 +135,6 @@ const UserRegister = () => {
     }
 
     return (
-    (userLog)?(
         <KeyboardAwareScrollView style={UserStyles.keyboard}>
             <Text
             style = {UserStyles.msgText}
@@ -244,20 +240,6 @@ const UserRegister = () => {
                             setErrors(_errors =>({..._errors,Se:''}));
                         }}
                         />                    
-
-                    <Text style = {UserStyles.labels}>Tipo de Usuario:</Text>
-                    <Text style = {UserStyles.labelTipo}>{tipoUsuario}</Text>
-                    <View style={UserStyles.toggleContainer}>
-                        <SwitchToggle
-                            containerStyle = {UserStyles.toggle}
-                            switchOn={esPaciente}
-                            onPress={()=>{handleToggel()}}
-                            circleColorOff="#f4f3f4"
-                            circleColorOn="cyan"
-                            backgroundColorOn= "#81b0ff"
-                            backgroundColorOff= "#81b0ff"//"#767577"
-                        />
-                    </View>
                     
                     {(esPaciente)?(<View>
                         <Text style = {UserStyles.labels}>Peso: </Text>
@@ -344,10 +326,10 @@ const UserRegister = () => {
                     if(!name) err = {...err, Nam :'Inserte el Nombre'}
                     if(!CI) err = {...err, Cd :'Inserte el documento de identidad'}
                     if(!Age) err = {...err, Ag :'Inserte la Edad'}
-                    if(!Weight && esPaciente) err = {...err, We :'Inserte el Peso'}
-                    if(!Height && esPaciente) err = {...err, He :'Inserte la Altura'}
+                    if(!Weight) err = {...err, We :'Inserte el Peso'}
+                    if(!Height) err = {...err, He :'Inserte la Altura'}
                     if(!Sex) err = {...err, Se :'Inserte el Sexo'}
-                    if(!imc && esPaciente) err = {...err, imc :'Inserte el IMC'}
+                    if(!imc) err = {...err, imc :'Inserte el IMC'}
                     //Condicional de validacion de datos 
                     if(err.Nam || err.Cd || err.Ag || err.We || err.We || err.He || err.Se || err.imc){
                         setErrors(_errors =>({..._errors, ...err}));
@@ -366,7 +348,7 @@ const UserRegister = () => {
                 }}
                 >
                     <Text style = {UserStyles.textButton}>
-                        Registrarse 
+                        Guardar Cambios
                     </Text>
                 </TouchableOpacity>
             
@@ -374,17 +356,6 @@ const UserRegister = () => {
 
         
         </KeyboardAwareScrollView>
-        
-        
-        
-
-    ):(
-        <>
-            <UserShow
-            handleSetUserLog = {handleSetUserLog}/>
-        </> 
-        //console.debug('nada')
-    )
     );
 }
-export default UserRegister;
+export default UserEdit;

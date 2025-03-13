@@ -3,84 +3,106 @@ import { useState } from "react";
 import { View, Text, StyleSheet, Dimensions,Image,ImageBackground ,TouchableOpacity} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native';
-
+import Login from "./Login";
+import {useAuth} from './AuthContext';
+import { getPacienteDatos, getUserDatos } from "../api/ecg.api";
 
 
 const UserShow = ({handleSetUserLog}) =>{
 
     const navigation = useNavigation();
-    const [storedName, setStoredName] = useState(null);
-    const [storedCI, setStoredCI] = useState(null);
-    const [storedAge, setStoredAge] = useState(null);
-    const [storedWeight, setStoredWeight] = useState(null);
-    const [storedHeight, setStoredHeight] = useState(null);
-    const [storedSex, setStoredSex] = useState(null);
-    const [user,setUser] = useState({
-        "nombre": null,
-        "cedula":null,
-        "edad": null,
-        "peso": null,
-        "altura": null,
-        "sexo": null,});
+    const {logout,userDatos,setUserDatos,setToken,token} = useAuth();
 
     useEffect(() => {
+        
         const fetchData = async () => {
             try {
                 // Obtener el valor almacenado en AsyncStorage
                 const userRegistered = await AsyncStorage.getItem('User');
-                setUser(userRegistered ? JSON.parse(userRegistered) : null);
-                console.debug("Usuario cargado correctamente");
-
-                const storedName = await AsyncStorage.getItem('Nombre');
-                setStoredName(storedName ? JSON.parse(storedName) : null);
+                setUserDatos(userRegistered ? JSON.parse(userRegistered) : null);
+                //console.debug(userRegistered);
 
             } catch (error) {
-                console.error('Error al obtener el valor:', error);
+                console.error(error);
             }
         };
         fetchData();
-    }, []);
+    },[token]);
+
+    const handleLogOut = () =>{
+        logout();
+        navigation.navigate("userLogin");
+    }
+
+    const handleEditPerfil = () =>{
+        navigation.navigate("userEdit");
+    }
 
     //require('../../assets/')
     return (
+        (token)?(
         <View style={styles.pincipalContainer}>
-        <ImageBackground style ={styles.fondo} resizeMode="cover" source={require('../../assets/fondo.png')} >
-            <View style ={styles.container} flexDirection = 'colum'>
-                <View style ={styles.line} flexDirection='row'  paddingRight={50} alingIyems='stretch'>
-                    <Image style ={styles.image} source={{uri:"https://media.gq.com.mx/photos/5f6ce732bc946e88f6c96320/16:9/w_2560%2Cc_limit/goky%2520ultra%2520instinto.jpg" }}/>
-                    <Text numberOfLines={2} ellipsizeMode="tail" style={styles.nombre}>{user.nombre}</Text>
-                </View>
-                <View flexDirection='row'>
-                    <Text style={styles.caractT}>C.I: </Text>
-                    <Text style={styles.caractS}>{user.cedula}</Text>
-                </View>
-                <View flexDirection='row'>
-                    <Text style={styles.caractT}>Edad: </Text>
-                    <Text style={styles.caractS}>{user.edad}</Text>
-                    <Text style={styles.caractS}>años</Text>
-                </View>
-                <View flexDirection='row'>
-                    <Text style={styles.caractT}>Peso: </Text>
-                    <Text style={styles.caractS}>{user.peso}</Text>
-                    <Text style={styles.caractS}>kg</Text>
-                </View>
-                <View flexDirection='row'>
-                    <Text style={styles.caractT}>Altura: </Text>
-                    <Text style={styles.caractS}>{user.altura}</Text>
-                    <Text style={styles.caractS}>cm</Text>
-                </View>
-                <View flexDirection='row'>
-                    <Text style={styles.caractT}>Sexo: </Text>
-                    <Text style={styles.caractS}>{user.sexo}</Text>
-                </View>
+            <TouchableOpacity
+                style={styles.touchableEditar}
+                onPress={()=>{handleEditPerfil()}}>
+                <Text style={styles.textButton}>Editar</Text>
+            </TouchableOpacity>
+            <ImageBackground style ={styles.fondo} resizeMode="cover" source={require('../../assets/fondo.png')} >
+                <View style ={styles.container} flexDirection = 'colum'>
+                    <View style ={styles.line} flexDirection='row'  paddingRight={50} alingIyems='stretch'>
+                        <Image style ={styles.image} source={{uri:"https://media.gq.com.mx/photos/5f6ce732bc946e88f6c96320/16:9/w_2560%2Cc_limit/goky%2520ultra%2520instinto.jpg" }}/>
+                        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.nombre}>{userDatos.user.first_name}</Text>
+                    </View>
+                    <View flexDirection='row'>
+                        <Text style={styles.caractT}>C.I: </Text>
+                        <Text style={styles.caractS}>{userDatos.datosUser.cedula}</Text>
+                    </View>
+                    <View flexDirection='row'>
+                        <Text style={styles.caractT}>Edad: </Text>
+                        <Text style={styles.caractS}>{userDatos.datosUser.edad}</Text>
+                        <Text style={styles.caractS}>años</Text>
+                    </View>
+                
+                    <View flexDirection='row'>
+                        <Text style={styles.caractT}>Sexo: </Text>
+                        <Text style={styles.caractS}>{userDatos.datosUser.sexo}</Text>
+                    </View>
 
-            </View>
-        </ImageBackground>
-        <TouchableOpacity
-            style={styles.touchable}
-            onPress={()=>{handleSetUserLog()}}>
-            <Text style={styles.textButton}>Cambiar Usuario</Text>
-        </TouchableOpacity>
+                    {(userDatos.datosUser.tipo== "Pt")?(<View>
+                        <View flexDirection='row'>
+                            <Text style={styles.caractT}>Peso: </Text>
+                            <Text style={styles.caractS}>{userDatos.datosTipo.peso}</Text>
+                            <Text style={styles.caractS}>kg</Text>
+                        </View>
+                        <View flexDirection='row'>
+                            <Text style={styles.caractT}>Altura: </Text>
+                            <Text style={styles.caractS}>{userDatos.datosTipo.altura}</Text>
+                            <Text style={styles.caractS}>cm</Text>
+                        </View>
+
+                        <View flexDirection='row'>
+                            <Text style={styles.caractT}>IMC: </Text>
+                            <Text style={styles.caractS}>{userDatos.datosTipo.IMC}</Text>
+                        </View>
+                        <View flexDirection='row'>
+                            <Text style={styles.caractT}>Historial medico: </Text>
+                            <Text style={styles.caractS}>{userDatos.datosTipo.historial_medico}</Text>
+                        </View>
+                    </View>
+                    ):(<View>
+                        <View flexDirection='row'>
+                            <Text style={styles.caractT}>Especialidad: </Text>
+                            <Text style={styles.caractS}>{userDatos.datosTipo.especialidad}</Text>
+                        </View>
+
+                    </View>)}
+                </View>
+            </ImageBackground>
+            <TouchableOpacity
+                style={styles.touchable}
+                onPress={()=>{handleLogOut()}}>
+                <Text style={styles.textButton}>Cerrar sesion</Text>
+            </TouchableOpacity>
         </View>
         /*<View style ={styles.container} flexDirection = 'colum'>
             <ImageBackground style ={styles.fondo} resizeMode="cover" source={require('../../assets/USER.png')}/>
@@ -107,6 +129,9 @@ const UserShow = ({handleSetUserLog}) =>{
             <View flexDirection='row'>
             </View>
         </View>*/
+        ):(
+            <Login/>
+        )
     );
 }
 const styles = StyleSheet.create({
@@ -118,7 +143,7 @@ const styles = StyleSheet.create({
     },
     container:{
         width: 340,
-        height: 350,
+        height: 450,
        // marginTop:'40%',
        // marginLeft:25,
        // borderWidth : 5,
@@ -135,7 +160,7 @@ const styles = StyleSheet.create({
         //flex:1,
         resizeMode:'cover',
         width: 340,
-        height: 350,
+        height: 450,
         marginTop:'40%',
         //marginLeft:45,
         borderRadius: 20, // Ajusta el radio de las esquinas
@@ -174,6 +199,15 @@ const styles = StyleSheet.create({
         marginTop:20,
         color:'white',
         paddingLeft:5,
+    },
+    touchableEditar:{
+        backgroundColor: '#1A5276',
+        padding : 10,
+        marginTop : 70,
+        width : '50%',
+        alignSelf: 'center',
+        borderRadius: 10,
+        position: "absolute"
     },
     touchable:{
         backgroundColor: '#1A5276',

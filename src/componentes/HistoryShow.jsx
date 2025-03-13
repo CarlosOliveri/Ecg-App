@@ -5,11 +5,13 @@ import { useDatosContext } from "./useDatosContext";
 import ChartHeart from './ChartHeart';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import {getUserData,getPacienteDatos} from '../api/ecg.api';
+import {getUserDatos,getPacienteDatos} from '../api/ecg.api';
+import {useAuth} from './AuthContext';
 
 const HistoryShow =({route})=>{
     const info = route.params.datos
 
+    const {token} = useAuth();
     const [user,setUser] = useState({
         "id": null,
         "foto": null,
@@ -22,7 +24,8 @@ const HistoryShow =({route})=>{
         "email": null,
         "userName": null,
         "password": null,
-        "tipo": null,});
+        "tipo": null
+    });
     const [paciente,setPaciente] = useState({
         "user":null,
         "peso":null,
@@ -35,12 +38,12 @@ const HistoryShow =({route})=>{
         //console.debug(info);
         const getUser = async () => {
             //const userRegistered = await AsyncStorage.getItem('User');
-            const responseUser = await getUserData(1);
-            const responsePaciente = await getPacienteDatos(1);
+            const responseUser = await getUserDatos(token,1);
+            const responsePaciente = await getPacienteDatos(token,1);
             const userDatos = responseUser.data;
             const pacienteDatos = responsePaciente.data;
             setUser(userDatos);
-            setPaciente(pacienteDatos);
+            setPaciente(pacienteDatos); 
         }
         getUser();
     },[])
@@ -110,11 +113,10 @@ const HistoryShow =({route})=>{
                         <FontAwesome5 name="heartbeat" size={30} style={styles.Icon} />
                         <Text style={[styles.BPM]}>{info.BPM_calculado} BPM</Text>
                     </View>
-    
-    
+
                     <View style = {RegistroShowStyles.chartHeart}>
                     <ChartHeart
-                    data = {JSON.parse(info.datos)}/>
+                        data = {JSON.parse(info.datos)}/>
                     </View>
 
                 </View>
