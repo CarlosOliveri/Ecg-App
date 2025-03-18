@@ -276,6 +276,12 @@ setInterval(() => {
     };
 
     const scanPermission = (onPermissionGranted, onPermissionDenied) =>{
+		if (Platform.OS !== 'web') {
+			const { PermissionsAndroid } = require('react-native');
+		}else{
+			console.log("soy");
+		}
+
         if (Platform.OS === 'android' && Platform.Version >= 23) {
           PermissionsAndroid.check(
             PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
@@ -308,15 +314,19 @@ setInterval(() => {
     };
 
     const requestPermissions = () => {
-      if (Platform.OS == 'android'){
-        PermissionsAndroid.requestMultiple(
-          [PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION]
-        ).then((result) => {
-            console.debug("[Location Permissions] granted");
-        }).catch((err)=> {console.log("Error de permisos" ,err)})
-      }
+		if (Platform.OS !== 'web') {
+			const { PermissionsAndroid } = require('react-native');
+		}
+
+		if (Platform.OS == 'android'){
+			PermissionsAndroid.requestMultiple(
+			[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+				PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+				PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION]
+			).then((result) => {
+				console.debug("[Location Permissions] granted");
+			}).catch((err)=> {console.log("Error de permisos" ,err)})
+		}
     }
 
     //Empezamos a Scanear los dispositivos cercanos

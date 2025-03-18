@@ -92,48 +92,30 @@ const Main = () => {
             </HistoryStackNavigator.Navigator>
         );
     }
-    
-    /*const AutenticacioStack = () => {
-        return(
-            <UserStack.Navigator
-                //initialRouteName= {isUserAuthenticated ? 'bleStackUser' : 'Login'}
-                intialRouteName = 'userRegister'
-            >
-                <UserStack.Screen 
-                    name = 'Login'
-                    component = {Login}
-                    options={{
-                        headerShown:false,
-                    }}/>
-                <UserStack.Screen 
-                    name = 'userRegister'
-                    component = {UserRegister}
-                    options={{
-                        headerShown:false,
-                    }}/>
-            </UserStack.Navigator>
-        );
-    };*/
 
     const UserStack = ()=>{
         return (
             <UserStackNavigator.Navigator
-                initialRouteName = {"UserShow"}
+                initialRouteName = {"userLogin"}
                 screenOptions = {{
                     headerShown: false,
                 }}>
                 <HistoryStackNavigator.Screen
-                    name = 'UserShow'
-                    component={UserShow}/>
+                    name = "UserRegister"
+                    component={UserRegister}
+                    options={{ unmountOnBlur: true }}/>
                 <HistoryStackNavigator.Screen
-                    name = {userRegister}
-                    component={UserRegister}/>
+                    name = 'UserShow'
+                    component={UserShow}
+                    options={{ unmountOnBlur: true }}/>
                 <HistoryStackNavigator.Screen
                     name = "userLogin"
-                    component={Login}/>
+                    component={Login}
+                    options={{ unmountOnBlur: true }}/>
                 <HistoryStackNavigator.Screen
                     name = "userEdit"
-                    component={UserEdit}/>
+                    component={UserEdit}
+                    options={{ unmountOnBlur: true }}/>
             </UserStackNavigator.Navigator>
         );
     }

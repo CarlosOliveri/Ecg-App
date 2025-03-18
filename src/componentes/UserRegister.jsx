@@ -5,7 +5,6 @@ import UserStyles from '../styles/UserRegisterStyles';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import UserShow from './UserShow';
 import {useAuth} from './AuthContext';
 import { LoginRequest, getPacienteDatos, getUserDatos,RegisterRequest } from "../api/ecg.api";
 import UserRegisterStyles from '../styles/UserRegisterStyles';
@@ -18,16 +17,43 @@ const UserRegister = () => {
     const [firstRender,setFirstRender] = useState(true);
 
     useEffect(() =>{
-        /* if (firstRender){
+        console.debug("[userRegister]");
+        if (firstRender){
             setFirstRender(false);
-            setUserDatos({});
+            handleToggel();
+            /* setUserDatos({
+                "user":{
+                    "username":"",
+                    "password":"",
+                    "email": "",
+                    "first_name": "",
+                },
+                "datosUser":{
+                    "cedula":"",
+                    "edad": "",
+                    "sexo": "",
+                    "telefono":"",
+                    "tipo":"",
+                },
+                "paciente":{
+                    "peso": "",
+                    "altura": "",
+                    "IMC":"",
+                    "historial_medico":"",
+                    "doctor":null
+                },
+                "doctor":{
+                    "especialidad":"",
+                    "matricula": "",
+                },
+            }); */
             return 
         }
-        handleRegisterUp(userDatos); */
-    },[userDatos])
+        handleRegisterUp(userDatos);
+    },[userDatos]);
     
-    const [userLog,setUserLog] = useState(true);
-    const navigation = useNavigation();
+    const [userLog,setUserLog] = useState(false);
+    //const navigation = useNavigation();
     //const [foto,setFoto] = useState();
     const [username,setUsername] = useState();
     const [password,setPassword] = useState();
@@ -80,12 +106,16 @@ const UserRegister = () => {
                     "telefono":telefono,
                     "tipo":tipoUsuario,
                 },
-                "datosTipo":{
+                "paciente":{
                     "peso": Weight,
                     "altura": Height,
                     "IMC":imc,
                     "historial_medico":historialMedico,
                     "doctor":null
+                },
+                "doctor":{
+                    "especialidad":"",
+                    "matricula": "",
                 },
             })
         }else{
@@ -103,20 +133,25 @@ const UserRegister = () => {
                     "telefono":telefono,
                     "tipo":tipoUsuario,
                 },
-                "datosTipo":{
+                "paciente":{
+                    "peso": "",
+                    "altura": "",
+                    "IMC":"",
+                    "historial_medico":"",
+                    "doctor":null
+                },
+                "doctor":{
                     "especialidad": especialidad,
                     "matricula": matricula,
                 },
             })
         }
         //console.log(userDatos);
-        //setUserLog(true);
         //Guardamos los datos 
         //setUserDatos(newRegistro);
         //await AsyncStorage.setItem('User', JSON.stringify(newRegistro));
         
         //Cambiamos de Pantalla
-        //navigation.navigate('UserShow');
     }
 
     const handleRegisterUp = async(value) =>{
@@ -138,7 +173,6 @@ const UserRegister = () => {
     }
 
     return (
-    (userLog)?(
         <KeyboardAwareScrollView style={UserStyles.keyboard}>
             <Text
             style = {UserStyles.msgText}
@@ -214,7 +248,7 @@ const UserRegister = () => {
                         placeholderTextColor={'gray'}
                         value= {Age}
                         onChangeText = {(val)=>{
-                            setAge(val);
+                            setAge(parseInt(val,10));
                             setErrors(_errors =>({..._errors,Ag:''}));
                         }}
                         />
@@ -370,21 +404,8 @@ const UserRegister = () => {
                     </Text>
                 </TouchableOpacity>
             
-            </View>
-
-        
+            </View>        
         </KeyboardAwareScrollView>
-        
-        
-        
-
-    ):(
-        <>
-            <UserShow
-            handleSetUserLog = {handleSetUserLog}/>
-        </> 
-        //console.debug('nada')
-    )
     );
 }
 export default UserRegister;

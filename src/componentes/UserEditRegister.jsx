@@ -5,7 +5,7 @@ import UserStyles from '../styles/UserRegisterStyles';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import UserShow from './UserShow';
+//import UserShow from './UserShow';
 import {useAuth} from './AuthContext';
 import { LoginRequest, getPacienteDatos, getUserDatos,RegisterRequest } from "../api/ecg.api";
 import UserRegisterStyles from '../styles/UserRegisterStyles';
@@ -22,7 +22,7 @@ const UserEdit = () => {
             setFirstRender(false);
             return 
         }
-        handleEdit(newRegistro);
+        //handleEdit(newRegistro);
     },[userDatos])
     
     const [userLog,setUserLog] = useState(true);
@@ -113,7 +113,7 @@ const UserEdit = () => {
         //await AsyncStorage.setItem('User', JSON.stringify(newRegistro));
 
         //Cambiamos de Pantalla
-        navigation.navigate('UserShow');
+        //navigation.navigate('UserShow');
     }
 
     const handleEdit = async(value) =>{

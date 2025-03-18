@@ -5,18 +5,24 @@ import { useAuth } from "./AuthContext";
 const useDatosMedidos = () => {
 
     const [datos, setDatos] = useState([]);
-    const {token} = useAuth();
+    const {token,isLog,userDatos} = useAuth();
 
     const fetchData = async() =>{
-        const response = await getAllMeasurements(token,'ceom1');
-        const datos = response.data;
-        setDatos(datos["mediciones"]);
-      }
+		try{
+			const response = await getAllMeasurements(token,userDatos.user.username);
+			const datos = response.data;
+			setDatos(datos["mediciones"]);
+		}catch{
+			console.debug("[useDatosMedidos]" + response.data["mensaje"]);
+		}
+    } 
 
     //const Measurements = datosJson.mediciones;// Esto debe ser una consult al backend
     useEffect(()=>{
-      fetchData();
-    },[])
+      if(isLog){
+        fetchData();
+      }
+    },[isLog])
 
     return([
         datos,

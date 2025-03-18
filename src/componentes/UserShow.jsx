@@ -2,26 +2,27 @@ import React ,{useEffect, useReducer} from "react";
 import { useState } from "react";
 import { View, Text, StyleSheet, Dimensions,Image,ImageBackground ,TouchableOpacity} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useIsFocused } from '@react-navigation/native';
 import Login from "./Login";
 import {useAuth} from './AuthContext';
 import { getPacienteDatos, getUserDatos } from "../api/ecg.api";
 
 
-const UserShow = ({handleSetUserLog}) =>{
+const UserShow = () =>{
 
     const navigation = useNavigation();
-    const {logout,userDatos,setUserDatos,setToken,token} = useAuth();
+    const isFocused = useIsFocused();
+    const {isLog, setIsLog,logout,userDatos,setUserDatos,setToken,token} = useAuth();
 
     useEffect(() => {
-        
+        console.debug("[userShow]");
+
         const fetchData = async () => {
             try {
                 // Obtener el valor almacenado en AsyncStorage
-                const userRegistered = await AsyncStorage.getItem('User');
-                setUserDatos(userRegistered ? JSON.parse(userRegistered) : null);
+                //const userRegistered = await AsyncStorage.getItem('User');
+                //setUserDatos(userRegistered ? JSON.parse(userRegistered) : null);
                 //console.debug(userRegistered);
-
             } catch (error) {
                 console.error(error);
             }
@@ -30,6 +31,7 @@ const UserShow = ({handleSetUserLog}) =>{
     },[token]);
 
     const handleLogOut = () =>{
+        setIsLog(false);
         logout();
         navigation.navigate("userLogin");
     }
@@ -38,9 +40,7 @@ const UserShow = ({handleSetUserLog}) =>{
         navigation.navigate("userEdit");
     }
 
-    //require('../../assets/')
     return (
-        (token)?(
         <View style={styles.pincipalContainer}>
             <TouchableOpacity
                 style={styles.touchableEditar}
@@ -68,31 +68,31 @@ const UserShow = ({handleSetUserLog}) =>{
                         <Text style={styles.caractS}>{userDatos.datosUser.sexo}</Text>
                     </View>
 
-                    {(userDatos.datosUser.tipo== "Pt")?(<View>
+                    {(userDatos.datosUser.tipo== "Paciente")?(<View>
                         <View flexDirection='row'>
                             <Text style={styles.caractT}>Peso: </Text>
-                            <Text style={styles.caractS}>{userDatos.datosTipo.peso}</Text>
+                            <Text style={styles.caractS}>{userDatos.paciente.peso}</Text>
                             <Text style={styles.caractS}>kg</Text>
                         </View>
                         <View flexDirection='row'>
                             <Text style={styles.caractT}>Altura: </Text>
-                            <Text style={styles.caractS}>{userDatos.datosTipo.altura}</Text>
+                            <Text style={styles.caractS}>{userDatos.paciente.altura}</Text>
                             <Text style={styles.caractS}>cm</Text>
                         </View>
 
                         <View flexDirection='row'>
                             <Text style={styles.caractT}>IMC: </Text>
-                            <Text style={styles.caractS}>{userDatos.datosTipo.IMC}</Text>
+                            <Text style={styles.caractS}>{userDatos.paciente.IMC}</Text>
                         </View>
                         <View flexDirection='row'>
                             <Text style={styles.caractT}>Historial medico: </Text>
-                            <Text style={styles.caractS}>{userDatos.datosTipo.historial_medico}</Text>
+                            <Text style={styles.caractS}>{userDatos.paciente.historial_medico}</Text>
                         </View>
                     </View>
                     ):(<View>
                         <View flexDirection='row'>
                             <Text style={styles.caractT}>Especialidad: </Text>
-                            <Text style={styles.caractS}>{userDatos.datosTipo.especialidad}</Text>
+                            <Text style={styles.caractS}>{userDatos.doctor.especialidad}</Text>
                         </View>
 
                     </View>)}
@@ -104,34 +104,6 @@ const UserShow = ({handleSetUserLog}) =>{
                 <Text style={styles.textButton}>Cerrar sesion</Text>
             </TouchableOpacity>
         </View>
-        /*<View style ={styles.container} flexDirection = 'colum'>
-            <ImageBackground style ={styles.fondo} resizeMode="cover" source={require('../../assets/USER.png')}/>
-            <View flexDirection='row'>
-                <Image style ={styles.image} source={{uri:"https://media.gq.com.mx/photos/5f6ce732bc946e88f6c96320/16:9/w_2560%2Cc_limit/goky%2520ultra%2520instinto.jpg" }}/>
-                <Text style={styles.nombre}>{storedName}</Text>
-            </View>
-            <View flexDirection='row'>
-                <Text style={styles.caractT}>Edad: </Text>
-                <Text style={styles.caractS}>{storedAge}</Text>
-            </View>
-            <View flexDirection='row'>
-                <Text style={styles.caractT}>Peso: </Text>
-                <Text style={styles.caractS}>{storedWeight}</Text>
-            </View>
-            <View flexDirection='row'>
-                <Text style={styles.caractT}>Altura: </Text>
-                <Text style={styles.caractS}>{storedHeight}</Text>
-            </View>
-            <View flexDirection='row'>
-                <Text style={styles.caractT}>Sexo: </Text>
-                <Text style={styles.caractS}>{storedSex}</Text>
-            </View>
-            <View flexDirection='row'>
-            </View>
-        </View>*/
-        ):(
-            <Login/>
-        )
     );
 }
 const styles = StyleSheet.create({

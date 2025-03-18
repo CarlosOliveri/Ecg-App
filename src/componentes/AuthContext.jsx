@@ -8,7 +8,33 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [loadingScreen, setLoadingScreen] = useState(true);
-    const [userDatos, setUserDatos] = useState({});
+    const [userDatos, setUserDatos] = useState({
+        "user":{
+            "username":"",
+            "password":"",
+            "email": "",
+            "first_name": "",
+        },
+        "datosUser":{
+            "cedula":"",
+            "edad": "",
+            "sexo": "",
+            "telefono":"",
+            "tipo":"",
+        },
+        "paciente":{
+            "peso": "",
+            "altura": "",
+            "IMC":"",
+            "historial_medico":"",
+            "doctor":null
+        },
+        "doctor":{
+            "especialidad":"",
+            "matricula": "",
+        },
+    });
+    const [isLog,setIsLog] = useState(false);
 
     useEffect(() => {
         // Verificar si hay sesión activa al abrir la app
@@ -24,12 +50,10 @@ export const AuthProvider = ({ children }) => {
 
     const checkLoginStatus = async () => {
         try {
-            const token = await AsyncStorage.getItem("accessToken");
+            const token = await AsyncStorage.getItem("accessToken");//[IMPORTANTE]descomentar en produccion
             if (token) {
                 setToken(JSON.parse(token));
-                //console.debug(token);
             }
-            console.debug(token);
         } catch (error) {
             console.debug('Error verificando sesión:', error);
         }
@@ -38,7 +62,34 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         await AsyncStorage.removeItem("accessToken");
+        await AsyncStorage.setItem("accessToken",JSON.stringify({}));
         setToken(null);
+        setUserDatos({
+            "user":{
+                "username":"",
+                "password":"",
+                "email": "",
+                "first_name": "",
+            },
+            "datosUser":{
+                "cedula":"",
+                "edad": "",
+                "sexo": "",
+                "telefono":"",
+                "tipo":"",
+            },
+            "paciente":{
+                "peso": "",
+                "altura": "",
+                "IMC":"",
+                "historial_medico":"",
+                "doctor":null
+            },
+            "doctor":{
+                "especialidad":"",
+                "matricula": "",
+            },
+        });
         console.debug("log Out");
 
         checkLoginStatus();
@@ -65,7 +116,8 @@ export const AuthProvider = ({ children }) => {
     }; */
 
     return (
-        <AuthContext.Provider value={{ setToken, token, logout, setLoadingScreen, loadingScreen, userDatos, setUserDatos, saveTokens }}>
+        <AuthContext.Provider value={{ setToken, token, logout, setLoadingScreen, loadingScreen, 
+                                        userDatos, setUserDatos, saveTokens,isLog, setIsLog }}>
             {children}
         </AuthContext.Provider>
     );
