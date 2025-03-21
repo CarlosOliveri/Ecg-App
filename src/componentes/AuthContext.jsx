@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
             },
             "datosUser":{
                 "cedula":"",
-                "edad": "",
+                "edad": 0,
                 "sexo": "",
                 "telefono":"",
                 "tipo":"",

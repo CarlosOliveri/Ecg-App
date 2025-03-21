@@ -101,7 +101,7 @@ const UserRegister = () => {
                 },
                 "datosUser":{
                     "cedula":CI,
-                    "edad": Age,
+                    "edad": parseInt(Age,10),
                     "sexo": Sex,
                     "telefono":telefono,
                     "tipo":tipoUsuario,
@@ -248,7 +248,7 @@ const UserRegister = () => {
                         placeholderTextColor={'gray'}
                         value= {Age}
                         onChangeText = {(val)=>{
-                            setAge(parseInt(val,10));
+                            setAge(val);
                             setErrors(_errors =>({..._errors,Ag:''}));
                         }}
                         />

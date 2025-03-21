@@ -31,3 +31,8 @@ export const RegisterRequest = (objectJson) =>{
    return response
 }
 
+export const SaveMedition = (objectJson,username) => {
+   const response = axios.post(`http://${IP}:8000/registers/api/v1/post_medicion/${username}`,objectJson);
+   return response
+}
+

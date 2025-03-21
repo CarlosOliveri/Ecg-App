@@ -10,11 +10,15 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { SaveMedition } from '../api/ecg.api';
+import { useAuth } from './AuthContext';
 
 
 const Measurements = () => {
 
+    const {userDatos} = useAuth({});
     const {datos,setDatos} = useDatosContext();
+    const [firstRender,setFirstRender] = useState(true);
     //const {isBleConnected,setIsBleConnected} = useBleConnectContext();
     const {discoveredDevices,dataReceived,isConnected,objetGenerate,
         setObjetGenerate,writeStartOrder,setIsConnected,startScan,setDiscoveredDevices,scanPermission,
@@ -116,6 +120,14 @@ const Measurements = () => {
             handleBpsCalculate();
         }
     },[segundos])
+
+    useEffect(() =>{
+        if (firstRender){
+            setFirstRender(false);
+            return;
+        }
+        handleSaveMedition();
+    },[datos])
     //inicia el timer
     const startTimer = () => {
         setObjetGenerate([]);
@@ -167,22 +179,27 @@ const Measurements = () => {
 
     const guardarNewRegistro = async () => {
         const newRegistro = {
-            "id": obtenerId(),
-            "num": obtenerId(),
+            //"id": obtenerId(),
+            //"num": obtenerId(),
             "actividad": Activity,
             "intensidad":intensityAct.toString(),
             "fecha": fecha.fecha,
             "hora": fecha.hora,
             "tiempo_actividad_minutos": timeActivity,
             "datos_medicion": objetGenerate,
-            "BPM_calculado": bpmValue,
+            "bpm": parseInt(bpmValue,10),
+            "user":userDatos.user.id
         };
         setDatos(datos => [...datos,newRegistro])
-        await AsyncStorage.setItem('mediciones',JSON.stringify(datos));
-        console.debug('guardado con exito');
+        //await AsyncStorage.setItem('mediciones',JSON.stringify(datos));
+        //console.debug('guardado con exito');
+        console.log(newRegistro);
         ocultarModal();
     }
 
+    const handleSaveMedition = async () => {
+        response = await SaveMedition(datos,userDatos.user.username);
+    }
     
     //Datos que se muestran en el grafico 
     /* const initialData =[
