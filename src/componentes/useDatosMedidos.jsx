@@ -1,10 +1,11 @@
 import {React,useState,useEffect} from "react";
 import datosJson from '../../assets/appDirectories/Mediciones.json';
 import {getAllMeasurements} from '../api/ecg.api';
-import { useAuth } from "./AuthContext";
+import {useAuth} from "./AuthContext";
 const useDatosMedidos = () => {
 
     const [datos, setDatos] = useState([]);
+    const [sincro,setSincro] = useState(true);
     const {token,isLog,userDatos} = useAuth();
 
     const fetchData = async() =>{
@@ -19,14 +20,21 @@ const useDatosMedidos = () => {
 
     //const Measurements = datosJson.mediciones;// Esto debe ser una consult al backend
     useEffect(()=>{
-      if(isLog){
+      console.debug("[useDatosMedidos]");
+      if(isLog && sincro){
+        setDatos([]);
+        console.log("helo");
         fetchData();
+        setSincro(false);
+      }else{
+        setDatos([]);
       }
-    },[isLog])
+    },[isLog,sincro])
 
     return([
         datos,
-        setDatos
+        setDatos,
+        setSincro
     ]);
 };
 export default useDatosMedidos;

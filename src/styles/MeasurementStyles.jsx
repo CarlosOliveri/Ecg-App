@@ -142,7 +142,7 @@ export const Measurementstyles = StyleSheet.create({
     actividadtxt:{
         color:'white',
         fontSize:18,
-        fontWeight:'40',
+        fontWeight:"400",
         padding:10,
         paddingHorizontal:15,
     },

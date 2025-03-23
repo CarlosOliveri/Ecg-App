@@ -4,9 +4,9 @@ import useDatosMedidos from './useDatosMedidos';
 const DatosContext = createContext();
 
 export const DatosProvider = ({children}) => {
-    const [datos,setDatos] = useDatosMedidos();
+    const [datos,setDatos,setSincro] = useDatosMedidos();
     return(
-        <DatosContext.Provider value = {{datos,setDatos}}>
+        <DatosContext.Provider value = {{datos,setDatos,setSincro}}>
             {children}
         </DatosContext.Provider>
     );

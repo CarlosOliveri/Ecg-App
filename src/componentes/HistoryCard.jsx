@@ -18,7 +18,7 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
           <View style = {HistoryCardStyles.cardContainer}>
              <View flexDirection='row'>
               <Text style={HistoryCardStyles.titleStyle} > Medicion numero </Text>
-              <Text style={HistoryCardStyles.titleStyle} marginLeft={-2}> {info.num} </Text>
+              <Text style={HistoryCardStyles.titleStyle} marginLeft={-2}> {info.id} </Text>
             </View>
 
             <View style={HistoryCardStyles.iconTrashStyle}>
@@ -47,7 +47,7 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
             </View>
             
             <View style={HistoryCardStyles.iconTimerStyle}>
-              <IconLabel name="timer" label = {info.tiempo_actividad_minutos} color={iconColor}/>
+              <IconLabel name="timer" label = {info.duracion} color={iconColor}/>
             </View>
             
             <View style={HistoryCardStyles. iconArrowtyle}>

@@ -17,8 +17,9 @@ import { useAuth } from './AuthContext';
 const Measurements = () => {
 
     const {userDatos} = useAuth({});
-    const {datos,setDatos} = useDatosContext();
+    const {datos,setDatos,setSincro} = useDatosContext();
     const [firstRender,setFirstRender] = useState(true);
+    const [newRegister,setNewRegister] = useState({});
     //const {isBleConnected,setIsBleConnected} = useBleConnectContext();
     const {discoveredDevices,dataReceived,isConnected,objetGenerate,
         setObjetGenerate,writeStartOrder,setIsConnected,startScan,setDiscoveredDevices,scanPermission,
@@ -127,7 +128,8 @@ const Measurements = () => {
             return;
         }
         handleSaveMedition();
-    },[datos])
+        setFirstRender(true);
+    },[newRegister])
     //inicia el timer
     const startTimer = () => {
         setObjetGenerate([]);
@@ -178,27 +180,29 @@ const Measurements = () => {
     }
 
     const guardarNewRegistro = async () => {
-        const newRegistro = {
+        setNewRegister({
             //"id": obtenerId(),
             //"num": obtenerId(),
+            "datos": JSON.stringify(objetGenerate),
             "actividad": Activity,
-            "intensidad":intensityAct.toString(),
+            "intensidad":intensityAct,
             "fecha": fecha.fecha,
             "hora": fecha.hora,
-            "tiempo_actividad_minutos": timeActivity,
-            "datos_medicion": objetGenerate,
+            "duracion": parseInt(timeActivity,10),
             "bpm": parseInt(bpmValue,10),
             "user":userDatos.user.id
-        };
-        setDatos(datos => [...datos,newRegistro])
+        });
+        //setDatos(datos => [...datos,newRegistro])
         //await AsyncStorage.setItem('mediciones',JSON.stringify(datos));
         //console.debug('guardado con exito');
-        console.log(newRegistro);
+        //console.log(newRegistro);
         ocultarModal();
     }
 
     const handleSaveMedition = async () => {
-        response = await SaveMedition(datos,userDatos.user.username);
+        response = await SaveMedition(newRegister,userDatos.user.username);
+        console.log(newRegister);
+        setSincro(true);
     }
     
     //Datos que se muestran en el grafico 
@@ -220,7 +224,7 @@ const Measurements = () => {
     
     return(
         <View style={Measurementstyles.containerPrincipal}>
-                
+
                 <View style={Measurementstyles.actionContainer}>
                 <View style={Measurementstyles.bpmContainer}>
                     <FontAwesome5 name="heartbeat" size={30} style={Measurementstyles.Icon}/>
@@ -317,9 +321,9 @@ const Measurements = () => {
                                 style={Measurementstyles.duracionActividad}
                                 placeholder="Duracion [minutos]"
                                 placeholderTextColor={'#616A6B'}
-                                value= {timeActivity}
+                                value= {String(timeActivity)}
                                 onChangeText = {(val)=>{
-                                    setTimeActivity(parseInt(val,10));
+                                    setTimeActivity(val);
                                 }}/>
                             <View style={Measurementstyles.containerButtonActivity}>
                                 <TouchableOpacity

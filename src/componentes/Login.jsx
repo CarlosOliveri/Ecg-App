@@ -52,7 +52,7 @@ const Login = () => {
                     "matricula": "",
                 },
             });
-            console.debug("primer render, en loging");
+            console.debug("[Login]primer render");
             return 
         }
         //setFirstRender(true);//[IMPORTANTE]No mover de debajo del IF

@@ -10,10 +10,10 @@ const HistoryHome = () => {
   
   /* const Measurements = datosJson.mediciones;
   const [datos, setDatos] = useState(Measurements); */
-  const {datos,setDatos} = useDatosContext();
+  const {datos,setDatos,setSincro} = useDatosContext();
   
   useEffect(() => {
-    console.log("mostrar tarjetas");
+    console.log("[HistoryHome]");
   },[]);
 
   const handleDeleteRegister = (id) =>{
@@ -27,19 +27,25 @@ const HistoryHome = () => {
       console.log("[Data Storage] Datos Actualizados correctamente")
     })
   }
+  const handleSincronizacion = () => {
+	setSincro(true);
+  }
 
     return (
         <View style={styles.container}>
-          <FlatList
-            data={datos}
-            renderItem={({ item }) => {
-              return (
-                <HistoryCard 
-                  info = {item} 
-                  handleDeleteRegister = {handleDeleteRegister}/>
-            );}}
-            keyExtractor={(datos) => datos.id.toString()}
-            showsVerticalScrollIndicator={false}/>
+        	<Button
+        		title='Actualizar'
+				onPress={()=>{handleSincronizacion()}}/>
+          	<FlatList
+            	data={datos}
+            	renderItem={({ item }) => {
+              		return (
+                		<HistoryCard 
+                  			info = {item} 
+                  			handleDeleteRegister = {handleDeleteRegister}/>
+            	);}}
+            	keyExtractor={(datos) => String(datos.id)}
+            	showsVerticalScrollIndicator={false}/>
           
         </View>
 

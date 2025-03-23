@@ -11,42 +11,7 @@ import {useAuth} from './AuthContext';
 const HistoryShow =({route})=>{
     const info = route.params.datos
 
-    const {token} = useAuth();
-    const [user,setUser] = useState({
-        "id": null,
-        "foto": null,
-        "nombre": null,
-        "apellido": null,
-        "cedula":null,
-        "edad": null,
-        "sexo": null,
-        "telefono": null,
-        "email": null,
-        "userName": null,
-        "password": null,
-        "tipo": null
-    });
-    const [paciente,setPaciente] = useState({
-        "user":null,
-        "peso":null,
-        "altura":null,
-        "IMC":null,
-        "historial_medico":null,});
-    //const {datos,setDatos} = useDatosContext();
-
-    useEffect(()=>{
-        //console.debug(info);
-        const getUser = async () => {
-            //const userRegistered = await AsyncStorage.getItem('User');
-            const responseUser = await getUserDatos(token,1);
-            const responsePaciente = await getPacienteDatos(token,1);
-            const userDatos = responseUser.data;
-            const pacienteDatos = responsePaciente.data;
-            setUser(userDatos);
-            setPaciente(pacienteDatos); 
-        }
-        getUser();
-    },[])
+    const {token,userDatos} = useAuth();
 
     return(
         
@@ -66,11 +31,11 @@ const HistoryShow =({route})=>{
 
                     <View flexDirection='row' position='relative' >
                         <Text style={[styles.caractT ,  { left: 10 }]}>Paciente: </Text>
-                        <Text style={[styles.caractS ,  { left: 72 }]}>{user.nombre}</Text>
+                        <Text style={[styles.caractS ,  { left: 72 }]}>{userDatos.user.first_name}</Text>
                     </View>
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT ,  { left: 10 }]}>C.I: </Text>
-                        <Text style={[styles.caractS ,  { left: 33 }]}>{user.cedula}</Text>
+                        <Text style={[styles.caractS ,  { left: 33 }]}>{userDatos.datosUser.cedula}</Text>
 
                         <Text style={[styles.caractTs ,  { left: 200 }]} >Fecha: </Text>
                         <Text style={[styles.caractS ,  { left: 245 }]}>{info.fecha}</Text>
@@ -78,20 +43,20 @@ const HistoryShow =({route})=>{
 
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT ,  { left: 10 }]} >Edad: </Text>
-                        <Text style={[styles.caractS ,  { left: 48 }]}>{user.edad}</Text>
+                        <Text style={[styles.caractS ,  { left: 48 }]}>{userDatos.datosUser.edad}</Text>
                         <Text style={[styles.caractS ,  { left: 75 }]}>años</Text>
 
                         <Text style={[styles.caractTs ,  { left: 200 }]} >Peso: </Text>
-                        <Text style={[styles.caractS ,  { left: 238 }]}>{paciente.peso}</Text>
+                        <Text style={[styles.caractS ,  { left: 238 }]}>{userDatos.paciente.peso}</Text>
                         <Text style={[styles.caractS ,  { left: 265 }]}>kg</Text>
                     </View>
 
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT ,  { left: 10 }]}>Sexo: </Text>
-                        <Text style={[styles.caractS ,  { left: 48 }]}>{user.sexo}</Text>
+                        <Text style={[styles.caractS ,  { left: 48 }]}>{userDatos.datosUser.sexo}</Text>
 
                         <Text style={[styles.caractTs ,  { left: 200 }]} >Altura: </Text>
-                        <Text style={[styles.caractS ,  { left: 243 }]}>{paciente.altura}</Text>
+                        <Text style={[styles.caractS ,  { left: 243 }]}>{userDatos.paciente.altura}</Text>
                         <Text style={[styles.caractS ,  { left: 268 }]}>cm</Text>
                     </View>
                     <View style={[styles.linea, {marginTop:10}]}></View>
@@ -111,7 +76,7 @@ const HistoryShow =({route})=>{
                     </View>
                     <View flexDirection='row'>
                         <FontAwesome5 name="heartbeat" size={30} style={styles.Icon} />
-                        <Text style={[styles.BPM]}>{info.BPM_calculado} BPM</Text>
+                        <Text style={[styles.BPM]}>{info.bpm} BPM</Text>
                     </View>
 
                     <View style = {RegistroShowStyles.chartHeart}>

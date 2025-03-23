@@ -16,7 +16,6 @@ const UserShow = () =>{
 
     useEffect(() => {
         console.debug("[userShow]");
-
         const fetchData = async () => {
             try {
                 // Obtener el valor almacenado en AsyncStorage

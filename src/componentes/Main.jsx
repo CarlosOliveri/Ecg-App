@@ -65,10 +65,12 @@ const Main = () => {
                     >
                         <MeasuremetStackNavigator.Screen 
                             name = 'HomeScreen' 
-                            component={MeasurementsHome}/>
+                            component={MeasurementsHome}
+                            options={{ unmountOnBlur: true }}/>
                         <MeasuremetStackNavigator.Screen 
                             name = "Bluetooth" 
-                            component={BluetoothList} />
+                            component={BluetoothList} 
+                            options={{ unmountOnBlur: true }}/>
                     </MeasuremetStackNavigator.Navigator>
                 </BleProvider>
             </StateProvider>
@@ -85,10 +87,12 @@ const Main = () => {
                 }}>
                 <HistoryStackNavigator.Screen
                     name = 'Registro'
-                    component={HistoryShow}/>
+                    component={HistoryShow}
+                    options={{ unmountOnBlur: true }}/>
                 <HistoryStackNavigator.Screen
                     name = {history}
-                    component={HistoryHome}/>
+                    component={HistoryHome}
+                    options={{ unmountOnBlur: true }}/>
             </HistoryStackNavigator.Navigator>
         );
     }
@@ -121,8 +125,8 @@ const Main = () => {
     }
 
     return(
-        <DatosProvider>
         <AuthProvider>
+        <DatosProvider>
         <NavigationContainer>
             <Tab.Navigator
                 initialRouteName= 'userStack'
@@ -181,8 +185,8 @@ const Main = () => {
                     }}/>
             </Tab.Navigator>
         </NavigationContainer>
-        </AuthProvider>
         </DatosProvider>
+        </AuthProvider>
     );
 
 }
