@@ -16,6 +16,7 @@ const UserShow = () =>{
 
     useEffect(() => {
         console.debug("[userShow]");
+
         const fetchData = async () => {
             try {
                 // Obtener el valor almacenado en AsyncStorage
@@ -50,7 +51,7 @@ const UserShow = () =>{
                 <View style ={styles.container} flexDirection = 'colum'>
                     <View style ={styles.line} flexDirection='row'  paddingRight={50} alingIyems='stretch'>
                         <Image style ={styles.image} source={{uri:"https://media.gq.com.mx/photos/5f6ce732bc946e88f6c96320/16:9/w_2560%2Cc_limit/goky%2520ultra%2520instinto.jpg" }}/>
-                        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.nombre}>{userDatos.user.first_name}</Text>
+                        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.nombre}>{userDatos.user.first_name + " "+ userDatos.user.last_name}</Text>
                     </View>
                     <View flexDirection='row'>
                         <Text style={styles.caractT}>C.I: </Text>

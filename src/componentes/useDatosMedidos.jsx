@@ -23,7 +23,6 @@ const useDatosMedidos = () => {
       console.debug("[useDatosMedidos]");
       if(isLog && sincro){
         setDatos([]);
-        console.log("helo");
         fetchData();
         setSincro(false);
       }else{

@@ -18,7 +18,7 @@ const HistoryCard = ({ info, handleDeleteRegister }) => {
           <View style = {HistoryCardStyles.cardContainer}>
              <View flexDirection='row'>
               <Text style={HistoryCardStyles.titleStyle} > Medicion numero </Text>
-              <Text style={HistoryCardStyles.titleStyle} marginLeft={-2}> {info.id} </Text>
+              <Text style={HistoryCardStyles.titleStyle} marginLeft={-2}> {info.num} </Text>
             </View>
 
             <View style={HistoryCardStyles.iconTrashStyle}>

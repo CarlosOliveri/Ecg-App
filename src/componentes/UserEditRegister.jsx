@@ -2,7 +2,7 @@ import React ,{useState, useEffect} from 'react'
 import {Text,View,TextInput,TouchableOpacity,Switch,Button, InputAccessoryView} from 'react-native'
 import SwitchToggle from "react-native-switch-toggle";
 import UserStyles from '../styles/UserRegisterStyles';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 //import UserShow from './UserShow';
@@ -16,13 +16,34 @@ const UserEdit = () => {
 
     const {logout,setUserDatos,userDatos} =useAuth();
     const [firstRender,setFirstRender] = useState(true);
+    const isFocused = useIsFocused();
 
     useEffect(() =>{
+        console.debug("[UserEditRegister]");
         if (firstRender){
             setFirstRender(false);
+
+            setAge(userDatos.datosUser.edad);
+            setName(userDatos.user.first_name);
+            setApellido(userDatos.user.last_name);
+            setCI(userDatos.datosUser.cedula);
+            setEmail(userDatos.user.email);
+            setEspecialidad(userDatos.doctor.especialidad);
+            setHeight(userDatos.paciente.altura);
+            setIMC(userDatos.paciente.IMC);
+            setHistorialMedico(userDatos.paciente.historialMedico);
+            setMatricula(userDatos.doctor.matricula);
+            setSex(userDatos.datosUser.sexo);
+            setTelefono(userDatos.datosUser.telefono);
+            setUsername(userDatos.user.username);
+            setWeight(userDatos.paciente.peso);
+
             return 
         }
-        //handleEdit(newRegistro);
+        if (isFocused){
+            handleEdit();
+            setFirstRender(true);
+        }
     },[userDatos])
     
     const [userLog,setUserLog] = useState(true);
@@ -46,8 +67,10 @@ const UserEdit = () => {
     const [matricula,setMatricula] = useState();
     const [errors,setErrors] = useState({
         Fot:'',
+        Un:'',
         Nam:'',
-        Ap:'',
+        Ape:'',
+        Em:'',
         Cd:'',
         Ag: '',
         Se:'',
@@ -57,6 +80,7 @@ const UserEdit = () => {
         He:'',
         imc:'',
         HM:'',
+        Mt:'',
     });
 
     const [esPaciente,setEsPaciente] = useState(true);
@@ -74,7 +98,7 @@ const UserEdit = () => {
                 },
                 "datosUser":{
                     "cedula":CI,
-                    "edad": Age,
+                    "edad": parseInt(Age,10),
                     "sexo": Sex,
                     "telefono":telefono,
                     "tipo":tipoUsuario,
@@ -84,6 +108,11 @@ const UserEdit = () => {
                     "altura": Height,
                     "IMC":imc,
                     "historial_medico":historialMedico,
+                    "doctor":null
+                },
+                "doctor":{
+                    "especialidad":"",
+                    "matricula": "",
                 },
             })
         }else{
@@ -93,6 +122,7 @@ const UserEdit = () => {
                     "password":password,
                     "email": email,
                     "first_name": name,
+                    "last_name": apellido,
                 },
                 "datosUser":{
                     "cedula":CI,
@@ -100,6 +130,13 @@ const UserEdit = () => {
                     "sexo": Sex,
                     "telefono":telefono,
                     "tipo":tipoUsuario,
+                },
+                "paciente":{
+                    "peso": "",
+                    "altura": "",
+                    "IMC":"",
+                    "historial_medico":"",
+                    "doctor":null
                 },
                 "doctor":{
                     "especialidad": especialidad,
@@ -116,8 +153,9 @@ const UserEdit = () => {
         //navigation.navigate('UserShow');
     }
 
-    const handleEdit = async(value) =>{
-        //await RegisterRequest(value);
+    const handleEdit = async() =>{
+        //await RegisterRequest(userDatos);
+        console.debug("Se editaron los datos");
     }
 
     const handleSetUserLog = ()=>{
@@ -151,13 +189,13 @@ const UserEdit = () => {
                         value= {username}
                         onChangeText = {(val)=>{
                             setUsername(val);
-                            setErrors(_errors =>({..._errors,Nam:''}));
+                            setErrors(_errors =>({..._errors,Un:''}));
                         }}/>
 
                     <Text style = {UserStyles.labels}>Password: </Text> 
                     <TextInput
                         style ={UserStyles.inputText}
-                        placeholder="Ex: 12bhbj32bh"
+                        placeholder="Ex: bhbj32bh"
                         placeholderTextColor={'gray'}
                         value= {password}
                         onChangeText = {(val)=>{
@@ -168,19 +206,19 @@ const UserEdit = () => {
                     <Text style = {UserStyles.labels}>Email: </Text> 
                     <TextInput
                         style ={UserStyles.inputName}
-                        placeholder="Ex: NomAp@gmail.com"
+                        placeholder="Ej: NApel@gmail.com"
                         placeholderTextColor={'gray'}
                         value= {email}
                         onChangeText = {(val)=>{
                             setEmail(val);
-                            setErrors(_errors =>({..._errors,Nam:''}));
+                            setErrors(_errors =>({..._errors,Em:''}));
                         }}/>
 
                     <Text style = {UserStyles.labels}>Nombre: </Text> 
                     <TextInput
                         style ={UserStyles.inputName}
-                        placeholder="Ex: Nombre Apellido"
-                        placeholderTextColor={'gray'}
+                        placeholder="Ej: Nombre"
+                        placeholderTextColor={'grey'}
                         value= {name}
                         onChangeText = {(val)=>{
                             setName(val);
@@ -188,6 +226,19 @@ const UserEdit = () => {
                         }}
                         />
                     {errors.Nam ? <Text style = {UserStyles.errores}>{errors.Nam}</Text> : null}
+
+                    <Text style = {UserStyles.labels}>Apellido: </Text> 
+                    <TextInput
+                        style ={UserStyles.inputName}
+                        placeholder="Ej: Apellido"
+                        placeholderTextColor={'grey'}
+                        value= {apellido}
+                        onChangeText = {(val)=>{
+                            setApellido(val);
+                            setErrors(_errors =>({..._errors,Ape:''}));
+                        }}
+                        />
+                    {errors.Ape ? <Text style = {UserStyles.errores}>{errors.Ape}</Text> : null}
 
                     <Text style = {UserStyles.labels}>Cedula: </Text> 
                     
@@ -208,7 +259,7 @@ const UserEdit = () => {
                         style ={UserStyles.inputText}
                         placeholder="Ex: 25 años"
                         placeholderTextColor={'gray'}
-                        value= {Age}
+                        value= {String(Age)}
                         onChangeText = {(val)=>{
                             setAge(val);
                             setErrors(_errors =>({..._errors,Ag:''}));
@@ -237,7 +288,7 @@ const UserEdit = () => {
                         value= {telefono}
                         onChangeText = {(val)=>{
                             setTelefono(val);
-                            setErrors(_errors =>({..._errors,Se:''}));
+                            setErrors(_errors =>({..._errors,tel:''}));
                         }}
                         />                    
                     
@@ -246,7 +297,7 @@ const UserEdit = () => {
                         <TextInput style ={UserStyles.inputText}
                             placeholder="Ex: 80 [kg]"
                             placeholderTextColor={'gray'}
-                            value= {Weight}
+                            value= {String(Weight)}
                             onChangeText = {(val)=>{
                                 setWeight(val);
                                 setErrors(_errors =>({..._errors,We:''}));
@@ -259,7 +310,7 @@ const UserEdit = () => {
                             style ={UserStyles.inputText}
                             placeholder="Ex: 177 [cm]"
                             placeholderTextColor={'gray'}
-                            value= {Height}
+                            value= {String(Height)}
                             onChangeText = {(val)=>{
                                 setHeight(val);
                                 setErrors(_errors =>({..._errors,He:''}));
@@ -272,7 +323,7 @@ const UserEdit = () => {
                             style ={UserStyles.inputText}
                             placeholder="Ex: 21"
                             placeholderTextColor={'gray'}
-                            value= {imc}
+                            value= {String(imc)}
                             onChangeText = {(val)=>{
                                 setIMC(val);
                                 setErrors(_errors =>({..._errors,imc:''}));

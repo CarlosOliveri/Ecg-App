@@ -21,32 +21,6 @@ const UserRegister = () => {
         if (firstRender){
             setFirstRender(false);
             handleToggel();
-            /* setUserDatos({
-                "user":{
-                    "username":"",
-                    "password":"",
-                    "email": "",
-                    "first_name": "",
-                },
-                "datosUser":{
-                    "cedula":"",
-                    "edad": "",
-                    "sexo": "",
-                    "telefono":"",
-                    "tipo":"",
-                },
-                "paciente":{
-                    "peso": "",
-                    "altura": "",
-                    "IMC":"",
-                    "historial_medico":"",
-                    "doctor":null
-                },
-                "doctor":{
-                    "especialidad":"",
-                    "matricula": "",
-                },
-            }); */
             return 
         }
         handleRegisterUp(userDatos);

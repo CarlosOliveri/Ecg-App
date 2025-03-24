@@ -88,6 +88,7 @@ const Login = () => {
                     "doctor": (datos["doctor"] == "") ? userDatos.doctor : datos["doctor"],
                 })
                 setIsLog(true);
+                setPassword("");
             }
         }catch(error){
             Alert.alert(error.response.data["Error"]);

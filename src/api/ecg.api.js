@@ -36,3 +36,7 @@ export const SaveMedition = (objectJson,username) => {
    return response
 }
 
+export const DeleteMedition = (id) => {
+   const response = axios.delete(`http://${IP}:8000/registers/api/v1/delete_medicion/${id}`);
+   return response
+}

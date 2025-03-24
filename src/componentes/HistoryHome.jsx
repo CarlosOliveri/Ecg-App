@@ -5,6 +5,7 @@ import HistoryCard from './HistoryCard';
 //import datosJson from '../../assets/appDirectories/Mediciones.json';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import { useDatosContext } from './useDatosContext';
+import { DeleteMedition } from '../api/ecg.api';
 
 const HistoryHome = () => {
   
@@ -16,16 +17,11 @@ const HistoryHome = () => {
     console.log("[HistoryHome]");
   },[]);
 
-  const handleDeleteRegister = (id) =>{
+  const handleDeleteRegister = async (id) =>{
     //Manejar eliminacion de registros
-    const datosActualizados = datos.filter(dato => dato.id !== id);
-    for (i = 0; i < datosActualizados.length;i++){
-      datosActualizados[i].num = i+1;
-    }
-    setDatos(datosActualizados);
-    AsyncStorage.setItem('mediciones', JSON.stringify(datos)).then(()=>{
-      console.log("[Data Storage] Datos Actualizados correctamente")
-    })
+    const response = await DeleteMedition(id);
+    console.debug(response.data["mensaje"]);
+    setSincro(true);
   }
   const handleSincronizacion = () => {
 	setSincro(true);
@@ -35,13 +31,13 @@ const HistoryHome = () => {
         <View style={styles.container}>
         	<Button
         		title='Actualizar'
-				onPress={()=>{handleSincronizacion()}}/>
+				    onPress={()=>{handleSincronizacion()}}/>
           	<FlatList
             	data={datos}
-            	renderItem={({ item }) => {
+            	renderItem={({ item, index }) => {
               		return (
                 		<HistoryCard 
-                  			info = {item} 
+                  			info = {{... item,num : index +1}} 
                   			handleDeleteRegister = {handleDeleteRegister}/>
             	);}}
             	keyExtractor={(datos) => String(datos.id)}
