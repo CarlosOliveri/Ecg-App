@@ -19,6 +19,7 @@ import { DatosProvider } from './useDatosContext';
 import LoadingScreen from './LoadigScreen';
 import { useAuth } from './AuthContext';
 import { AuthProvider } from './AuthContext';
+import MisPacientes from './MisPacientes';
 
 //Iconos
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -29,6 +30,7 @@ const measurements = 'Measurementscreen'
 const history = 'HistoryScreen'
 const userRegister = 'UserRegister'
 const userLogin = "UserLogin";
+const Pacientes = "Pacientes"
 // Estetica
 const themeColor = '#154360' //'#4EC8DB'
 const titleSize = 20 //'#4EC8DB'
@@ -81,7 +83,7 @@ const Main = () => {
     const HistoryStack = ()=>{
         return (
             <HistoryStackNavigator.Navigator
-                initialRouteName = {history}
+                initialRouteName = "Pacientes"
                 screenOptions = {{
                     headerShown: false,
                 }}>
@@ -92,6 +94,10 @@ const Main = () => {
                 <HistoryStackNavigator.Screen
                     name = {history}
                     component={HistoryHome}
+                    options={{ unmountOnBlur: true }}/>
+                <HistoryStackNavigator.Screen
+                    name = "Pacientes"
+                    component={MisPacientes}
                     options={{ unmountOnBlur: true }}/>
             </HistoryStackNavigator.Navigator>
         );
