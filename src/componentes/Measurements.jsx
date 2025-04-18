@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { View,Text,TextInput,DeviceEventEmitter, Button, TouchableOpacity, Modal,ImageBackground, Touchable} from 'react-native';
+import { View,Text,TextInput,FlatList,DeviceEventEmitter, Button, TouchableOpacity, Modal,ImageBackground, Touchable} from 'react-native';
 import {Measurementstyles} from '../styles/MeasurementStyles';
 import { useDatosContext } from './useDatosContext';
 import {useBleContext} from './useBleContext';
@@ -17,24 +17,25 @@ import { useAuth } from './AuthContext';
 const Measurements = () => {
 
     const {userDatos} = useAuth({});
-    const {datos,setDatos,setSincro} = useDatosContext();
+    const {datos,setDatos,setSincro,pacientes} = useDatosContext();
+    const [paciente,setPaciente] = useState();
     const [firstRender,setFirstRender] = useState(true);
     const [newRegister,setNewRegister] = useState({});
     //const {isBleConnected,setIsBleConnected} = useBleConnectContext();
     const {discoveredDevices,dataReceived,isConnected,objetGenerate,
-        setObjetGenerate,writeStartOrder,setIsConnected,startScan,setDiscoveredDevices,scanPermission,
-        handleConnectPeripheral,handleBleDisconnectManual,isMeasuring, startMeasurement, stopMeasurement} = useBleContext();
-
-    const [fecha,setFecha] = useState();
+        setObjetGenerate,writeStartOrder,setIsConnected,startScan,
+        setDiscoveredDevices,scanPermission,handleConnectPeripheral,
+        handleBleDisconnectManual,isMeasuring, startMeasurement, 
+        stopMeasurement} = useBleContext();
+    const [fecha,setFecha] = useState("");
     const [segundos,setSegundos] = useState(0);
     const [isRunning,setIsRunning] = useState(false);
     const [modalVisible,setModalVisible] = useState(false);
     const [intensityAct,setIntensityAct] = useState('Baja');
     const [timeActivity,setTimeActivity] = useState(0);
     const [Activity,setActivity] = useState("");
-    //const [datosRegistro,setDatosRegistro] = useState([]);
-    //estado correspondiene a los BPS
     const [bpmValue,setBpmValue] = useState(0);
+    const [showPacientesOption,setShowPacientesOption] = useState();
 
     const handleBpsCalculate = () => {
         //Calculo de los BPS
@@ -127,8 +128,10 @@ const Measurements = () => {
             setFirstRender(false);
             return;
         }
-        handleSaveMedition();
-        setFirstRender(true);
+        if(paciente){
+            handleSaveMedition();
+            setFirstRender(true);
+        }
     },[newRegister])
     //inicia el timer
     const startTimer = () => {
@@ -190,13 +193,17 @@ const Measurements = () => {
             "hora": fecha.hora,
             "duracion": parseInt(timeActivity,10),
             "bpm": parseInt(bpmValue,10),
-            "user":userDatos.user.id
+            "user":paciente
         });
         //setDatos(datos => [...datos,newRegistro])
         //await AsyncStorage.setItem('mediciones',JSON.stringify(datos));
         //console.debug('guardado con exito');
         //console.log(newRegistro);
-        ocultarModal();
+        if(!paciente){
+            setShowPacientesOption(true);
+        }else{
+            ocultarModal();
+        }
     }
 
     const handleSaveMedition = async () => {
@@ -205,22 +212,17 @@ const Measurements = () => {
         setSincro(true);
     }
     
-    //Datos que se muestran en el grafico 
-    /* const initialData =[
-        {x:0, y: 32.51 },
-        {x:1, y: 31.11 },
-        {x:2, y: 27.02 },
-        {x:3, y: 27.32 },
-        {x:4, y: 25.17 },
-        {x:5, y: 28.89 },
-        {x:6, y: 25.46 },
-        {x:7, y: 23.92 },
-        {x:8, y: 22.68 },
-        {x:9, y: 22.67 },
-    ]; */
+    const handleSelectPaciente = (opcion) => {
+        setPaciente(opcion);
+        setShowPacientesOption(false);
+    }
 
-    /* const data = [{x:0,y: 1}, {x:1,y: 2}, {x:2,y: 1}];*/
-    //console.log(objetGenerate); 
+    const options = [
+        'Opción 1',
+        'Opción 2',
+        'Opción 3',
+        'Opción 4',
+      ];
     
     return(
         <View style={Measurementstyles.containerPrincipal}>
@@ -321,10 +323,42 @@ const Measurements = () => {
                                 style={Measurementstyles.duracionActividad}
                                 placeholder="Duracion [minutos]"
                                 placeholderTextColor={'#616A6B'}
-                                value= {String(timeActivity)}
+                                value= {!timeActivity ? "" : timeActivity}
                                 onChangeText = {(val)=>{
                                     setTimeActivity(val);
                                 }}/>
+                            <TouchableOpacity
+                            onPress={()=>{setShowPacientesOption(true)}}>
+                            <TextInput
+                                style={Measurementstyles.duracionActividad}
+                                placeholder="Paciente[ID]"
+                                placeholderTextColor={'#616A6B'}
+                                value= {!paciente ? "" : String(paciente)}
+                                //onFocus={()=>{setShowPacientesOption(true)}}
+                                onChangeText = {(val)=>{
+                                    setPaciente(val);
+                                    setShowPacientesOption(false);
+                                }}
+                                editable={false}
+                                pointerEvents="none"/>
+                            </TouchableOpacity>    
+
+                            {showPacientesOption && (
+                                <FlatList
+                                data={pacientes}
+                                keyExtractor={(item, index) => index.toString()}
+                                style={Measurementstyles.dropdown}
+                                nestedScrollEnabled
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity 
+                                        onPress={() => handleSelectPaciente(item.user)} 
+                                        style={Measurementstyles.option}>
+                                            <Text>{item.user}</Text>
+                                    </TouchableOpacity>
+                                )}
+                              />
+                            )}
+                    
                             <View style={Measurementstyles.containerButtonActivity}>
                                 <TouchableOpacity
                                     style={Measurementstyles.touchActividadButton}

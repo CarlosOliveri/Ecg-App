@@ -14,23 +14,23 @@ import Toggle from './Toggle';
 const UserRegister = () => {
 
     const {logout,setUserDatos,userDatos} =useAuth();
+    const [paciente,setPaciente] = useState({});
     const [firstRender,setFirstRender] = useState(true);
 
     useEffect(() =>{
         console.debug("[userRegister]");
         if (firstRender){
+            console.log("primer render");
             setFirstRender(false);
-            handleToggel();
             return 
         }
-        handleRegisterUp(userDatos);
-    },[userDatos]);
+        handleRegisterUp(paciente);
+    },[paciente]);
     
-    const [userLog,setUserLog] = useState(false);
     //const navigation = useNavigation();
     //const [foto,setFoto] = useState();
     const [username,setUsername] = useState();
-    const [password,setPassword] = useState();
+    const [password,setPassword] = useState("changeme");
     const [email,setEmail] = useState();
     const [name,setName] = useState();
     const [apellido,setApellido] = useState();
@@ -38,13 +38,10 @@ const UserRegister = () => {
     const [Age,setAge] = useState();
     const [Sex,setSex] = useState();
     const [telefono,setTelefono] = useState();
-    const [tipo,setTipo] = useState();
     const [Weight,setWeight] = useState();
     const [Height,setHeight] = useState();
     const [imc,setIMC] = useState();
     const [historialMedico,setHistorialMedico] = useState();
-    const [especialidad,setEspecialidad] = useState();
-    const [matricula,setMatricula] = useState();
     const [errors,setErrors] = useState({
         Fot:'',
         Nam:'',
@@ -60,90 +57,34 @@ const UserRegister = () => {
         HM:'',
     });
 
-    const [esPaciente,setEsPaciente] = useState(false);
-    const [tipoUsuario,setTipoUsuario] = useState("Paciente");
-
     const handleGuardarRegistro = async () => {
         //Generacion de objeto JS
-        if (esPaciente){
-            setUserDatos({
-                "user":{
-                    "username":username,
-                    "password":password,
-                    "email": email,
-                    "first_name": name,
-                },
-                "datosUser":{
-                    "cedula":CI,
-                    "edad": parseInt(Age,10),
-                    "sexo": Sex,
-                    "telefono":telefono,
-                    "tipo":tipoUsuario,
-                },
-                "paciente":{
-                    "peso": Weight,
-                    "altura": Height,
-                    "IMC":imc,
-                    "historial_medico":historialMedico,
-                    "doctor":null
-                },
-                "doctor":{
-                    "especialidad":"",
-                    "matricula": "",
-                },
-            })
-        }else{
-            setUserDatos({
-                "user":{
-                    "username":username,
-                    "password":password,
-                    "email": email,
-                    "first_name": name,
-                },
-                "datosUser":{
-                    "cedula":CI,
-                    "edad": Age,
-                    "sexo": Sex,
-                    "telefono":telefono,
-                    "tipo":tipoUsuario,
-                },
-                "paciente":{
-                    "peso": "",
-                    "altura": "",
-                    "IMC":"",
-                    "historial_medico":"",
-                    "doctor":null
-                },
-                "doctor":{
-                    "especialidad": especialidad,
-                    "matricula": matricula,
-                },
-            })
-        }
-        //console.log(userDatos);
-        //Guardamos los datos 
-        //setUserDatos(newRegistro);
-        //await AsyncStorage.setItem('User', JSON.stringify(newRegistro));
-        
-        //Cambiamos de Pantalla
+        setPaciente({
+            "user":{
+                "username":String(CI),
+                "password":password,
+                "email": email,
+                "first_name": name,
+            },
+            "datosUser":{
+                "cedula":CI,
+                "edad": parseInt(Age,10),
+                "sexo": Sex,
+                "telefono":telefono,
+                "tipo":"Paciente",
+            },
+            "paciente":{
+                "peso": Weight,
+                "altura": Height,
+                "IMC":imc,
+                "historial_medico":historialMedico,
+                "doctor":userDatos.user.id
+            },
+        })
     }
 
     const handleRegisterUp = async(value) =>{
         await RegisterRequest(value);
-    }
-
-    const handleSetUserLog = ()=>{
-        setUserLog(false);
-    }
-
-    const handleToggel = () => {
-        if (esPaciente) {
-            setEsPaciente(false);
-            setTipoUsuario("Doctor");
-        }else{
-            setEsPaciente(true);
-            setTipoUsuario("Paciente");
-        }
     }
 
     return (
@@ -154,28 +95,6 @@ const UserRegister = () => {
             sus datos seran almacenados en la memoria de su dispositivo movil</Text>
             <View>
                 <View style = {UserStyles.formContainer}>
-
-                    <Text style = {UserStyles.labels}>Username: </Text> 
-                    <TextInput
-                        style ={UserStyles.inputText}
-                        placeholder="Ex: NApellido"
-                        placeholderTextColor={'gray'}
-                        value= {username}
-                        onChangeText = {(val)=>{
-                            setUsername(val);
-                            setErrors(_errors =>({..._errors,Nam:''}));
-                        }}/>
-
-                    <Text style = {UserStyles.labels}>Password: </Text> 
-                    <TextInput
-                        style ={UserStyles.inputText}
-                        placeholder="Ex: 12bhbj32bh"
-                        placeholderTextColor={'gray'}
-                        value= {password}
-                        onChangeText = {(val)=>{
-                            setPassword(val);
-                            setErrors(_errors =>({..._errors,Nam:''}));
-                        }}/>
                     
                     <Text style = {UserStyles.labels}>Email: </Text> 
                     <TextInput
@@ -252,22 +171,8 @@ const UserRegister = () => {
                             setErrors(_errors =>({..._errors,Se:''}));
                         }}
                         />                    
-
-                    <Text style = {UserStyles.labels}>Tipo de Usuario:</Text>
-                    <Text style = {UserStyles.labelTipo}>{tipoUsuario}</Text>
-                    <View style={UserStyles.toggleContainer}>
-                        <SwitchToggle
-                            containerStyle = {UserStyles.toggle}
-                            switchOn={esPaciente}
-                            onPress={()=>{handleToggel()}}
-                            circleColorOff="#f4f3f4"
-                            circleColorOn="cyan"
-                            backgroundColorOn= "#81b0ff"
-                            backgroundColorOff= "#81b0ff"//"#767577"
-                        />
-                    </View>
                     
-                    {(esPaciente)?(<View>
+                    <View>
                         <Text style = {UserStyles.labels}>Peso: </Text>
                         <TextInput style ={UserStyles.inputText}
                             placeholder="Ex: 80 [kg]"
@@ -318,29 +223,6 @@ const UserRegister = () => {
                             }}
                             multiline = {true}/>
                     </View>            
-                    ):(<View>
-                        <Text style = {UserStyles.labels}>Especialidad: </Text>
-                        <TextInput
-                            style ={UserStyles.inputText}
-                            placeholder="Ex: Pediatria"
-                            placeholderTextColor={'gray'}
-                            value= {especialidad}
-                            onChangeText = {(val)=>{
-                                setEspecialidad(val);
-                                setErrors(_errors =>({..._errors,ep:''}));
-                            }}/>
-                        
-                        <Text style = {UserStyles.labels}>Matricula: </Text>
-                        <TextInput
-                            style ={UserStyles.inputText}
-                            placeholder="Ex: 7654"
-                            placeholderTextColor={'gray'}
-                            value= {matricula}
-                            onChangeText = {(val)=>{
-                                setMatricula(val);
-                                setErrors(_errors =>({..._errors,mc:''}));
-                            }}/>
-                    </View>)}
 
                 </View>
 
@@ -352,12 +234,10 @@ const UserRegister = () => {
                     if(!name) err = {...err, Nam :'Inserte el Nombre'}
                     if(!CI) err = {...err, Cd :'Inserte el documento de identidad'}
                     if(!Age) err = {...err, Ag :'Inserte la Edad'}
-                    if(!Weight && esPaciente) err = {...err, We :'Inserte el Peso'}
-                    if(!Height && esPaciente) err = {...err, He :'Inserte la Altura'}
                     if(!Sex) err = {...err, Se :'Inserte el Sexo'}
-                    if(!imc && esPaciente) err = {...err, imc :'Inserte el IMC'}
+                    if(!imc) err = {...err, imc :'Inserte el IMC'}
                     //Condicional de validacion de datos 
-                    if(err.Nam || err.Cd || err.Ag || err.We || err.We || err.He || err.Se || err.imc){
+                    if(err.Nam || err.Cd || err.Ag || err.We || err.He || err.Se || err.imc){
                         setErrors(_errors =>({..._errors, ...err}));
                     }else{
                         //console.log({Name,Age,Weight,Height,Sex});
@@ -368,6 +248,7 @@ const UserRegister = () => {
                             We:'',
                             He:'',
                             Se:'',
+                            imc:'',
                         });
                         handleGuardarRegistro();
                     }

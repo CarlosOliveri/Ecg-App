@@ -13,8 +13,8 @@ const Login = () => {
     const navigation = useNavigation();
     const isFocused = useIsFocused();
 
-    const [user,setUser] = useState();
-    const [password,setPassword] = useState();
+    const [user,setUser] = useState("");
+    const [password,setPassword] = useState("");
     const [firstRender,setFirstRender] = useState(true);
 
     function onChangeUser(value){
@@ -28,6 +28,7 @@ const Login = () => {
             setFirstRender(false);
             setUserDatos({
                 "user":{
+                    "id":"",
                     "username":"",
                     "password":"",
                     "email": "",
@@ -70,30 +71,31 @@ const Login = () => {
     }
 
     const onPressButton = async () => {
-        try{
-            const response = await LoginRequest(user, password);
-            
-            if (response.status == 200){
-                const datos = response.data;
-                setLoadingScreen(true);
-                
-                saveTokens(datos["tokens"]);
-                Alert.alert(datos["mensaje"]);
-                //const datos_paciente = await getPacienteDatos(token,1)
-                setToken(datos["tokens"]["access"]);//[IMPORTANTE]esto debe estar en la ultima linea del if, porque se usa de condicion en UserShow
-                setUserDatos({
-                    "user": datos["user"],
-                    "datosUser": datos["datos_user"],
-                    "paciente": (datos["paciente"] == "") ? userDatos.paciente : datos["paciente"],
-                    "doctor": (datos["doctor"] == "") ? userDatos.doctor : datos["doctor"],
-                })
-                setIsLog(true);
-                setPassword("");
-            }
-        }catch(error){
-            Alert.alert(error.response.data["Error"]);
-            console.debug(error);
-
+        if(user.length <= 1, password.length <= 1){
+            Alert.alert("Debe completar ambos campos")    
+        }else{
+            await LoginRequest(user, password).then((response) => {
+                if (response.status == 200){
+                    const datos = response.data;
+                    setLoadingScreen(true);
+                    
+                    saveTokens(datos["tokens"]);
+                    Alert.alert(datos["mensaje"]);
+                    //const datos_paciente = await getPacienteDatos(token,1)
+                    setToken(datos["tokens"]["access"]);//[IMPORTANTE]esto debe estar en la ultima linea del if, porque se usa de condicion en UserShow
+                    setUserDatos({
+                        "user": datos["user"],
+                        "datosUser": datos["datos_user"],
+                        "paciente": (datos["paciente"] == "") ? userDatos.paciente : datos["paciente"],
+                        "doctor": (datos["doctor"] == "") ? userDatos.doctor : datos["doctor"],
+                    })
+                    setIsLog(true);
+                }
+            }).catch((error,response) => {
+                console.debug(error)
+                Alert.alert("Usuario o contraseña incorrecto. Vuelva a intentar")
+            });
+        
         }
     }
 

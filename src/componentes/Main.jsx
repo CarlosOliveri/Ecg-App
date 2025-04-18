@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { MaterialIcons } from '@expo/vector-icons';
 import UserRegister from './UserRegister'
+import Doc_register_user from './Doc_register_user';
 import HistoryHome from './HistoryHome'
 import MeasurementsHome from './MeasurementsHome';
 import Measurements from './Measurements';
@@ -98,6 +99,10 @@ const Main = () => {
                 <HistoryStackNavigator.Screen
                     name = "Pacientes"
                     component={MisPacientes}
+                    options={{ unmountOnBlur: true }}/>
+                <HistoryStackNavigator.Screen
+                    name = "PacienteRegister"
+                    component={Doc_register_user}
                     options={{ unmountOnBlur: true }}/>
             </HistoryStackNavigator.Navigator>
         );

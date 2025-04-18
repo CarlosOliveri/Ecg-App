@@ -11,6 +11,11 @@ import {useAuth} from './AuthContext';
 const HistoryShow =({route})=>{
     const info = route.params.datos
 
+    useEffect(()=>{
+        console.log("[HistoryShow]")
+        console.log(info.info);
+    },[])
+
     const {token,userDatos} = useAuth();
 
     return(
@@ -31,32 +36,32 @@ const HistoryShow =({route})=>{
 
                     <View flexDirection='row' position='relative' >
                         <Text style={[styles.caractT ,  { left: 10 }]}>Paciente: </Text>
-                        <Text style={[styles.caractS ,  { left: 72 }]}>{userDatos.user.first_name}</Text>
+                        <Text style={[styles.caractS ,  { left: 72 }]}>{info.info.paciente.first_name}</Text>
                     </View>
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT ,  { left: 10 }]}>C.I: </Text>
-                        <Text style={[styles.caractS ,  { left: 33 }]}>{userDatos.datosUser.cedula}</Text>
+                        <Text style={[styles.caractS ,  { left: 33 }]}>{}</Text>
 
                         <Text style={[styles.caractTs ,  { left: 200 }]} >Fecha: </Text>
-                        <Text style={[styles.caractS ,  { left: 245 }]}>{info.fecha}</Text>
+                        <Text style={[styles.caractS ,  { left: 245 }]}>{info.medicion.fecha}</Text>
                     </View>
 
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT ,  { left: 10 }]} >Edad: </Text>
-                        <Text style={[styles.caractS ,  { left: 48 }]}>{userDatos.datosUser.edad}</Text>
+                        <Text style={[styles.caractS ,  { left: 48 }]}>{}</Text>
                         <Text style={[styles.caractS ,  { left: 75 }]}>años</Text>
 
                         <Text style={[styles.caractTs ,  { left: 200 }]} >Peso: </Text>
-                        <Text style={[styles.caractS ,  { left: 238 }]}>{userDatos.paciente.peso}</Text>
+                        <Text style={[styles.caractS ,  { left: 238 }]}>{info.info.info.peso}</Text>
                         <Text style={[styles.caractS ,  { left: 265 }]}>kg</Text>
                     </View>
 
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT ,  { left: 10 }]}>Sexo: </Text>
-                        <Text style={[styles.caractS ,  { left: 48 }]}>{userDatos.datosUser.sexo}</Text>
+                        <Text style={[styles.caractS ,  { left: 48 }]}>{}</Text>
 
                         <Text style={[styles.caractTs ,  { left: 200 }]} >Altura: </Text>
-                        <Text style={[styles.caractS ,  { left: 243 }]}>{userDatos.paciente.altura}</Text>
+                        <Text style={[styles.caractS ,  { left: 243 }]}>{info.info.info.altura}</Text>
                         <Text style={[styles.caractS ,  { left: 268 }]}>cm</Text>
                     </View>
                     <View style={[styles.linea, {marginTop:10}]}></View>
@@ -65,23 +70,23 @@ const HistoryShow =({route})=>{
                     </View>
                     <View flexDirection='row' position='relative'>
                         <Text style={[styles.caractT , {fontSize: 11, left: 10 }]}>Actividad: </Text>
-                        <Text style={[styles.caractS ,{fontSize: 11, left: 61 }]}>{info.actividad}</Text>
+                        <Text style={[styles.caractS ,{fontSize: 11, left: 61 }]}>{info.medicion.actividad}</Text>
 
                         <Text style={[styles.caractTs ,{fontSize: 11, left: 140 }]} >Intensidad: </Text>
-                        <Text style={[styles.caractS ,{fontSize: 11, left: 198 }]}>{info.intensidad}</Text>
+                        <Text style={[styles.caractS ,{fontSize: 11, left: 198 }]}>{info.medicion.intensidad}</Text>
 
                         <Text style={[styles.caractTs ,{fontSize: 11, left: 245 }]} >Duración: </Text>
-                        <Text style={[styles.caractS ,{fontSize: 11, left: 295 }]}>{info.duracion} min</Text>
+                        <Text style={[styles.caractS ,{fontSize: 11, left: 295 }]}>{info.medicion.duracion} min</Text>
 
                     </View>
                     <View flexDirection='row'>
                         <FontAwesome5 name="heartbeat" size={30} style={styles.Icon} />
-                        <Text style={[styles.BPM]}>{info.bpm} BPM</Text>
+                        <Text style={[styles.BPM]}>{info.medicion.bpm} BPM</Text>
                     </View>
 
                     <View style = {RegistroShowStyles.chartHeart}>
                     <ChartHeart
-                        data = {JSON.parse(info.datos)}/>
+                        data = {JSON.parse(info.medicion.datos)}/>
                     </View>
 
                 </View>

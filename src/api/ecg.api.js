@@ -23,20 +23,25 @@ export const getDoctorDatos = (accessToken,userId) =>{
 
 export const LoginRequest = (username,password) =>{
    const response = axios.post(`http://${IP}:8000/auth_log/login`,{"username":username,"password":password});
-   return response
+   return response;
 }
 
 export const RegisterRequest = (objectJson) =>{
    const response = axios.post(`http://${IP}:8000/auth_log/register`,objectJson);
-   return response
+   return response;
 }
 
 export const SaveMedition = (objectJson,username) => {
    const response = axios.post(`http://${IP}:8000/registers/api/v1/post_medicion/${username}`,objectJson);
-   return response
+   return response;
 }
 
 export const DeleteMedition = (id) => {
    const response = axios.delete(`http://${IP}:8000/registers/api/v1/delete_medicion/${id}`);
-   return response
+   return response;
+}
+
+export const GetPacientes = (accessToken,id) => {
+   const response = axios.get(`http://${IP}:8000/registers/api/v1/get_pacientes/${id}`);
+   return response;
 }

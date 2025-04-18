@@ -7,14 +7,16 @@ import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import { useDatosContext } from './useDatosContext';
 import { DeleteMedition } from '../api/ecg.api';
 
-const HistoryHome = () => {
-  
+const HistoryHome = ({route}) => {
+  const info = route.params.datos
+
   /* const Measurements = datosJson.mediciones;
   const [datos, setDatos] = useState(Measurements); */
-  const {datos,setDatos,setSincro} = useDatosContext();
+  const {datos,setDatos,setSincro,GetMediciones} = useDatosContext();
   
   useEffect(() => {
     console.log("[HistoryHome]");
+    GetMediciones(info.paciente.username);
   },[]);
 
   const handleDeleteRegister = async (id) =>{
@@ -23,29 +25,23 @@ const HistoryHome = () => {
     console.debug(response.data["mensaje"]);
     setSincro(true);
   }
-  const handleSincronizacion = () => {
-	setSincro(true);
-  }
 
     return (
         <View style={styles.container}>
-        	<Button
-        		title='Actualizar'
-				    onPress={()=>{handleSincronizacion()}}/>
-          	<FlatList
+			<FlatList
             	data={datos}
+				ListEmptyComponent={()=>{return(<View><Text>Aun no hay mediciones</Text></View>)}}
             	renderItem={({ item, index }) => {
               		return (
                 		<HistoryCard 
-                  			info = {{... item,num : index +1}} 
+							info = {info}
+                  			medicion = {{... item,num : index +1}} 
                   			handleDeleteRegister = {handleDeleteRegister}/>
             	);}}
             	keyExtractor={(datos) => String(datos.id)}
             	showsVerticalScrollIndicator={false}/>
-          
-        </View>
-
-      );
+		</View>
+    );
 }
 
 const styles = StyleSheet.create({

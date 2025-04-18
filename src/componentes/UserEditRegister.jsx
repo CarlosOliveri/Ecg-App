@@ -270,7 +270,7 @@ const UserEdit = () => {
                     <Text style = {UserStyles.labels}>Sexo: </Text>
                     <TextInput
                         style ={UserStyles.inputText}
-                        placeholder="Ex: Masculino"
+                        placeholder="Ex: H:Hombre"
                         placeholderTextColor={'gray'}
                         value= {Sex}
                         onChangeText = {(val)=>{
