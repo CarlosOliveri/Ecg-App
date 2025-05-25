@@ -2,6 +2,7 @@ import React ,{useState, useEffect} from 'react'
 import {Text,View,TextInput,TouchableOpacity,Button} from 'react-native'
 import UserStyles from '../styles/UserRegisterStyles';
 import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import UserShow from './UserShow';

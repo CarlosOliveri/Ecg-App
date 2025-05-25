@@ -17,6 +17,9 @@ web-build/
 *.mobileprovision
 android
 
+.git_old
+
+
 # Metro
 .metro-health-check*
 
@@ -76,5 +79,5 @@ yarn-error.*
 
 #Archivos de Prueba
 mmm.jsx
-
+.tmp.driveupload/
 # @end expo-cli

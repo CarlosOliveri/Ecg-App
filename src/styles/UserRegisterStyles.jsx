@@ -33,7 +33,7 @@ const UserRegisterStyles = StyleSheet.create({
         borderRadius:5,
         borderWidth: 1,
         marginTop: -35,
-        marginHorizontal: 120,
+        marginHorizontal: 180,
         padding: 10
     },
     inputCI:{
@@ -43,23 +43,34 @@ const UserRegisterStyles = StyleSheet.create({
         borderRadius:5,
         borderWidth: 1,
         marginTop: -35,
-        marginHorizontal: 120,
+        marginHorizontal: 180,
         padding: 10
     },
-    inputText:{
-        height:40,
-        width: 107,
+    inputHistorialMedico:{
+        height:80,
+        width: 200,
         borderColor: '#1A5276',
         borderRadius:5,
         borderWidth: 1,
         marginTop: -35,
-        marginHorizontal: 120,
+        marginHorizontal: 180,
+        padding: 10,
+        textAlignVertical:"top"
+    },
+    inputText:{
+        height:40,
+        width: 113,
+        borderColor: '#1A5276',
+        borderRadius:5,
+        borderWidth: 1,
+        marginTop: -35,
+        marginHorizontal: 180,
         padding: 10
     },
     touchable:{
         backgroundColor: '#1A5276',
         padding : 10,
-        marginTop : 30,
+        margin : 30,
         width : '50%',
         alignSelf: 'center',
         borderRadius: 10,
@@ -78,6 +89,27 @@ const UserRegisterStyles = StyleSheet.create({
     },
     userShow:{
 
-    }
+    },
+    toggleContainer:{
+        alignItems: "center", 
+        marginTop: -29,
+    },
+    toggle:{
+        width: 150, // Largo del switch
+        height: 40, // Alto del switch
+        borderRadius: 20,
+        padding: 5,
+    },
+    labelTipo:{
+        marginTop: 12,
+        //backgroundColor: "white",
+        color: "black",
+        fontSize: 15,
+        paddingLeft: 0, 
+        marginLeft:157,
+        marginRight:157,
+        zIndex: 1,
+        textAlign:"center"
+    },
 })
 export default UserRegisterStyles;

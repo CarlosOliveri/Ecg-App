@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, StatusBar, FlatList,Button } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, FlatList,Button } from 'react-native';
 import Header from './Header';
 import HistoryCard from './HistoryCard';
+//import datosJson from '../../assets/appDirectories/Mediciones.json';
 //import datosJson from '../../assets/appDirectories/Mediciones.json';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import { useDatosContext } from './useDatosContext';
@@ -12,16 +14,11 @@ const HistoryHome = () => {
   const [datos, setDatos] = useState(Measurements); */
   const {datos,setDatos} = useDatosContext();
 
-  const handleDeleteRegister = (id) =>{
+  const handleDeleteRegister = async (id) =>{
     //Manejar eliminacion de registros
-    const datosActualizados = datos.filter(dato => dato.id !== id);
-    for (i = 0; i < datosActualizados.length;i++){
-      datosActualizados[i].num = i+1;
-    }
-    setDatos(datosActualizados);
-    AsyncStorage.setItem('mediciones', JSON.stringify(datos)).then(()=>{
-      console.log("[Data Storage] Datos Actualizados correctamente")
-    })
+    const response = await DeleteMedition(id);
+    console.debug(response.data["mensaje"]);
+    setSincro(true);
   }
 
     return (

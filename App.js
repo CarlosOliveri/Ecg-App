@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Main from './src/componentes/Main.jsx'
+import { AuthProvider } from './src/componentes/AuthContext.jsx';
 
 // importaciones para pruebay debuging
 import Login from './src/componentes/Login.jsx';
@@ -13,5 +14,8 @@ import ChartHeart from './src/componentes/ChartHeart.jsx';
 import UserShow from './src/componentes/UserShow.jsx';
 
 export default function App() {
-  return <Main/>
-}
+  return (
+  <AuthProvider>
+    <Main/>
+  </AuthProvider>  
+)}

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Cardio Monitor PRO",
+    "name": "Cardio Monitor Pro",
     "slug": "ecg-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,10 +13,11 @@
           "android": {
             "compileSdkVersion": 34,
             "targetSdkVersion": 34,
-            "buildToolsVersion": "34.0.0"
+            "buildToolsVersion": "34.0.0",
+            "kotlinVersion": "1.8.22"
           },
           "ios": {
-            "deploymentTarget": "13.4"
+            "deploymentTarget": "15.1"
           }
         }
       ]
@@ -30,7 +31,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "deploymentTarget": "15.1"
     },
     "android": {
       "adaptiveIcon": {

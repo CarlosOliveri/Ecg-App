@@ -94,7 +94,7 @@ export const Measurementstyles = StyleSheet.create({
         justifyContent:'center',
         resizeMode:'center',
         width: 350,
-        height: 380,
+        height: 460,
         //marginTop:'40%',
         //marginLeft:45,
         borderRadius: 20, // Ajusta el radio de las esquinas
@@ -106,7 +106,7 @@ export const Measurementstyles = StyleSheet.create({
         justifyContent:'center',
         backgroundColor: 'rgba(170, 183, 184,0.2)',
         width:350,
-        height:380,
+        height:460,
         //marginTop:'10%',
         borderRadius:20,
         borderWidth:0,
@@ -142,7 +142,7 @@ export const Measurementstyles = StyleSheet.create({
     actividadtxt:{
         color:'white',
         fontSize:18,
-        fontWeight:'40',
+        fontWeight:"400",
         padding:10,
         paddingHorizontal:15,
     },
@@ -172,5 +172,21 @@ export const Measurementstyles = StyleSheet.create({
         color: 'white',
         fontSize: 13,
         textAlign:'center',
-    }
+    },
+    dropdown: {
+        borderWidth: 1,
+        borderColor: '#1A5276',
+        width: 300,
+        maxHeight: 150,
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        marginTop: 5,
+        position: 'absolute',
+        top: 350,
+        zIndex:1,
+    },
+    option: {
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
 });

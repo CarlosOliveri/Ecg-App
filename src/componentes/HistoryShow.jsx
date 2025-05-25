@@ -1,5 +1,7 @@
 import React ,{useEffect, useState}from "react";
 import {StyleSheet, View, Text,ImageBackground,Image} from 'react-native';
+import React ,{useEffect, useState}from "react";
+import {StyleSheet, View, Text,ImageBackground,Image} from 'react-native';
 import RegistroShowStyles from "../styles/RegistroShowStyles";
 import { useDatosContext } from "./useDatosContext";
 import ChartHeart from './ChartHeart';
@@ -28,6 +30,7 @@ const HistoryShow =({route})=>{
     },[])
 
     return(
+        
         
         <>
             <View style = {styles.principalContainer}>
@@ -114,7 +117,11 @@ const HistoryShow =({route})=>{
                 </Text>
                 <Text style = {RegistroShowStyles.text}>
                     {info.fecha}/{info.hora}
+                    {info.fecha}/{info.hora}
                 </Text>
+                <Text style = {RegistroShowStyles.text}>
+                    {info.tiempo_actividad_minutos} min
+                </Text>*/}
                 <Text style = {RegistroShowStyles.text}>
                     {info.tiempo_actividad_minutos} min
                 </Text>*/}
@@ -129,9 +136,108 @@ const HistoryShow =({route})=>{
                         return(<Text>{element.value}</Text>)
                     })}
                 </Text> */}
+
+                {/*<View style = {RegistroShowStyles.chartHeart}>
+                    <ChartHeart
+                    data = {info.datos_medicion}/>
+                </View>
+                <Text style = {RegistroShowStyles.text}>
+                    {info.datos_medicion.map((element)=>{
+                        return(<Text>{element.value}</Text>)
+                    })}
+                </Text> */}
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    Icon:{
+        marginLeft:'33%',
+        marginTop:18,
+        color:'#1A5276',
+    },
+    BPM:{
+        fontSize: 20,
+        marginTop:20,
+        marginLeft:10,
+        //fontWeight:'bold',
+        color:'#1A5276',
+        textAlign: 'left',
+    },
+    titulo:{
+        fontSize: 24,
+        marginTop:20,
+        marginLeft:-15,
+        paddingHorizontal:10,
+        //fontWeight:'bold',
+        color:'#1A5276',
+        textAlign: 'left',
+    },
+    subT:{
+        fontSize: 11,
+        fontStyle: 'italic',
+        marginLeft:-15,
+        marginTop:-2,
+        paddingHorizontal:10,
+        //fontWeight:'bold',
+        color:'black',
+        textAlign: 'left',
+    },
+    principalContainer:{
+        //backgroundColor:'red',
+        //width:400,
+        alignItems: 'center',
+    },
+    container:{
+        width: '95%',
+        height: '95%',
+        borderRadius : 20,
+        backgroundColor : 'white',
+        elevation:5,
+        marginVertical:15,
+    },
+    linea:{
+        width: '95%',
+        height: 3,
+        marginLeft:'3%',
+       // borderWidth : 5,
+       // borderColor : '#FF4646',
+        borderRadius : 1.5,
+        backgroundColor : '#1A5276',
+        marginTop:0,
+    },
+    line:{
+        width: 300,
+    },
+    image:{
+        width:80,
+        height:80,
+        resizeMode:'cover',
+        borderRadius:45,
+    },
+    caractT:{
+        fontSize: 14,
+        textAlign:'center',
+        marginTop:10,
+        fontWeight:'bold',
+        color:'black'
+    },
+    caractTs:{
+         position: 'absolute',
+         fontSize: 14,
+         textAlign:'center',
+         marginTop:10,
+         fontWeight:'bold',
+         color:'black'
+     },
+    caractS:{
+        position: 'absolute',
+        fontSize: 14,
+        textAlign:'center',
+        marginTop:10,
+        color:'black',
+    },
+});
 
 const styles = StyleSheet.create({
     Icon:{

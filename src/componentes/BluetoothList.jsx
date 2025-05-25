@@ -1,7 +1,9 @@
 import React,{useState, useEffect} from "react";
 import { Platform, NativeModules,
-     NativeEventEmitter, PermissionsAndroid, View,
-      Text, FlatList, StyleSheet} from "react-native";
+    NativeEventEmitter, 
+    //PermissionsAndroid, 
+    View,
+    Text, FlatList, StyleSheet} from "react-native";
 import BluetoothListStyles from "../styles/BluetoothListStyles";
 import Empty from './Empty';
 import Toggle from './Toggle';

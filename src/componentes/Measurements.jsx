@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react';
 import { View,Text,TextInput,DeviceEventEmitter, Button, TouchableOpacity, Modal,ImageBackground, Touchable} from 'react-native';
 import {Measurementstyles} from '../styles/MeasurementStyles';
 import { useDatosContext } from './useDatosContext';
+import { useDatosContext } from './useDatosContext';
 import {useBleContext} from './useBleContext';
 import { useBleConnectContext } from './useBleConnectContext';
 import ChartHeart from './ChartHeart';
@@ -36,10 +37,29 @@ const Measurements = () => {
         const bps = (contarPicos()/segundos)*60;
         setBpmValue(parseInt(bps,10));
         //console.log(bps);
+        const bps = (contarPicos()/segundos)*60;
+        setBpmValue(parseInt(bps,10));
+        //console.log(bps);
     }
 
     const handleBleDisconnect = () =>{
         setIsConnected(false);
+        setObjetGenerate([]);
+    }
+
+    const contarPicos = () => {
+        let cant = 0;
+        for(let i = 0; i < objetGenerate.length; i++){
+            try{
+                if (objetGenerate[i].y > 230 && objetGenerate[i - 1].y < 230){
+                    cant++;
+                }
+            }catch(err){
+                console.debug("no hacer nada");
+            }
+        }
+        //console.debug(objetGenerate.length);
+        return cant;
         setObjetGenerate([]);
     }
 
@@ -76,12 +96,18 @@ const Measurements = () => {
     },[]);
 
     const setearFecha = () => {
+    const setearFecha = () => {
         date = new Date();
         dia = date.getDate();
         mes = date.getMonth()+1;
         año = date.getFullYear();
         hora = date.getHours();
         minuto = date.getMinutes();
+        const newDate = año.toString()+'-'+ mes.toString()+'-'+ dia.toString();
+        const newHora = hora.toString()+':'+minuto.toString();
+        //console.debug(newHora);
+        setFecha({'fecha':newDate,'hora': newHora});
+        //console.log(dia, mes, año, hora,minuto);
         const newDate = año.toString()+'-'+ mes.toString()+'-'+ dia.toString();
         const newHora = hora.toString()+':'+minuto.toString();
         //console.debug(newHora);
@@ -104,8 +130,10 @@ const Measurements = () => {
     //Detecta cambios en el Timer para detenerlo
     useEffect(() =>{
         if (segundos >= 20){
+        if (segundos >= 20){
             stopTimer();
             //console.log(segundos)
+            setearFecha(); //Se genera el objeto fecha y Datos para guardar
             setearFecha(); //Se genera el objeto fecha y Datos para guardar
             mostrarModal();//Temporalmente aca
             //Prueba para detener la medicion 
@@ -114,12 +142,34 @@ const Measurements = () => {
         }
         if (segundos != 0){
             handleBpsCalculate();
+            //Prueba para detener la medicion 
+            setIsRunning(false);
+            //writeStartOrder(0);
+        }
+        if (segundos != 0){
+            handleBpsCalculate();
         }
     },[segundos])
+
+    useEffect(() =>{
+        if (firstRender){
+            setFirstRender(false);
+            return;
+        }
+        if(paciente){
+            handleSaveMedition();
+            setFirstRender(true);
+        }
+    },[newRegister])
     //inicia el timer
     const startTimer = () => {
         setObjetGenerate([]);
+        setObjetGenerate([]);
         setIsRunning(true);
+        //setIsMeasuring(true); // Inicia la medición
+        startMeasurement();
+       // writeStartOrder(1);
+        setSegundos(0);
         //setIsMeasuring(true); // Inicia la medición
         startMeasurement();
        // writeStartOrder(1);
@@ -138,7 +188,22 @@ const Measurements = () => {
     }
     const resetTimer = () => {
         //writeStartOrder(0);
+        //setIsMeasuring(false); // Detiene la medición
+        //setObjetGenerate([]);
+        stopMeasurement();
         setIsRunning(false);
+        setSegundos(0);
+        setBpmValue(0);
+        //writeStartOrder(0);
+        //setSegundos(0);
+    }
+    const resetTimer = () => {
+        //writeStartOrder(0);
+        setIsRunning(false);
+        setSegundos(0);
+        //setObjetGenerate([]);
+        setBpmValue(0);
+        //console.debug(bpmValue);
         setSegundos(0);
         //setObjetGenerate([]);
         setBpmValue(0);
@@ -217,7 +282,21 @@ const Measurements = () => {
                     data = {objetGenerate}
                     //isMeasuring={isMeasuring}
                     />
+                    <FontAwesome5 name="heartbeat" size={30} style={Measurementstyles.Icon}/>
+                    <Text style={Measurementstyles.bpmValue}>{bpmValue}</Text>
+                    <Text style={Measurementstyles.bpmTitle}>BPM</Text>
+                    <MaterialIcons name="timer" size={24} color={'#1A5276'} marginTop={20} marginLeft={90} />
+                    <Text style={[Measurementstyles.bpmValue, {marginLeft: 10}]}>{segundos}s</Text>
                 </View>
+                <View style = {Measurementstyles.chartHeart}>
+                    <ChartHeart
+                    data = {objetGenerate}
+                    //isMeasuring={isMeasuring}
+                    />
+                </View>
+
+                
+            
 
                 
             
@@ -225,8 +304,11 @@ const Measurements = () => {
                     <TouchableOpacity
                         style = {Measurementstyles.Button}
                         onPress={() => {
+                        style = {Measurementstyles.Button}
+                        onPress={() => {
                         //aca se debe manejar el inicio de las mediciones
                         startTimer();//temporalmente aca
+                        }}>
                         }}>
                         <Text style={Measurementstyles.buttonTitle}>
                             INICIAR MEDICIONES
@@ -250,8 +332,20 @@ const Measurements = () => {
                     </TouchableOpacity>
                 </View>
                
+                <View marginVertical={50}>
+                    <TouchableOpacity
+                    style={Measurementstyles.buttonDesconectar}
+                    onPress={handleBleDisconnectManual}>
+                        <Text style={Measurementstyles.titleDesconectar}>
+                            DESCONECTAR
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+               
             </View>
             {/* <Text style = {{fontSize:20}}>{dataReceived}</Text> */}
+
+            {/*Pantalla emergente tras concluir la medicion*/}
 
             {/*Pantalla emergente tras concluir la medicion*/}
             <Modal
