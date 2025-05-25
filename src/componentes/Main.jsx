@@ -25,13 +25,11 @@ import Dispositivos from './Dispositivos';
 
 
 const measurements = 'Measurementscreen'
-const measurements = 'Measurementscreen'
 const history = 'HistoryScreen'
 const userRegister = 'UserRegister'
 const userLogin = "UserLogin";
 const Pacientes = "Pacientes"
 // Estetica
-const themeColor = '#154360' //'#4EC8DB'
 const themeColor = '#154360' //'#4EC8DB'
 const titleSize = 20 //'#4EC8DB'
 
@@ -40,7 +38,6 @@ const Tab = createBottomTabNavigator();
 //Stacks
 const MeasuremetStackNavigator = createNativeStackNavigator();
 const HistoryStackNavigator = createNativeStackNavigator();
-const UserStackNavigator = createNativeStackNavigator();
 const UserStackNavigator = createNativeStackNavigator();
 
 const Main = () => {
@@ -159,7 +156,7 @@ const Main = () => {
                     tabBarActiveTintColor : '#2471A3',
                     tabBarInactiveTintColor : '#AAB7B8',
                     tabBarHideOnKeyboard: true,
-                }}
+                //}}
                 //keyboardShouldPersistTaps="handled"
                 
                     keyboardHidesTabBar: true,
@@ -171,7 +168,6 @@ const Main = () => {
                 
             >
                 <Tab.Screen 
-                    name = {measurements}
                     name = {measurements}
                     component={Measurementstack}
                     options={{
@@ -203,8 +199,6 @@ const Main = () => {
                     }}
                     />
                 <Tab.Screen 
-                    name = 'userStack'
-                    component={UserStack}
                     name = 'userStack'
                     component={UserStack}
                     options={{

@@ -37,9 +37,6 @@ const Measurements = () => {
         const bps = (contarPicos()/segundos)*60;
         setBpmValue(parseInt(bps,10));
         //console.log(bps);
-        const bps = (contarPicos()/segundos)*60;
-        setBpmValue(parseInt(bps,10));
-        //console.log(bps);
     }
 
     const handleBleDisconnect = () =>{
@@ -47,21 +44,6 @@ const Measurements = () => {
         setObjetGenerate([]);
     }
 
-    const contarPicos = () => {
-        let cant = 0;
-        for(let i = 0; i < objetGenerate.length; i++){
-            try{
-                if (objetGenerate[i].y > 230 && objetGenerate[i - 1].y < 230){
-                    cant++;
-                }
-            }catch(err){
-                console.debug("no hacer nada");
-            }
-        }
-        //console.debug(objetGenerate.length);
-        return cant;
-        setObjetGenerate([]);
-    }
 
     const contarPicos = () => {
         let cant = 0;
@@ -96,15 +78,12 @@ const Measurements = () => {
     },[]);
 
     const setearFecha = () => {
-    const setearFecha = () => {
         date = new Date();
         dia = date.getDate();
         mes = date.getMonth()+1;
         año = date.getFullYear();
         hora = date.getHours();
         minuto = date.getMinutes();
-        const newDate = año.toString()+'-'+ mes.toString()+'-'+ dia.toString();
-        const newHora = hora.toString()+':'+minuto.toString();
         //console.debug(newHora);
         setFecha({'fecha':newDate,'hora': newHora});
         //console.log(dia, mes, año, hora,minuto);
@@ -129,7 +108,6 @@ const Measurements = () => {
     },[isRunning])
     //Detecta cambios en el Timer para detenerlo
     useEffect(() =>{
-        if (segundos >= 20){
         if (segundos >= 20){
             stopTimer();
             //console.log(segundos)
@@ -177,17 +155,6 @@ const Measurements = () => {
     }
     //detiene el timer
     const stopTimer = () =>{
-        //setIsMeasuring(false); // Detiene la medición
-        //setObjetGenerate([]);
-        stopMeasurement();
-        setIsRunning(false);
-        setSegundos(0);
-        setBpmValue(0);
-        //writeStartOrder(0);
-        //setSegundos(0);
-    }
-    const resetTimer = () => {
-        //writeStartOrder(0);
         //setIsMeasuring(false); // Detiene la medición
         //setObjetGenerate([]);
         stopMeasurement();
@@ -304,11 +271,8 @@ const Measurements = () => {
                     <TouchableOpacity
                         style = {Measurementstyles.Button}
                         onPress={() => {
-                        style = {Measurementstyles.Button}
-                        onPress={() => {
                         //aca se debe manejar el inicio de las mediciones
                         startTimer();//temporalmente aca
-                        }}>
                         }}>
                         <Text style={Measurementstyles.buttonTitle}>
                             INICIAR MEDICIONES
