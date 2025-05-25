@@ -1,6 +1,7 @@
 import axios from 'axios';
 //IP = "172.16.253.141"
-IP = "192.168.100.146"
+//IP = "192.168.100.146"
+IP = " 192.168.0.6"
 
 export const getUserDatos = (accessToken,userId) =>{
    return axios.get(`http://${IP}:8000/auth_log/usuarios/${userId}`,{headers:{Authorization: `Bearer ${accessToken}`}});
