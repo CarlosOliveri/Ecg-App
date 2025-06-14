@@ -77,7 +77,6 @@ const useBLE = () => {
             'BleManagerDidUpdateState',
           ({ state }) => {
               console.log('El bluetooth se a apagado =>estado: ', state);
-              // Aquí puedes actualizar el estado del Bluetooth en tu componente
               handleBleDisconnect();}
           ),
       ];

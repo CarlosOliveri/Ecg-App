@@ -181,8 +181,8 @@ export const Measurementstyles = StyleSheet.create({
         backgroundColor: 'rgba(255,255,255,0.9)',
         marginTop: 5,
         position: 'absolute',
-        top: 350,
-        zIndex:1,
+        top: 520,
+        zIndex: 1,
     },
     option: {
         padding: 10,

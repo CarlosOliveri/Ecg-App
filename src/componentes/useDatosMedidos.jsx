@@ -28,6 +28,7 @@ const useDatosMedidos = () => {
     //const Measurements = datosJson.mediciones;// Esto debe ser una consult al backend
     useEffect(()=>{
 		console.debug("[useDatosMedidos]");
+		console.debug(pacientes)
 		if(isLog && sincro){
 			setDatos([]);
 			GetMisPacientes(userDatos.user.id);

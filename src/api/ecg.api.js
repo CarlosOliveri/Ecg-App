@@ -1,5 +1,5 @@
 import axios from 'axios';
-//IP = "172.16.253.141"
+//IP = "172.16.245.229"
 IP = "192.168.100.146"
 
 export const getUserDatos = (accessToken,userId) =>{

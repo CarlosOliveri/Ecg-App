@@ -216,13 +216,6 @@ const Measurements = () => {
         setPaciente(opcion);
         setShowPacientesOption(false);
     }
-
-    const options = [
-        'Opción 1',
-        'Opción 2',
-        'Opción 3',
-        'Opción 4',
-      ];
     
     return(
         <View style={Measurementstyles.containerPrincipal}>
@@ -316,6 +309,7 @@ const Measurements = () => {
                                 placeholder="Actividad Realizada"
                                 placeholderTextColor={'#616A6B'}
                                 value= {Activity}
+                                onFocus={()=>{setShowPacientesOption(false)}}
                                 onChangeText = {(val)=>{
                                     setActivity(val);
                                 }}/>
@@ -324,6 +318,7 @@ const Measurements = () => {
                                 placeholder="Duracion [minutos]"
                                 placeholderTextColor={'#616A6B'}
                                 value= {!timeActivity ? "" : timeActivity}
+                                onFocus={()=>{setShowPacientesOption(false)}}
                                 onChangeText = {(val)=>{
                                     setTimeActivity(val);
                                 }}/>
@@ -334,7 +329,6 @@ const Measurements = () => {
                                 placeholder="Paciente[ID]"
                                 placeholderTextColor={'#616A6B'}
                                 value= {!paciente ? "" : String(paciente)}
-                                //onFocus={()=>{setShowPacientesOption(true)}}
                                 onChangeText = {(val)=>{
                                     setPaciente(val);
                                     setShowPacientesOption(false);
@@ -343,7 +337,7 @@ const Measurements = () => {
                                 pointerEvents="none"/>
                             </TouchableOpacity>    
 
-                            {showPacientesOption && (
+                            {/*showPacientesOption && (
                                 <FlatList
                                 data={pacientes}
                                 keyExtractor={(item, index) => index.toString()}
@@ -353,11 +347,11 @@ const Measurements = () => {
                                     <TouchableOpacity 
                                         onPress={() => handleSelectPaciente(item.user)} 
                                         style={Measurementstyles.option}>
-                                            <Text>{item.user}</Text>
+                                            <Text>{item.name}</Text>
                                     </TouchableOpacity>
                                 )}
                               />
-                            )}
+                            )*/}
                     
                             <View style={Measurementstyles.containerButtonActivity}>
                                 <TouchableOpacity
@@ -377,7 +371,22 @@ const Measurements = () => {
                             </View>
                             
                         </View>
-                        </ImageBackground>        
+                        </ImageBackground>
+                        {showPacientesOption && (
+                                <FlatList
+                                data={pacientes}
+                                keyExtractor={(item, index) => index.toString()}
+                                style={Measurementstyles.dropdown}
+                                nestedScrollEnabled
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity 
+                                        onPress={() => handleSelectPaciente(item.user)} 
+                                        style={Measurementstyles.option}>
+                                            <Text>{item.name}</Text>
+                                    </TouchableOpacity>
+                                )}
+                              />
+                            )}        
                 </View>
             </Modal>
         </View>
