@@ -1,5 +1,5 @@
 import { NativeEventEmitter, NativeModules, Platform, PermissionsAndroid,Alert } from 'react-native';
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import BleManager from 'react-native-ble-manager';
 import {Buffer} from 'buffer'; 
 import { bytesToString } from "convert-string";
@@ -22,11 +22,19 @@ const useBLE = () => {
     const [isConnected,setIsConnected] = useState(false); //Estado que nos permite switchear entre mediciones y conexion
     const [peripheralId,setPeripheralId] = useState();
     const [isMeasuring, setIsMeasuring] = useState(false); // Añadimos el estado isMeasuring
+	const [bpm,setBpm] = useState(0);
+	const [detector,setDetector] = useState(null);
 
-  useEffect(()=>{
-      BluetoothModuleStart();
-      EncenderBluetooth();
-      requestPermissions();
+	useEffect(()=>{
+		//const detector = new RealTimePeakDetector2(minDistanceSamples, threshold);
+		const detectorPeaks= new RealTimePeakDetector2(minDistanceSamples, threshold);
+		setDetector(detectorPeaks);
+	},[])
+	
+	useEffect(()=>{
+		BluetoothModuleStart();
+		EncenderBluetooth();
+		requestPermissions();
 
       /*BleManager.checkState().then(state => {
           if (state == 'off'){
@@ -92,11 +100,19 @@ const useBLE = () => {
 
   const startMeasurement = () => {
     setIsMeasuring(true);
+	contador = 0;
+	buffer = [];
+	integrationBuffer = [];
+	peaksN = 0;
+	tiempo = 0;
+	bpm = 0;
+	peaksI = [];
     //console.log("Starting measurement, isMeasuring set to:", isMeasuring);
   };
 
   const stopMeasurement = () => {
     setIsMeasuring(false);
+	detector.reset();
     //console.log("Stopping measurement, isMeasuring set to:", isMeasuring);
   };
 
@@ -183,6 +199,74 @@ setInterval(() => {
         ]);
     }
 }, 50);  // Se actualiza cada 20ms*/
+
+function derivativeFilter(buffer) {
+	if (buffer.length < 5) {
+    	return 0;
+  	}
+  	// Diferencia: y(n) = (2x(n) + x(n-1) - x(n-3) - 2x(n-4)) / 8
+  	const y = (2 * buffer[buffer.length - 1] + buffer[buffer.length - 2] - buffer[buffer.length - 4] - 2 * buffer[buffer.length - 5]) / 8;
+  	return y;
+}
+class RealTimePeakDetector2 {
+	constructor(minDistanceSamples, threshold) {
+		this.buffer = []; // Usamos un array fijo de tamaño 3
+		this.maxBufferLength = 3;
+		this.minDistance = minDistanceSamples;
+		this.threshold = threshold;
+		this.lastPeakIndex = -minDistanceSamples;
+		this.currentIndex = 0;
+  	}
+
+	update(newSample) {
+		// Manejamos la cola de longitud máxima
+		if (this.buffer.length >= this.maxBufferLength) {
+			this.buffer.shift(); // elimina el más antiguo
+		}
+		this.buffer.push(newSample);
+
+		let peakDetected = false;
+
+		// Solo analizamos si hay 3 muestras para comparar
+		if (this.buffer.length === 3) {
+			const [prev, curr, next_] = this.buffer;
+
+			// Es un máximo local y supera el threshold
+			if (curr > prev && curr > next_ && curr > this.threshold) {
+				// Y se respeta la distancia mínima desde el último pico
+				if (this.currentIndex - 1 - this.lastPeakIndex >= this.minDistance) {
+					peakDetected = true;
+					this.lastPeakIndex = this.currentIndex - 1;
+					// console.log(`${prev}, ${curr}, ${next_}`);
+				}
+			}
+		}
+
+		this.currentIndex += 1;
+		return peakDetected;
+  	}
+
+	reset(){
+		this.buffer = [];
+		this.lastPeakIndex = -minDistanceSamples;
+		this.currentIndex = 0;
+	}
+}
+const minDistanceMs = 500;
+const samplingRate = 500; // 500 muestras por segundo
+const minDistanceSamples = Math.floor((minDistanceMs / 1000.0) * samplingRate);
+const threshold = 150;
+//const detector = new RealTimePeakDetector2(minDistanceSamples, threshold);
+
+let contador = 0;
+let buffer = [];
+let integrationBuffer = [];
+let peaksN = 0;
+let tiempo = 0;
+let peaksI = [];
+const samplingInterval = 0.002;
+const integrationWindowSize = 50;
+
 let bufferA = [];
 let bufferB = [];
 let activeBuffer = bufferA;
@@ -197,6 +281,24 @@ const handleUpdateValueForCharacteristic = (data) => {
         for (let i = 0; i < newBuffer.length; i += 2) {
             const sample = newBuffer.readInt16LE(i);
             samples.push(sample);
+
+			buffer.push(sample);
+			contador = contador + 1;
+			const outDeriv = derivativeFilter(buffer);
+  			const squared = outDeriv * outDeriv;
+			integrationBuffer.push(squared);
+			if (integrationBuffer.length > integrationWindowSize) {
+				integrationBuffer.shift(); // descarta la muestra más antigua
+			}
+			const integrated = integrationBuffer.reduce((a, b) => a + b, 0) / integrationBuffer.length;
+			//console.log("Integrado:", integrated.toFixed(2));
+			if (detector.update(squared)) {
+				peaksI.push(contador);
+				peaksN += 1;
+			}
+			tiempo = contador * samplingInterval; // 500 Hz → 0.002 s por muestra
+  			setBpm((peaksN / tiempo) * 60);
+        	///////////hasta aca es el bucle for que lee los elementos que llegan uno a uno    
         }
 
         // Agregar muestras al buffer activo
@@ -206,7 +308,7 @@ const handleUpdateValueForCharacteristic = (data) => {
     });
 };
 
-// Esta función se encargará de actualizar los gráficos cada 20ms
+// Esta función se encargará de actualizar los gráficos cada 200ms
 setInterval(() => {
     // Alterna el buffer activo para no perder muestras entrantes
     const processingBuffer = activeBuffer === bufferA ? bufferA : bufferB;
@@ -216,13 +318,13 @@ setInterval(() => {
         const samplesToProcess = processingBuffer.slice();
         processingBuffer.length = 0;  // Vacía el buffer procesado
 
-        // Actualiza el objeto de generación solo cada 20ms
+        // Actualiza el objeto de generación solo cada 200ms
         setObjetGenerate(prevObjGen => [
             ...prevObjGen,
             ...samplesToProcess.map((y, idx) => ({ x: prevObjGen.length + idx, y }))
         ]);
     }
-}, 200);  // Se actualiza cada 20ms 
+}, 200);  // Se actualiza cada 200ms 
 
 
     
