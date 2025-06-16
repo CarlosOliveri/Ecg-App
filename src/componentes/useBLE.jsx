@@ -22,8 +22,8 @@ const useBLE = () => {
     const [isConnected,setIsConnected] = useState(false); //Estado que nos permite switchear entre mediciones y conexion
     const [peripheralId,setPeripheralId] = useState();
     const [isMeasuring, setIsMeasuring] = useState(false); // Añadimos el estado isMeasuring
-	const [bpm,setBpm] = useState(0);
-	const [detector,setDetector] = useState(null);
+    const [bpm,setBpm] = useState(0);
+    const [detector,setDetector] = useState(null);
 
 	useEffect(()=>{
 		//const detector = new RealTimePeakDetector2(minDistanceSamples, threshold);
@@ -597,6 +597,7 @@ setInterval(() => {
         isMeasuring,            // Exportamos isMeasuring
         startMeasurement,       // Función para iniciar medición
         stopMeasurement,        // Función para detener medición
+        bpm,
     ]);
 }
 

@@ -26,7 +26,7 @@ const Measurements = () => {
         setObjetGenerate,writeStartOrder,setIsConnected,startScan,
         setDiscoveredDevices,scanPermission,handleConnectPeripheral,
         handleBleDisconnectManual,isMeasuring, startMeasurement, 
-        stopMeasurement} = useBleContext();
+        stopMeasurement,bpm} = useBleContext();
     const [fecha,setFecha] = useState("");
     const [segundos,setSegundos] = useState(0);
     const [isRunning,setIsRunning] = useState(false);
@@ -39,9 +39,10 @@ const Measurements = () => {
 
     const handleBpsCalculate = () => {
         //Calculo de los BPS
-        const bps = (contarPicos()/segundos)*60;
-        setBpmValue(parseInt(bps,10));
-        //console.log(bps);
+        //const bps = (contarPicos()/segundos)*60;
+        //setBpmValue(parseInt(bps,10));
+        console.log(bpm);
+        setBpmValue(bpm);
     }
 
     const handleBleDisconnect = () =>{
